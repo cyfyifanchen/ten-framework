@@ -109,6 +109,21 @@ TEN, the world’s first real-time, distributed, cloud-edge collaborative multim
 
 ## ✨ TEN Features
 
+| Project | Preview |
+| ------- | ------- |
+| [**🏚️ TEN Framework**][ten-framework-link]<br>TEN, a AI agent framework to create various AI agents which supports real-time conversation.<br><br>![][ten-framework-shield] | ![][ten-framework-banner] |
+| [**🎙️ TEN Agent**][ten-agent-link]<br>TEN Agent is a conversational voice AI agent powered by TEN, integrating Deepseek, Gemini, OpenAI, RTC, and hardware like ESP32. It enables realtime AI capabilities like seeing, hearing, and speaking, and is fully compatible with platforms like Dify and Coze.<br><br>![][ten-agent-shield] | ![][ten-agent-banner] |
+| **🎨 TMAN Designer** `beta`<br>TMAN Designer is low/no code option to make a cool voice agent. With it's easy-to-use workflow UI, you can build things easily. It comes with runtime, dark/light themes, integrated editors and integrated terminals.<br><br>![][tman-designer-shield] | ![][tman-designer-banner] |
+| **📒 TEN Portal**<br>The official site of TEN framework, it has documentation, blog and showcases.<br><br>![][ten-docs-shield] | ![][ten-docs-banner] |
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+<!-- ## ✨ TEN Features
+
 The TEN framework offers the following advantages:
 
 1. **Native Support for High-Performance, Real-Time Multimodal Interactions**
@@ -139,11 +154,11 @@ The TEN framework offers the following advantages:
 
 [![][back-to-top]](#readme-top)
 
-</div>
+</div> -->
 
 <br>
 
-## 💡 TEN Usecases
+<!-- ## 💡 TEN Usecases
 
 ![Usecases](https://ten-framework-assets.s3.us-east-1.amazonaws.com/usecases.jpg)
 
@@ -163,9 +178,9 @@ The TEN framework offers the following advantages:
 
 [![][back-to-top]](#readme-top)
 
-</div>
+</div> -->
 
-<br>
+<!-- <br> -->
 
 ## 🤖 TEN Agent - a Showcase of TEN Framework
 
@@ -442,7 +457,7 @@ Check out [this guide](https://theten.ai/docs/ten_agent/setup_development_env/se
 
 <br>
 
-## 👀 TEN Agent Demo
+<!-- ## 👀 TEN Agent Demo
 
 Playground and Demo server different purposes, in a nut shell, think it as Playground is for you to customize you agent, and Demo is for you to deploy your agent.
 
@@ -453,7 +468,7 @@ Check out [this guide](https://theten.ai/docs/ten_agent/demo) for more details.
 
 </div>
 
-<br>
+<br> -->
 
 ## 🛳️ TEN Agent Self Hosting
 
@@ -477,7 +492,7 @@ Read the [Deployment Guide](https://theten.ai/docs/ten_agent/deploy_ten_agent/de
 
 <br>
 
-## 🏗️ TEN Agent Architecture
+<!-- ## 🏗️ TEN Agent Architecture
 
 1️⃣ **TEN Agent App**: Core application that manages extensions and data flow based on graph configuration
 
@@ -496,24 +511,9 @@ Read the [Deployment Guide](https://theten.ai/docs/ten_agent/deploy_ten_agent/de
 
 [![][back-to-top]](#readme-top)
 
-</div>
+</div> -->
 
-<br>
-
-## 🌍 TEN Framework Ecosystem
-
-| Project | Preview |
-| ------- | ------- |
-| [**🏚️ TEN Framework**][ten-framework-link]<br>TEN, a AI agent framework to create various AI agents which supports real-time conversation.<br><br>![][ten-framework-shield] | ![][ten-framework-banner] |
-| [**🎙️ TEN Agent**][ten-agent-link]<br>TEN Agent is a conversational voice AI agent powered by TEN, integrating Deepseek, Gemini, OpenAI, RTC, and hardware like ESP32. It enables realtime AI capabilities like seeing, hearing, and speaking, and is fully compatible with platforms like Dify and Coze.<br><br>![][ten-agent-shield] | ![][ten-agent-banner] |
-| **🎨 TMAN Designer** `alpha`<br>TMAN Designer is low/no code option to make a cool voice agent. With it's easy-to-use workflow UI, you can build things easily. It comes with runtime, dark/light themes, integrated editors and integrated terminals.<br><br>![][tman-designer-shield] | ![][tman-designer-banner] |
-| **📒 TEN Portal**<br>The official site of TEN framework, it has documentation, blog and showcases.<br><br>![][ten-docs-shield] | ![][ten-docs-banner] |
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
+<!-- <br> -->
 
 <br>
 
@@ -529,7 +529,7 @@ We welcome all forms of open-source collaboration! Whether you're fixing bugs, a
 >
 > Join us in building TEN better! Every contribution makes a difference, from code to documentation. Share your TEN Agent projects on social media with to inspire others!
 >
-> Connect with TEN maintainer [@elliotchen100](https://x.com/elliotchen100) on 𝕏 or [@cyfyifanchen](https://github.com/cyfyifanchen) on GitHub for project updates, discussions and collaboration opportunities.
+> Connect with one of the TEN maintainers [@elliotchen100](https://x.com/elliotchen100) on 𝕏 or [@cyfyifanchen](https://github.com/cyfyifanchen) on GitHub for project updates, discussions and collaboration opportunities.
 
 <br>
 
