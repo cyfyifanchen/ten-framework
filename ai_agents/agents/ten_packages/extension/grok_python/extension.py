@@ -75,9 +75,7 @@ class GrokExtension(AsyncLLMBaseExtension):
         async_ten_env.log_info("on_start")
         await super().on_start(async_ten_env)
 
-        self.config = await grokConfig.create_async(
-            ten_env=async_ten_env
-        )
+        self.config = await grokConfig.create_async(ten_env=async_ten_env)
 
         # Mandatory properties
         if not self.config.api_key:
