@@ -25,7 +25,7 @@ export const voiceNameMap: LanguageMap = {
             female: "Aoede",
             langCode: "cmn-CN",
         },
-        grok4: {
+        azure_grok4: {
             male: "zh-CN-XiaoxiaoMultilingualNeural",
             female: "zh-CN-XiaoxiaoMultilingualNeural",
         }
@@ -54,7 +54,7 @@ export const voiceNameMap: LanguageMap = {
             female: "Aoede",
             langCode: "en-US",
         },
-        grok4: {
+        azure_grok4: {
             male: "zh-CN-XiaoxiaoMultilingualNeural",
             female: "zh-CN-XiaoxiaoMultilingualNeural",
         }
@@ -73,7 +73,7 @@ export const voiceNameMap: LanguageMap = {
             female: "Aoede",
             langCode: "ja-JP",
         },
-        grok4: {
+        azure_grok4: {
             male: "zh-CN-XiaoxiaoMultilingualNeural",
             female: "zh-CN-XiaoxiaoMultilingualNeural",
         }
@@ -92,7 +92,7 @@ export const voiceNameMap: LanguageMap = {
             female: "Aoede",
             langCode: "ko-KR",
         },
-        grok4: {
+        azure_grok4: {
             male: "zh-CN-XiaoxiaoMultilingualNeural",
             female: "zh-CN-XiaoxiaoMultilingualNeural",
         }
@@ -345,7 +345,7 @@ export const getGraphProperties = (
                 "model": "grok-4-0709",
             },
             "tts": {
-                "azure_synthesis_voice_name": voiceNameMap[language]["grok4"][voiceType]
+                "azure_synthesis_voice_name": voiceNameMap[language]["azure_grok4"][voiceType]
             }
         }
     } else if (graphName === "va_llama4") {
