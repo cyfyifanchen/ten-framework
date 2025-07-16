@@ -43,7 +43,7 @@ export const DEFAULT_DIFY_SETTINGS: IDifySettings = {
   base_url: "https://api.dify.ai/v1",
 }
 
-export const DESCRIPTION = "A Realtime Conversational AI Agent powered by TEN"
+export const DESCRIPTION = "A Real-time Multimodal Conversational AI Agent powered by TEN"
 export const LANGUAGE_OPTIONS: LanguageOptionItem[] = [
   {
     label: "English",
@@ -68,7 +68,7 @@ export const GRAPH_OPTIONS: GraphOptionItem[] = [
     value: "va_azure_v2v"
   },
   {
-    label: "Voice Agent with Grok4",
+    label: "Grok 4 with Annie",
     value: "grok4",
   },
   {
