@@ -55,8 +55,8 @@
   - [🅰️ Run TEN Agent in `localhost`](#🅰️-run-ten-agent-in-localhost)
   - [🅱️ Run TEN Agent in Codespace(no docker)](#🅱️-run-ten-agent-in-codespaceno-docker)
 - [🛳️ TEN Agent Self Hosting](#️-ten-agent-self-hosting)
-  - [🅰️ 🐳 Deploying with Docker](#️--deploying-with-docker)
-  - [🅱️ Deploying with other cloud services](#️-deploying-with-other-cloud-services)
+  - [🅰️ Deploying with Docker](#🅰️-deploying-with-docker)
+  - [🅱️ Deploying with other cloud services](#🅱️-deploying-with-other-cloud-services)
 - [🌍 TEN Ecosystem](#-ten-ecosystem)
 - [❓ Ask Questions](#-ask-questions)
 - [🥰 Contributing](#-contributing)
@@ -358,7 +358,7 @@ Check out [this guide](https://theten.ai/docs/ten_agent/demo) for more details.
 
 ## 🛳️ TEN Agent Self Hosting
 
-#### 🅰️ 🐳 Deploying with Docker
+#### 🅰️ Deploying with Docker
 
 Once you have customized your agent (either by using the TMAN Manager, Playground, or editing `property.json` directly), you can deploy it by creating a release Docker image for your service.
 
