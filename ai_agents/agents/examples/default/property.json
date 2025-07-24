@@ -3,7 +3,7 @@
     "predefined_graphs": [
       {
         "name": "voice_assistant",
-        "auto_start": true,
+        "auto_start": false,
         "graph": {
           "nodes": [
             {
@@ -96,8 +96,8 @@
             {
               "type": "extension",
               "name": "adapter",
-              "extension_group": "default",
-              "addon": "data_adapter_python"
+              "addon": "data_adapter_python",
+              "extension_group": "default"
             },
             {
               "type": "extension",

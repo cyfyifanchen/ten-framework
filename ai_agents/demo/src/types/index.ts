@@ -84,6 +84,10 @@ export interface GraphOptionItem {
   value: string
 }
 
+export interface GraphOptionsGrouped {
+  [category: string]: GraphOptionItem[]
+}
+
 export interface LanguageOptionItem {
   label: string
   value: Language

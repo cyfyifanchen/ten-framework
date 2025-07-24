@@ -10,10 +10,17 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import {
   useAppDispatch,
   LANGUAGE_OPTIONS,
   useAppSelector,
   GRAPH_OPTIONS,
+  GRAPH_OPTIONS_GROUPED,
 } from "@/common"
 import type { Language } from "@/types"
 import { setGraphName, setLanguage } from "@/store/reducers/global"
@@ -36,14 +43,25 @@ export function GraphSelect() {
         <SelectTrigger className="w-auto max-w-full">
           <SelectValue placeholder="Graph" />
         </SelectTrigger>
-        <SelectContent>
-          {GRAPH_OPTIONS.map((item) => {
-            return (
-              <SelectItem value={item.value} key={item.value}>
-                {item.label}
-              </SelectItem>
-            )
-          })}
+        <SelectContent className="max-h-[400px]">
+          <Accordion type="multiple" defaultValue={Object.keys(GRAPH_OPTIONS_GROUPED)} className="w-full">
+            {Object.entries(GRAPH_OPTIONS_GROUPED).map(([groupName, options]) => (
+              <AccordionItem value={groupName} key={groupName} className="border-b-0">
+                <AccordionTrigger className="py-2 hover:no-underline">
+                  <span className="text-sm font-medium">{groupName}</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-1 pl-2">
+                    {options.map((item) => (
+                      <SelectItem value={item.value} key={item.value} className="cursor-pointer">
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </SelectContent>
       </Select>
     </>
