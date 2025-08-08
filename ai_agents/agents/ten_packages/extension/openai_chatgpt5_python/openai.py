@@ -188,7 +188,7 @@ class OpenAIChatGPT:
         self.ten_env.log_info(f"Chat completion: {response}")
         if len(response.choices) == 0:
             return full_content, tool_calls_dict
-        
+
         choice = response.choices[0]
         message = choice.message
 
@@ -224,9 +224,7 @@ class OpenAIChatGPT:
                     listener.emit("content_update", content)
 
             if prev_state == "THINK" and parser.state == "NORMAL":
-                listener.emit(
-                    "reasoning_update_finish", parser.think_content
-                )
+                listener.emit("reasoning_update_finish", parser.think_content)
                 parser.think_content = ""
 
         full_content += content
@@ -239,7 +237,7 @@ class OpenAIChatGPT:
                         "id": tool_call.id,
                         "function": {
                             "arguments": tool_call.function.arguments,
-                            "name": tool_call.function.name
+                            "name": tool_call.function.name,
                         },
                         "type": tool_call.type,
                     }
