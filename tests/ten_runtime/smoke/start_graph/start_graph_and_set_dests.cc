@@ -6,7 +6,6 @@
 //
 #include "gtest/gtest.h"
 #include "include_internal/ten_runtime/binding/cpp/ten.h"
-#include "ten_runtime/binding/cpp/detail/msg/cmd/stop_graph.h"
 #include "tests/common/client/cpp/msgpack_tcp.h"
 #include "tests/ten_runtime/smoke/util/binding/cpp/check.h"
 
@@ -17,26 +16,83 @@ class test_extension_1 : public ten::extension_t {
   explicit test_extension_1(const char *name) : ten::extension_t(name) {}
 
   void on_start(ten::ten_env_t &ten_env) override {
+    // Start a new graph.
     auto start_graph_cmd = ten::cmd_start_graph_t::create();
+
+    // The destination of the 'start_graph' command is the current app, using
+    // "" to represent current app.
     start_graph_cmd->set_dests({{""}});
-    start_graph_cmd->set_predefined_graph_name("graph_1");
+
+    // The new graph contains 3 extensions.
+    start_graph_cmd->set_graph_from_json(R"({
+      "nodes": [{
+        "type": "extension",
+        "name": "test_extension_2",
+        "addon": "start_graph_and_set_dests__test_extension_2",
+        "extension_group": "start_graph_and_set_dests__test_extension_2_group"
+      }, {
+        "type": "extension",
+        "name": "test_extension_3",
+        "addon": "start_graph_and_set_dests__test_extension_3",
+        "extension_group": "start_graph_and_set_dests__test_extension_3_group"
+      }, {
+        "type": "extension",
+        "name": "test_extension_4",
+        "addon": "start_graph_and_set_dests__test_extension_4",
+        "extension_group": "start_graph_and_set_dests__test_extension_4_group"
+      }],
+      "connections": [
+        {
+          "extension": "test_extension_2",
+          "cmd": [
+            {
+              "name": "A",
+              "dest": [
+                {
+                  "extension": "test_extension_3",
+                  "msg_conversion": {
+                    "keep_original": true,
+                    "type": "per_property",
+                    "rules": [{
+                      "path": "ten.name",
+                      "conversion_mode": "fixed_value",
+                      "value": "B"
+                    }]
+                  }
+                },
+                {
+                  "extension": "test_extension_4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })"_json.dump()
+                                             .c_str());
 
     ten_env.send_cmd(
         std::move(start_graph_cmd),
         [this](ten::ten_env_t &ten_env,
                std::unique_ptr<ten::cmd_result_t> cmd_result,
                ten::error_t * /* err */) {
-          auto status_code = cmd_result->get_status_code();
-          ASSERT_EQ(status_code, TEN_STATUS_CODE_OK);
+          // The result for the 'start_graph' command.
+          TEN_ASSERT(cmd_result->get_status_code() == TEN_STATUS_CODE_OK,
+                     "should not happen.");
 
+          // Get the graph ID of the newly created graph.
           auto graph_id = cmd_result->get_property_string("detail");
 
-          auto hello_world_cmd = ten::cmd_t::create("hello_world");
-          hello_world_cmd->set_dests({{"msgpack://127.0.0.1:8001/",
-                                       graph_id.c_str(), "test_extension_2"}});
+          // Send a 'start' command to the specified extension in the newly
+          // created graph.
+          auto cmd_start = ten::cmd_t::create("start");
+
+          // This is important. Specify the destination of the 'start' command
+          // to the specified extension in the newly created graph.
+          cmd_start->set_dests({{"", graph_id.c_str(), "test_extension_2"}});
 
           ten_env.send_cmd(
-              std::move(hello_world_cmd),
+              std::move(cmd_start),
               [this, graph_id](
                   ten::ten_env_t &ten_env,
                   std::unique_ptr<ten::cmd_result_t> /* cmd_result */,
@@ -50,7 +106,7 @@ class test_extension_1 : public ten::extension_t {
                 ten_env.send_cmd(
                     std::move(stop_graph_cmd),
                     [this](ten::ten_env_t &ten_env,
-                           std::unique_ptr<ten::cmd_result_t> /* cmd_result */,
+                           std::unique_ptr<ten::cmd_result_t> /* cmd_result*/,
                            ten::error_t * /* err */) {
                       start_and_stop_graph_is_completed = true;
 
@@ -74,12 +130,15 @@ class test_extension_1 : public ten::extension_t {
               std::unique_ptr<ten::cmd_t> cmd) override {
     if (cmd->get_name() == "test") {
       if (start_and_stop_graph_is_completed) {
-        nlohmann::json detail = {{"id", 1}, {"name", "a"}};
-
+        // Send the response to the client.
         auto cmd_result = ten::cmd_result_t::create(TEN_STATUS_CODE_OK, *cmd);
+
+        nlohmann::json detail = {{"id", 1}, {"name", "a"}};
         cmd_result->set_property_from_json("detail", detail.dump().c_str());
+
         ten_env.return_result(std::move(cmd_result));
       } else {
+        // Save the command for later use. This is the command from the client.
         test_cmd = std::move(cmd);
       }
     } else {
@@ -98,10 +157,58 @@ class test_extension_2 : public ten::extension_t {
 
   void on_cmd(ten::ten_env_t &ten_env,
               std::unique_ptr<ten::cmd_t> cmd) override {
-    if (cmd->get_name() == "hello_world") {
-      auto cmd_result = ten::cmd_result_t::create(TEN_STATUS_CODE_OK, *cmd);
-      cmd_result->set_property("detail", "hello world, too");
-      ten_env.return_result(std::move(cmd_result));
+    if (cmd->get_name() == "start") {
+      auto cmd_shared =
+          std::make_shared<std::unique_ptr<ten::cmd_t>>(std::move(cmd));
+
+      ten_env.send_cmd(
+          ten::cmd_t::create("A"),
+          [cmd_shared](ten::ten_env_t &ten_env,
+                       std::unique_ptr<ten::cmd_result_t> /* cmd_result */,
+                       ten::error_t * /* err */) {
+            ten_env.return_result(
+                ten::cmd_result_t::create(TEN_STATUS_CODE_OK, **cmd_shared));
+          });
+    }
+  }
+};
+
+class test_extension_3 : public ten::extension_t {
+ public:
+  explicit test_extension_3(const char *name) : ten::extension_t(name) {}
+
+  void on_cmd(ten::ten_env_t &ten_env,
+              std::unique_ptr<ten::cmd_t> cmd) override {
+    auto cmd_name = cmd->get_name();
+
+    if (cmd_name == "B") {
+      ten_env.return_result(
+          ten::cmd_result_t::create(TEN_STATUS_CODE_OK, *cmd));
+    } else {
+      auto error_msg = "test_extension_3 received unexpected cmd: " + cmd_name;
+
+      TEN_ENV_LOG(ten_env, TEN_LOG_LEVEL_ERROR, error_msg.c_str());
+      TEN_ASSERT(0, "Should not happen.");
+    }
+  }
+};
+
+class test_extension_4 : public ten::extension_t {
+ public:
+  explicit test_extension_4(const char *name) : ten::extension_t(name) {}
+
+  void on_cmd(ten::ten_env_t &ten_env,
+              std::unique_ptr<ten::cmd_t> cmd) override {
+    auto cmd_name = cmd->get_name();
+
+    if (cmd_name == "A") {
+      ten_env.return_result(
+          ten::cmd_result_t::create(TEN_STATUS_CODE_OK, *cmd));
+    } else {
+      auto error_msg = "test_extension_4 received unexpected cmd: " + cmd_name;
+
+      TEN_ENV_LOG(ten_env, TEN_LOG_LEVEL_ERROR, error_msg.c_str());
+      TEN_ASSERT(0, "Should not happen.");
     }
   }
 };
@@ -137,19 +244,8 @@ class test_app : public ten::app_t {
                    "nodes": [{
                      "type": "extension",
                      "name": "test_extension_1",
-                     "addon": "start_predefined_graph_from_extension__test_extension_1",
-                     "extension_group": "start_predefined_graph_from_extension__test_extension_1_group"
-                   }]
-                 }
-               },{
-                 "name": "graph_1",
-                 "auto_start": false,
-                 "graph": {
-                   "nodes": [{
-                     "type": "extension",
-                     "name": "test_extension_2",
-                     "addon": "start_predefined_graph_from_extension__test_extension_2",
-                     "extension_group": "start_predefined_graph_from_extension__test_extension_2_group"
+                     "addon": "start_graph_and_set_dests__test_extension_1",
+                     "extension_group": "start_graph_and_set_dests__test_extension_1_group"
                    }]
                  }
                }]
@@ -171,14 +267,18 @@ void *app_thread_main(TEN_UNUSED void *args) {
   return nullptr;
 }
 
-TEN_CPP_REGISTER_ADDON_AS_EXTENSION(
-    start_predefined_graph_from_extension__test_extension_1, test_extension_1);
-TEN_CPP_REGISTER_ADDON_AS_EXTENSION(
-    start_predefined_graph_from_extension__test_extension_2, test_extension_2);
+TEN_CPP_REGISTER_ADDON_AS_EXTENSION(start_graph_and_set_dests__test_extension_1,
+                                    test_extension_1);
+TEN_CPP_REGISTER_ADDON_AS_EXTENSION(start_graph_and_set_dests__test_extension_2,
+                                    test_extension_2);
+TEN_CPP_REGISTER_ADDON_AS_EXTENSION(start_graph_and_set_dests__test_extension_3,
+                                    test_extension_3);
+TEN_CPP_REGISTER_ADDON_AS_EXTENSION(start_graph_and_set_dests__test_extension_4,
+                                    test_extension_4);
 
 }  // namespace
 
-TEST(StartGraphTest, StartPredefinedGraphFromExtension) {  // NOLINT
+TEST(StartGraphTest, StartGraphAndSetDests) {  // NOLINT
   auto *app_thread = ten_thread_create("app thread", app_thread_main, nullptr);
 
   // Create a client and connect to the app.
