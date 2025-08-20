@@ -75,61 +75,63 @@ import {
 
 // Group options by categories for better organization
 export const GRAPH_OPTIONS_GROUPED: GraphOptionsGrouped = {
-  "Open Source LLMs": [
-    {
-      label: "Llama 4",
-      value: "va_llama4",
-    },
-    {
-      label: "Grok 4",
-      value: "grok4",
-    },
-    {
-      label: "Qwen 3",
-      value: "qwen3",
-    },
-    {
-      label: "DeepSeek R1",
-      value: "deepseek_r1",
-    },
-  ],
-  "Voice AI": [
+  "Chained Voice AI": [
     {
       label: "OpenAI (STT + LLM + TTS)",
       value: "va_openai_azure",
-    },
-    {
-      label: "OpenAI Realtime",
-      value: "va_openai_v2v",
     },
     {
       label: "OpenAI Realtime + Custom STT/TTS",
       value: "va_openai_v2v_fish",
     },
     {
-      label: "Gemini 2.0 Realtime - Live API",
-      value: "va_gemini_v2v",
+      label: "Llama 4",
+      value: "va_llama4",
     },
     {
-      label: "Gemini 2.0 Realtime - Native Audio",
-      value: "va_gemini_v2v_native",
+      label: "Qwen 3",
+      value: "qwen3",
+    },
+    {
+      label: "Grok 4 Reasoning",
+      value: "grok4",
+    },
+    {
+      label: "DeepSeek R1 Reasoning",
+      value: "deepseek_r1",
+    },
+  ],
+  "Multimodal Voice AI": [
+    {
+      label: "Gemini Live API",
+      value: "va_gemini_v2v",
     },
     {
       label: "Nova Multimodal",
       value: "va_nova_multimodal_aws",
     },
   ],
-  "AI Platform Integrations": [
+  "Speech to Speech Voice AI": [
+    {
+      label: "OpenAI Realtime",
+      value: "va_openai_v2v",
+    },
+    {
+      label: "Gemini 2.0 Realtime - Native Audio",
+      value: "va_gemini_v2v_native",
+    },
     {
       label: "Azure Voice AI API",
       value: "va_azure_v2v"
     },
+  ],
+  "AI Platform Integrations": [
     {
-      label: "Dify",
+      label: "Dify Agent",
       value: "va_dify_azure",
     },
     {
-      label: "Coze Bot + Azure TTS",
+      label: "Coze Bot",
       value: "va_coze_azure",
     },
   ],

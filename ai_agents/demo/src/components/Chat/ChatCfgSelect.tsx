@@ -43,17 +43,21 @@ export function GraphSelect() {
         <SelectTrigger className="w-auto max-w-full">
           <SelectValue placeholder="Graph" />
         </SelectTrigger>
-        <SelectContent className="max-h-[400px]">
-          <Accordion type="multiple" defaultValue={Object.keys(GRAPH_OPTIONS_GROUPED)} className="w-full">
+        <SelectContent className="max-h-[400px] p-2">
+          <Accordion type="multiple" defaultValue={Object.keys(GRAPH_OPTIONS_GROUPED)} className="w-full space-y-2">
             {Object.entries(GRAPH_OPTIONS_GROUPED).map(([groupName, options]) => (
-              <AccordionItem value={groupName} key={groupName} className="border-b-0">
-                <AccordionTrigger className="py-2 hover:no-underline">
-                  <span className="text-sm font-medium">{groupName}</span>
+              <AccordionItem value={groupName} key={groupName}>
+                <AccordionTrigger>
+                  {groupName}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="flex flex-col gap-1 pl-2">
+                  <div className="space-y-1">
                     {options.map((item) => (
-                      <SelectItem value={item.value} key={item.value} className="cursor-pointer">
+                      <SelectItem 
+                        value={item.value} 
+                        key={item.value} 
+                        className="cursor-pointer rounded-md transition-colors hover:bg-accent/50 focus:bg-accent/50"
+                      >
                         {item.label}
                       </SelectItem>
                     ))}
