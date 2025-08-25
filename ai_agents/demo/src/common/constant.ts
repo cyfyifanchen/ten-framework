@@ -68,10 +68,10 @@ export const GROUPED_GRAPH_OPTIONS = {
       label: "OpenAI (STT + LLM + TTS)",
       value: "va_openai_azure",
     },
-    {
-      label: "OpenAI Realtime + Custom STT/TTS",
-      value: "va_openai_v2v_fish",
-    },
+    // {
+    //   label: "OpenAI Realtime + Custom STT/TTS",
+    //   value: "va_openai_v2v_fish",
+    // },
     {
       label: "Llama 4",
       value: "va_llama4",
@@ -80,10 +80,10 @@ export const GROUPED_GRAPH_OPTIONS = {
       label: "Qwen 3",
       value: "qwen3",
     },
-    {
-      label: "Grok 4 Reasoning",
-      value: "grok4",
-    },
+    // {
+    //   label: "Grok 4 Reasoning",
+    //   value: "grok4",
+    // },
     {
       label: "DeepSeek R1 Reasoning",
       value: "deepseek_r1",
@@ -94,10 +94,10 @@ export const GROUPED_GRAPH_OPTIONS = {
       label: "Gemini 2.0 Flash Live",
       value: "va_gemini_v2v",
     },
-    {
-      label: "Nova Multimodal",
-      value: "va_nova_multimodal_aws",
-    },
+    // {
+    //   label: "Nova Multimodal",
+    //   value: "va_nova_multimodal_aws",
+    // },
   ],
   "Speech to Speech Voice AI": [
     {
@@ -122,18 +122,18 @@ export const GROUPED_GRAPH_OPTIONS = {
       label: "Coze Bot",
       value: "va_coze_azure",
     },
-  ],
-  "Specialized Agents": [
-    {
-      label: "Story Teller with Image Generator",
-      value: "story_teller_stt_integrated",
-    },
-    // Uncomment when needed
-    // {
-    //   label: "Knowledge Agent (RAG + Qwen LLM)",
-    //   value: "va_qwen_rag"
-    // },
   ]
+  // "Specialized Agents": [
+  //   {
+  //     label: "Story Teller with Image Generator",
+  //     value: "story_teller_stt_integrated",
+  //   },
+  // Uncomment when needed
+  // {
+  //   label: "Knowledge Agent (RAG + Qwen LLM)",
+  //   value: "va_qwen_rag"
+  // },
+  // ]
 }
 
 export const GRAPH_OPTIONS: GraphOptionItem[] = Object.values(GROUPED_GRAPH_OPTIONS).flat()
