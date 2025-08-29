@@ -307,7 +307,7 @@ export const getGraphProperties = (
                 "lang_code": language,
             }
         }
-    } else if (graphName === "deepseek_r1") {
+    } else if (graphName === "deepseek_v3_1") {
         return {
             "agora_rtc": {
                 "agora_asr_language": language,
@@ -315,7 +315,7 @@ export const getGraphProperties = (
             "llm": {
                 "prompt": prompt,
                 "greeting": combined_greeting,
-                "model": "DeepSeek-R1",
+                "model": "deepseek-chat-v3.1",
             },
             "tts": {
                 "azure_synthesis_voice_name": voiceNameMap[language]["azure"][voiceType]

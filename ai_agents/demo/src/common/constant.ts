@@ -85,8 +85,8 @@ export const GROUPED_GRAPH_OPTIONS = {
     //   value: "grok4",
     // },
     {
-      label: "DeepSeek R1 Reasoning",
-      value: "deepseek_r1",
+      label: "DeepSeek V3.1 Chat",
+      value: "deepseek_v3_1",
     },
   ],
   "Multimodal Voice AI": [
