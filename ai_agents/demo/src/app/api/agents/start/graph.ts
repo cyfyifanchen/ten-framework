@@ -1,4 +1,4 @@
-import { LanguageMap } from "@/common/constant";
+import { LanguageMap, OPENAI_REALTIME_MODEL } from "@/common/constant";
 
 export const voiceNameMap: LanguageMap = {
     "zh-CN": {
@@ -194,7 +194,7 @@ export const getGraphProperties = (
     } else if (graphName === "va_openai_v2v") {
         return {
             "v2v": {
-                "model": "gpt-4o-realtime-preview",
+                "model": OPENAI_REALTIME_MODEL,
                 "voice": voiceNameMap[language]["openai"][voiceType],
                 "language": converteLanguage,
                 "prompt": prompt,
@@ -204,7 +204,7 @@ export const getGraphProperties = (
     } else if (graphName === "va_openai_v2v_fish") {
         return {
             "v2v": {
-                "model": "gpt-4o-realtime-preview-2024-12-17",
+                "model": OPENAI_REALTIME_MODEL,
                 "voice": voiceNameMap[language]["openai"][voiceType],
                 "language": language,
                 "prompt": prompt,
