@@ -129,11 +129,6 @@ export const GROUPED_GRAPH_OPTIONS = {
   //     value: "story_teller_stt_integrated",
   //   },
   // Uncomment when needed
-  // {
-  //   label: "Knowledge Agent (RAG + Qwen LLM)",
-  //   value: "va_qwen_rag"
-  // },
-  // ]
 };
 
 export const GRAPH_OPTIONS: GraphOptionItem[] = Object.values(
