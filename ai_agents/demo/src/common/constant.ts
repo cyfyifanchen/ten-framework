@@ -84,10 +84,10 @@ export const GROUPED_GRAPH_OPTIONS = {
     //   label: "Grok 4 Reasoning",
     //   value: "grok4",
     // },
-    {
-      label: "DeepSeek V3.1 Chat",
-      value: "deepseek_v3_1",
-    },
+    // {
+    //   label: "DeepSeek V3.1 Chat",
+    //   value: "deepseek_v3_1",
+    // },
   ],
   "Multimodal Voice AI": [
     {
@@ -101,7 +101,7 @@ export const GROUPED_GRAPH_OPTIONS = {
   ],
   "Speech to Speech Voice AI": [
     {
-      label: "OpenAI Realtime",
+      label: "OpenAI GPT Realtime",
       value: "va_openai_v2v",
     },
     {

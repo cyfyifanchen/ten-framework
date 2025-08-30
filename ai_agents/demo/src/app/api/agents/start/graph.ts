@@ -5,8 +5,8 @@ const OPENAI_REALTIME_MODEL = "gpt-realtime"
 export const voiceNameMap: LanguageMap = {
     "zh-CN": {
         azure: {
-            male: "zh-CN-YunxiNeural",
-            female: "zh-CN-XiaoxiaoNeural",
+            male: "zh-CN-YunyiMultilingualNeural",
+            female: "zh-CN-XiaoxiaoMultilingualNeural",
         },
         elevenlabs: {
             male: "pNInz6obpgDQGcFmaJgB", // Adam
@@ -28,7 +28,7 @@ export const voiceNameMap: LanguageMap = {
             langCode: "cmn-CN",
         },
         azure_grok4: {
-            male: "zh-CN-XiaoxiaoMultilingualNeural",
+            male: "zh-CN-YunyiMultilingualNeural",
             female: "zh-CN-XiaoxiaoMultilingualNeural",
         }
     },
@@ -57,8 +57,8 @@ export const voiceNameMap: LanguageMap = {
             langCode: "en-US",
         },
         azure_grok4: {
-            male: "zh-CN-XiaoxiaoMultilingualNeural",
-            female: "zh-CN-XiaoxiaoMultilingualNeural",
+            male: "en-US-AndrewMultilingualNeural",
+            female: "en-US-AvaMultilingualNeural",
         }
     },
     "ja-JP": {
@@ -76,8 +76,8 @@ export const voiceNameMap: LanguageMap = {
             langCode: "ja-JP",
         },
         azure_grok4: {
-            male: "zh-CN-XiaoxiaoMultilingualNeural",
-            female: "zh-CN-XiaoxiaoMultilingualNeural",
+            male: "ja-JP-KeitaNeural",
+            female: "ja-JP-NanamiNeural",
         }
     },
     "ko-KR": {
@@ -95,8 +95,8 @@ export const voiceNameMap: LanguageMap = {
             langCode: "ko-KR",
         },
         azure_grok4: {
-            male: "zh-CN-XiaoxiaoMultilingualNeural",
-            female: "zh-CN-XiaoxiaoMultilingualNeural",
+            male: "ko-KR-InJoonNeural",
+            female: "ko-KR-JiMinNeural",
         }
     },
 };
