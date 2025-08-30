@@ -1,4 +1,6 @@
-import { LanguageMap, OPENAI_REALTIME_MODEL } from "@/common/constant";
+import { LanguageMap } from "@/common/constant";
+
+const OPENAI_REALTIME_MODEL = "gpt-realtime"
 
 export const voiceNameMap: LanguageMap = {
     "zh-CN": {
