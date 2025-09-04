@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+import path from 'path'
 
 const nextConfig = {
   // basePath: '/ai-agent',
@@ -29,6 +30,13 @@ const nextConfig = {
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i
+
+    // Ensure TS path alias `@/*` resolves to `src/*` in webpack too
+    config.resolve = config.resolve || {}
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@': path.resolve(__dirname, 'src'),
+    }
 
     return config
   }
