@@ -349,19 +349,7 @@ export const getGraphProperties = (
                 }
             }
         }
-    } else if (graphName === "grok4") {
-        return {
-            "agora_rtc": {
-                "agora_asr_language": language,
-            },
-            "llm": {
-                "prompt": prompt,
-                "greeting": combined_greeting,
-            },
-            "tts": {
-                "azure_synthesis_voice_name": voiceNameMap[language]["azure"][voiceType]
-            }
-        }
+    // Note: duplicate grok4 branch removed for clarity; handled above
     } else if (graphName === "va_azure_v2v") {
         return {
             "v2v": {
