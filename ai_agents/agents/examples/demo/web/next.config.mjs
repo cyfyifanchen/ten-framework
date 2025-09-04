@@ -34,4 +34,5 @@ const nextConfig = {
   }
 };
 
+// to refresh the cache
 export default nextConfig;
