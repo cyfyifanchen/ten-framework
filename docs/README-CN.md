@@ -73,7 +73,7 @@
 
 TEN 是一个全面的开源生态系统，用于创建、定制和部署具有多模式功能（包括语音、视觉和化身交互）的实时对话 AI 代理。
 
-TEN 包括 [TEN 架构](https://github.com/ten-framework/ten-framework), [TEN 转弯检测](https://github.com/ten-framework/ten-turn-detection), [TEN VAD](https://github.com/ten-framework/ten-vad), [TEN 代理](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/demo), [TMAN 设计师](https://github.com/TEN-framework/ten-framework/tree/main/core/src/ten_manager/designer_frontend), and [TEN 门户](https://github.com/ten-framework/portal). 查看 [🌍 TEN 生态系统](#-ten-ecosystem) 了解更多详情。
+TEN 包括 [TEN 架构](https://github.com/ten-framework/ten-framework), [TEN 转弯检测](https://github.com/ten-framework/ten-turn-detection), [TEN VAD](https://github.com/ten-framework/ten-vad), [TEN 代理](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/demo/UI), [TMAN 设计师](https://github.com/TEN-framework/ten-framework/tree/main/core/src/ten_manager/designer_frontend), and [TEN 门户](https://github.com/ten-framework/portal). 查看 [🌍 TEN 生态系统](#-ten-ecosystem) 了解更多详情。
 
 <br>
 
