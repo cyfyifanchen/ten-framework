@@ -132,6 +132,7 @@ dist
 
 # lock
 package-lock.json
+bun.lockb
 # yarn.lock
 
 # Claude Code
