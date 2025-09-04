@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 import path from 'path'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 
 // Derive __dirname in ESM
@@ -41,6 +42,17 @@ const nextConfig = {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
       '@': path.resolve(__dirname, 'src'),
+    }
+
+    // Debug logs to verify alias + file presence during CI builds
+    try {
+      const aliasPath = config.resolve.alias['@']
+      const utilPath = path.join(aliasPath, 'lib', 'utils.ts')
+      // eslint-disable-next-line no-console
+      console.log('[next.config] alias @ →', aliasPath, '| utils.ts exists =', fs.existsSync(utilPath))
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('[next.config] alias debug error:', e?.message)
     }
 
     return config
