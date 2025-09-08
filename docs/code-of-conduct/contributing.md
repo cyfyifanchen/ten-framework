@@ -18,8 +18,8 @@ We welcome all forms of contributions:
 ### Required Reading
 
 1. Read our [Code of Conduct](./CLA.md) - all contributors must follow our community guidelines
-2. Sign the [Contributor License Agreement (CLA)](./CLA.md) - required for all contributions
-3. Review the project [README](./README.md) to understand the architecture
+2. Sign the [Contributor License Agreement (CLA)](../../CLA.md) - required for all contributions
+3. Review the project [README](../../README.md) to understand the architecture
 
 ### Prerequisites
 
@@ -261,7 +261,7 @@ Contributors are recognized in multiple ways:
 
 ## 📜 License
 
-By contributing to TEN Framework, you agree that your contributions will be licensed under the [Apache License v2.0 with additional conditions](./LICENSE).
+By contributing to TEN Framework, you agree that your contributions will be licensed under the [Apache License v2.0 with additional conditions](../../LICENSE).
 
 Your contributions must:
 - Be your original work or properly attributed
