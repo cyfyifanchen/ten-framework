@@ -129,16 +129,6 @@ Check out [this blog](https://theten.ai/blog/tman-designer-of-ten-framework) for
 
 </div>
 
-<!-- ## 🧩 Extensions
-
-![Ready-to-use Extensions](https://ten-framework-assets.s3.us-east-1.amazonaws.com/extensions.jpg)
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div> -->
-
 <br>
 
 ## ✨ Features
