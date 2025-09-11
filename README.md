@@ -296,17 +296,16 @@ docker exec -it ten_agent_dev bash
 check the `/examples` folder for more examples
 
 ```bash
-# use the default agent
+# use the default chained voice assistant
 task use
 
-# or use the demo agent
-task use AGENT=agents/examples/demo
+# or use the speech-to-speech voice assistant realtime
+task use AGENT=voice-assistant-realtime
 ```
 
 ##### 6. Start the web server
 
 ```bash
-
 # run task build if you changed any local source code, this is necessary if you are working on languages which require compilation like TypeScript or Golang.
 task build
 
@@ -348,19 +347,6 @@ Check out [this guide](https://theten.ai/docs/ten_agent/setup_development_env/se
 
 <br>
 
-<!-- ## 👀 TEN Agent Demo
-
-Playground and Demo server different purposes, in a nut shell, think it as Playground is for you to customize you agent, and Demo is for you to deploy your agent.
-
-Check out [this guide](https://theten.ai/docs/ten_agent/demo) for more details.
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-<br> -->
-
 ## 🛳️ TEN Agent Self Hosting
 
 #### 🅰️ Deploying with Docker
@@ -382,30 +368,6 @@ Read the [Deployment Guide](https://theten.ai/docs/ten_agent/deploy_ten_agent/de
 </div>
 
 <br>
-
-<!--
-## 🏗️ TEN Agent Architecture
-
-1️⃣ **TEN Agent App**: Core application that manages extensions and data flow based on graph configuration
-
-2️⃣ **Dev Server**: `port:49480`- local server for development purposes.
-
-3️⃣ **Web Server**: `port:8080`- Golang server handling HTTP requests and agent process management
-
-4️⃣ **Front-end UI**:
-
-- `port:3000` Playground - To customize and test your agent configurations.
-- `port:3002` Demo - To deploy your agent without module picker.
-
-![Components Diagram](https://ten-framework-assets.s3.us-east-1.amazonaws.com/diagram.jpg)
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-<br> -->
 
 ## 🌍 TEN Ecosystem
 
