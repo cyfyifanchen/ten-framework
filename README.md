@@ -296,8 +296,8 @@ docker exec -it ten_agent_dev bash
 check the `/examples` folder for more examples
 
 ```bash
-# use the default chained voice assistant
-task use
+# use the chained voice assistant
+task use AGENT=voice-assistant
 
 # or use the speech-to-speech voice assistant realtime
 task use AGENT=voice-assistant-realtime
@@ -317,10 +317,11 @@ task run
 #### Step ⓷ - Customize your agent with TMAN Designer
 
  1. Open [localhost:49483](http://localhost:49483).
- 2. Right click to load the corresponding graph (e.g., Voice Assistant).
- 3. Enter API keys and set preferences for each extension.
- 4. Right click and Select 'Manage Apps' to open the Apps Manager.
- 5. Click the ▶ to run App.
+ 2. Right-click on the STT, LLM, and TTS extensions.
+ 3. Open their properties and enter APIs respectively.
+ 4. Right-click the canvas and select 'Manage Apps' to open the Apps Manager.
+ 5. Right under the Actions, click the ▶ to run the App.
+ 6. Check the 'Run with TEN Agent' option and click the Run button.
 
 <div align="right">
 
