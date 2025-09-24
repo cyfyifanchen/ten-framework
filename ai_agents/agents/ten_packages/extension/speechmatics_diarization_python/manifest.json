@@ -41,7 +41,7 @@
               "type": "string"
             },
             "speaker_sensitivity": {
-              "type": "double"
+              "type": "float64"
             },
             "prefer_current_speaker": {
               "type": "bool"
@@ -50,7 +50,8 @@
               "type": "int64"
             },
             "speaker_diarization_config": {
-              "type": "object"
+              "type": "object",
+              "properties": {}
             },
             "channel_diarization_labels": {
               "type": "array",
