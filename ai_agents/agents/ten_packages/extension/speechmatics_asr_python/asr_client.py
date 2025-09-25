@@ -572,14 +572,17 @@ class SpeechmaticsASRClient:
         """
         new_words = []
         for w in words:
-            new_words.append(
-                {
-                    "word": w.word,
-                    "start_ms": w.start_ms,
-                    "duration_ms": w.duration_ms,
-                    "stable": True,
-                }
-            )
+            entry = {
+                "word": w.word,
+                "start_ms": w.start_ms,
+                "duration_ms": w.duration_ms,
+                "stable": True,
+            }
+            if w.speaker is not None:
+                entry["speaker"] = w.speaker
+            if w.channel is not None:
+                entry["channel"] = w.channel
+            new_words.append(entry)
         return new_words
 
     def _convert_to_asr_words(
@@ -598,6 +601,8 @@ class SpeechmaticsASRClient:
                     start_ms=word.start_ms,
                     duration_ms=word.duration_ms,
                     stable=stable,
+                    speaker=word.speaker,
+                    channel=word.channel,
                 )
             )
         return converted
