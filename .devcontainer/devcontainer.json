@@ -9,7 +9,7 @@
       ]
     }
   },
-  "workspaceMount": "source=${localWorkspaceFolder}/agents,target=/workspace,type=bind",
+  "workspaceMount": "source=${localWorkspaceFolder}/ai_agents,target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
   "mounts": [
     "source=${localWorkspaceFolder}/.git,target=/workspace/.git,type=bind"
