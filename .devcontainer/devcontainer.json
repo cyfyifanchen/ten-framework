@@ -9,11 +9,7 @@
       ]
     }
   },
-  "workspaceMount": "source=${localWorkspaceFolder}/agents,target=/workspace,type=bind",
-  "workspaceFolder": "/workspace",
-  "mounts": [
-    "source=${localWorkspaceFolder}/.git,target=/workspace/.git,type=bind"
-  ],
+  "workspaceFolder": "/workspaces/ten-framework/agents",
   "forwardPorts": [
     3000,
     8080,
