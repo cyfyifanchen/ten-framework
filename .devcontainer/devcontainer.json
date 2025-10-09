@@ -9,8 +9,11 @@
       ]
     }
   },
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceMount": "source=${localWorkspaceFolder}/ai_agents,target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder}/.git,target=/workspace/.git,type=bind"
+  ],
   "forwardPorts": [
     3000,
     8080,
