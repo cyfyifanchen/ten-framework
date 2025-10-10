@@ -112,6 +112,29 @@ class SpeechmaticsASRClient:
                 else:
                     self.ten_env.log_warn("invalid hotword format: " + hw)
 
+        # Configure diarization if enabled
+        diarization_config = None
+        if self.config.diarization == "speaker":
+            diarization_config = "speaker"
+        elif self.config.diarization == "channel":
+            diarization_config = "channel"
+        elif self.config.diarization == "channel_and_speaker":
+            diarization_config = "channel_and_speaker"
+
+        # Speaker diarization config
+        speaker_diarization_config = None
+        if (
+            self.config.diarization == "speaker"
+            or self.config.diarization == "channel_and_speaker"
+        ):
+            speaker_diarization_config = (
+                speechmatics.models.RTSpeakerDiarizationConfig(
+                    max_speakers=self.config.max_speakers,
+                )
+            )
+            # Note: speaker_sensitivity and prefer_current_speaker are not supported in speechmatics-python 3.0.2
+            # These parameters are available in newer versions of the Speechmatics API
+
         self.transcription_config = speechmatics.models.TranscriptionConfig(
             enable_partials=self.config.enable_partials,
             language=self.config.language,
@@ -121,6 +144,13 @@ class SpeechmaticsASRClient:
             operating_point=(
                 self.config.operating_point
                 if self.config.operating_point
+                else None
+            ),
+            diarization=diarization_config,
+            speaker_diarization_config=speaker_diarization_config,
+            channel_diarization_labels=(
+                self.config.channel_diarization_labels
+                if self.config.channel_diarization_labels
                 else None
             ),
         )
