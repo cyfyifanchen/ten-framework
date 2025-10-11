@@ -169,7 +169,9 @@ class SpeechmaticsASRExtension(AsyncASRBaseExtension):
             f"vendor_result: on_result: {message_data}",
             category=LOG_CATEGORY_VENDOR,
         )
-        self.ten_env.log_info(f"[EXTENSION] on_asr_result received metadata: {message_data.metadata}")
+        self.ten_env.log_info(
+            f"[EXTENSION] on_asr_result received metadata: {message_data.metadata}"
+        )
         await self._handle_asr_result(
             text=message_data.text,
             final=message_data.final,
@@ -236,7 +238,9 @@ class SpeechmaticsASRExtension(AsyncASRBaseExtension):
         """Process ASR recognition result"""
         assert self.config is not None
 
-        self.ten_env.log_info(f"[EXTENSION] _handle_asr_result creating ASRResult with metadata: {metadata}")
+        self.ten_env.log_info(
+            f"[EXTENSION] _handle_asr_result creating ASRResult with metadata: {metadata}"
+        )
 
         asr_result = ASRResult(
             text=text,
