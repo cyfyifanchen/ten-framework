@@ -160,7 +160,7 @@ export default function Home() {
                             const startResult = await apiStartService({
                                 channel: agoraConfig.channel,
                                 userId: agoraConfig.uid || 0,
-                                graphName: 'voice_assistant',
+                                graphName: 'voice_assistant_live2d',
                                 language: 'en',
                                 voiceType: 'female'
                             });
@@ -184,137 +184,166 @@ export default function Home() {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden flex justify-center">
-            <div className="w-full max-w-md relative">
-                {/* Night Sky Background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-blue-900 to-slate-800">
-                    {/* Uniform Star Field */}
-                    <div className="absolute inset-0" style={{
-                        backgroundImage: `radial-gradient(1px 1px at 20px 30px, #fff, transparent),
-                                    radial-gradient(1px 1px at 40px 70px, #fff, transparent),
-                                    radial-gradient(1px 1px at 60px 20px, #fff, transparent),
-                                    radial-gradient(1px 1px at 80px 50px, #fff, transparent),
-                                    radial-gradient(1px 1px at 100px 10px, #fff, transparent),
-                                    radial-gradient(1px 1px at 120px 60px, #fff, transparent),
-                                    radial-gradient(1px 1px at 140px 30px, #fff, transparent),
-                                    radial-gradient(1px 1px at 160px 80px, #fff, transparent),
-                                    radial-gradient(1px 1px at 180px 40px, #fff, transparent),
-                                    radial-gradient(1px 1px at 200px 70px, #fff, transparent)`,
-                        backgroundRepeat: 'repeat',
-                        backgroundSize: '220px 100px'
-                    }}></div>
+        <div className="relative min-h-screen overflow-hidden bg-[#fff9fd] text-[#2f2d4b]">
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#ffdff2_0%,transparent_55%),radial-gradient(circle_at_bottom,#d2e8ff_0%,transparent_65%)] opacity-70" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(255,255,255,0.85),transparent_55%),radial-gradient(circle_at_78%_18%,rgba(255,244,213,0.7),transparent_50%)]" />
+            </div>
 
-                    {/* Subtle Mountain Silhouettes */}
-                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-800/30 to-transparent">
-                        <div className="absolute bottom-0 left-0 w-full h-16 bg-slate-800/20" style={{
-                            clipPath: 'polygon(0% 100%, 0% 80%, 20% 60%, 40% 70%, 60% 50%, 80% 60%, 100% 40%, 100% 100%)'
-                        }}></div>
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                {Array.from({ length: 10 }).map((_, idx) => (
+                    <div
+                        key={idx}
+                        className="absolute text-[28px]"
+                        style={{
+                            top: `${8 + (idx % 5) * 16}%`,
+                            left: `${(idx * 11) % 100}%`,
+                            animation: `float${idx % 3} ${6 + (idx % 4)}s ease-in-out infinite`,
+                            filter: 'drop-shadow(0 8px 16px rgba(255, 188, 218, 0.35))',
+                        }}
+                    >
+                        🌸
                     </div>
-                </div>
+                ))}
+            </div>
 
-                {/* Floating Stars */}
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-16 left-1/4 text-yellow-400 text-2xl animate-bounce" style={{ animationDelay: '0s' }}>✨</div>
-                    <div className="absolute top-24 right-1/3 text-yellow-400 text-xl animate-bounce" style={{ animationDelay: '1s' }}>✨</div>
-                    <div className="absolute top-32 left-1/3 text-yellow-400 text-lg animate-bounce" style={{ animationDelay: '2s' }}>✨</div>
-                    <div className="absolute top-20 right-1/4 text-yellow-400 text-xl animate-bounce" style={{ animationDelay: '0.5s' }}>✨</div>
-                    <div className="absolute top-36 left-1/2 text-yellow-400 text-lg animate-bounce" style={{ animationDelay: '1.5s' }}>✨</div>
-                </div>
+            <div className="relative z-10 flex min-h-screen flex-col items-center gap-12 px-4 py-12 md:px-6">
+                <header className="max-w-2xl text-center space-y-4">
+                    <span className="inline-flex items-center rounded-full bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#ff79a8] shadow-sm">
+                        Say hello to Aiko
+                    </span>
+                    <h1 className="text-4xl font-semibold tracking-tight text-[#2f2d4b] md:text-5xl">
+                        Your charming, clever companion in the cloud
+                    </h1>
+                    <p className="text-base text-[#6f6a92] md:text-lg">
+                        Aiko is a friendly guide who lights up every conversation. Connect with her for thoughtful answers,
+                        gentle encouragement, and a dash of anime sparkle whenever you need it.
+                    </p>
+                </header>
 
+                <main className="flex w-full max-w-5xl flex-col items-center gap-10">
+                    <div className="relative w-full max-w-3xl">
+                        <div className="absolute -inset-6 rounded-[48px] bg-gradient-to-br from-[#ffe1f1]/70 via-[#d8ecff]/70 to-[#fff6d9]/70 blur-3xl" />
+                        <div className="relative overflow-hidden rounded-[40px] border border-white/80 bg-white/80 shadow-[0_32px_80px_rgba(200,208,255,0.45)] backdrop-blur-xl px-6 pb-10 pt-8 md:px-10">
+                            <div className="flex w-full items-center justify-between text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#87a0ff]">
+                                <span>Aiko</span>
+                                <span className="flex items-center gap-2">
+                                    <span
+                                        className={`inline-flex h-2.5 w-2.5 rounded-full ${
+                                            isConnected ? 'bg-[#7dd87d]' : 'bg-[#ff9bae]'
+                                        }`}
+                                    />
+                                    {isConnected ? 'Online' : 'Waiting'}
+                                </span>
+                            </div>
+                            <ClientOnlyLive2D
+                                key={selectedModel.id}
+                                modelPath={selectedModel.path}
+                                audioTrack={remoteAudioTrack}
+                                className="mt-5 h-[34rem] w-full rounded-[32px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[46rem]"
+                            />
+                            <p className="mt-6 text-center text-sm text-[#6f6a92]">
+                                “Hi! I’m Aiko. Let me know how I can make your day easier.”
+                            </p>
+                        </div>
+                    </div>
 
-                {/* Centered Character Display */}
-                <main className="absolute inset-0 z-10 flex items-center justify-center pt-8 pb-32">
-                    <div className="w-64 h-80 relative">
-                        {/* Subtle glow effect around avatar */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-blue-400/20 via-transparent to-purple-400/20 rounded-2xl blur-sm"></div>
-                        <ClientOnlyLive2D
-                            key={selectedModel.id}
-                            modelPath={selectedModel.path}
-                            audioTrack={remoteAudioTrack}
-                            className="h-full w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10"
-                        />
-                        {/* Soft vignette effect */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-blue-900/10 rounded-2xl pointer-events-none"></div>
+                    <div className="flex w-full max-w-3xl flex-col items-center gap-5">
+                        <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-medium">
+                            <span
+                                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${
+                                    isConnected ? 'bg-[#e6f8ff] text-[#236d94]' : 'bg-[#ffe8ef] text-[#b34f6a]'
+                                }`}
+                            >
+                                <span
+                                    className={`h-2.5 w-2.5 rounded-full ${
+                                        isConnected ? 'bg-[#38a8d8]' : 'bg-[#f0708f]'
+                                    }`}
+                                />
+                                {isConnected ? 'Connected to channel' : 'Not connected'}
+                            </span>
+                            <span
+                                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${
+                                    isMuted ? 'bg-[#ffe8ef] text-[#b34f6a]' : 'bg-[#ecfce1] text-[#2f7d3e]'
+                                }`}
+                            >
+                                <span
+                                    className={`h-2.5 w-2.5 rounded-full ${
+                                        isMuted ? 'bg-[#f0708f]' : 'bg-[#4cc073]'
+                                    }`}
+                                />
+                                {isMuted ? 'Mic muted' : 'Mic open'}
+                            </span>
+                        </div>
+
+                        <div className="flex items-center justify-center gap-6">
+                            <button
+                                onClick={handleMicToggle}
+                                disabled={!isConnected}
+                                className={`relative flex h-16 w-16 items-center justify-center rounded-2xl border text-xl shadow-lg transition-all duration-200 ${
+                                    !isConnected
+                                        ? 'cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60'
+                                        : isMuted
+                                        ? 'border-[#ffcfe0] bg-[#ffe7f0] text-[#b44f6c] hover:bg-[#ffd9e8]'
+                                        : 'border-[#cde5ff] bg-[#e7f3ff] text-[#2f63a1] hover:bg-[#d8ecff]'
+                                }`}
+                            >
+                                {isMuted ? (
+                                    <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                                        <path d="M3 3l18 18" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                                    </svg>
+                                ) : (
+                                    <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                                    </svg>
+                                )}
+                            </button>
+
+                            <button
+                                onClick={handleConnectToggle}
+                                disabled={isConnecting}
+                                className={`relative flex h-16 w-48 items-center justify-center gap-3 rounded-2xl border px-6 text-base font-semibold shadow-lg transition-all duration-200 ${
+                                    isConnecting
+                                        ? 'cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]'
+                                        : isConnected
+                                        ? 'border-[#ffcfe0] bg-[#ffe6f3] text-[#b44f6c] hover:bg-[#ffd9eb]'
+                                        : 'border-[#cbeec4] bg-[#e7f8df] text-[#2f7036] hover:bg-[#def6d2]'
+                                }`}
+                            >
+                                {isConnecting ? (
+                                    <>
+                                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            />
+                                        </svg>
+                                        Calling Aiko...
+                                    </>
+                                ) : isConnected ? (
+                                    <>
+                                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <rect x="6" y="6" width="12" height="12" rx="2" />
+                                        </svg>
+                                        End session
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                        Connect with Aiko
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </main>
-
-
-                {/* Bottom Control Buttons */}
-                <div className="absolute bottom-8 left-0 right-0 z-20">
-                    <div className="flex items-center justify-center gap-6">
-                        {/* Glow effect behind buttons */}
-                        <div className="absolute inset-0 flex items-center justify-center gap-6 pointer-events-none">
-                            <div className="w-14 h-14 rounded-full bg-white/5 blur-xl"></div>
-                            <div className="w-14 h-14 rounded-full bg-white/5 blur-xl"></div>
-                        </div>
-                        {/* Mic Button */}
-                        <button
-                            onClick={handleMicToggle}
-                            disabled={!isConnected}
-                            className={`relative w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 shadow-lg overflow-hidden ${!isConnected
-                                ? 'bg-gray-500/20 cursor-not-allowed opacity-50'
-                                : isMuted
-                                    ? 'bg-red-500/30 hover:bg-red-500/40 shadow-red-500/25 hover:scale-105 active:scale-95'
-                                    : 'bg-white/10 hover:bg-white/15 shadow-white/10 hover:scale-105 active:scale-95'
-                                }`}
-                        >
-                            {/* Subtle inner glow */}
-                            <div className={`absolute inset-1 rounded-full ${!isConnected ? 'bg-gray-400/5' : isMuted ? 'bg-red-400/10' : 'bg-white/5'}`}></div>
-                            {/* Button content */}
-                            <div className="relative z-10">
-                                {isMuted ? (
-                                    // Muted mic icon
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                                        <path d="M3 3l18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                    </svg>
-                                ) : (
-                                    // Normal mic icon
-                                    <svg className={`w-6 h-6 ${!isConnected ? 'text-white/40' : 'text-white/80'}`} fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                                    </svg>
-                                )}
-                            </div>
-                        </button>
-
-                        {/* Connect/Disconnect Button */}
-                        <button
-                            onClick={handleConnectToggle}
-                            disabled={isConnecting}
-                            className={`relative w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl overflow-hidden ${isConnecting
-                                ? 'bg-blue-500/30 shadow-blue-500/30 cursor-not-allowed'
-                                : isConnected
-                                    ? 'bg-red-500/30 hover:bg-red-500/40 shadow-red-500/30'
-                                    : 'bg-white/10 hover:bg-white/15 shadow-white/10'
-                                }`}
-                        >
-                            {/* Subtle inner glow */}
-                            <div className={`absolute inset-1 rounded-full ${isConnecting ? 'bg-blue-400/10' : isConnected ? 'bg-red-400/10' : 'bg-white/5'}`}></div>
-                            {/* Button content */}
-                            <div className="relative z-10">
-                                {isConnecting ? (
-                                    // Loading spinner
-                                    <svg className="w-6 h-6 text-white animate-spin" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                ) : isConnected ? (
-                                    // Disconnect/Stop icon
-                                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <rect x="6" y="6" width="12" height="12" rx="2" />
-                                    </svg>
-                                ) : (
-                                    // Connect/Play icon
-                                    <svg className="w-8 h-8 text-white/90" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z" />
-                                    </svg>
-                                )}
-                            </div>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     );

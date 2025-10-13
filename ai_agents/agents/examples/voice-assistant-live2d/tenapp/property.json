@@ -2,7 +2,7 @@
   "ten": {
     "predefined_graphs": [
       {
-        "name": "voice_assistant",
+        "name": "voice_assistant_live2d",
         "auto_start": true,
         "graph": {
           "nodes": [
@@ -48,7 +48,7 @@
                 "max_tokens": 512,
                 "prompt": "",
                 "proxy_url": "${env:OPENAI_PROXY_URL|}",
-                "greeting": "TEN Agent connected. How can I help you today?",
+                "greeting": "My name is Aiko, nice to meet you I am your anime assistant, and what's your name?",
                 "max_memory_length": 10
               }
             },
@@ -74,7 +74,7 @@
               "addon": "main_python",
               "extension_group": "control",
               "property": {
-                "greeting": "TEN Agent connected. How can I help you today?"
+                "greeting": "My name is Aiko, nice to meet you I am your anime assistant, and what's your name?"
               }
             },
             {
