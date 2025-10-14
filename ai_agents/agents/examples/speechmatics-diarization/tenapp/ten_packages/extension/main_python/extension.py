@@ -90,6 +90,8 @@ class MainControlExtension(AsyncExtension):
         # Extract speaker information for diarization
         speaker = event.metadata.get("speaker", "")
         channel = event.metadata.get("channel", "")
+        speaker_str = self._normalize_label(speaker)
+        channel_str = self._normalize_label(channel)
 
         # Debug logging to check if speaker info is received
         if event.final:
@@ -97,16 +99,16 @@ class MainControlExtension(AsyncExtension):
 
         # Format speaker label as [S1], [S2], etc.
         speaker_label = ""
-        if speaker:
-            speaker_label = f"[{speaker.upper()}] "
+        if speaker_str:
+            speaker_label = f"[{speaker_str}] "
             self.ten_env.log_info(f"[ASR] Using speaker label: {speaker_label}")
-        elif channel:
-            speaker_label = f"[{channel.upper()}] "
+        elif channel_str:
+            speaker_label = f"[{channel_str}] "
             self.ten_env.log_info(f"[ASR] Using channel label: {speaker_label}")
         else:
             # If no speaker/channel info, use last known speaker or default
             if self.last_speaker:
-                speaker_label = f"[{self.last_speaker.upper()}] "
+                speaker_label = f"[{self.last_speaker}] "
                 self.ten_env.log_info(f"[ASR] Using last speaker label: {speaker_label}")
             else:
                 speaker_label = "[USER] "
@@ -119,8 +121,8 @@ class MainControlExtension(AsyncExtension):
         if event.final:
             self.turn_id += 1
             # Track the current speaker
-            if speaker or channel:
-                self.last_speaker = speaker if speaker else channel
+            if speaker_str or channel_str:
+                self.last_speaker = speaker_str if speaker_str else channel_str
             # Include speaker info in LLM context
             text_with_speaker = f"{speaker_label}{event.text}"
             await self.agent.queue_llm_input(text_with_speaker)
@@ -152,6 +154,16 @@ class MainControlExtension(AsyncExtension):
             100,
             data_type=("reasoning" if event.type == "reasoning" else "text"),
         )
+
+    @staticmethod
+    def _normalize_label(value) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, str):
+            value = value.strip()
+        if value == "":
+            return ""
+        return str(value).upper()
 
     async def on_start(self, ten_env: AsyncTenEnv):
         ten_env.log_info("[MainControlExtension] on_start")

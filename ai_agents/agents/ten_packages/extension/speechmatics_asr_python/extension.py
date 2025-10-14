@@ -233,7 +233,7 @@ class SpeechmaticsASRExtension(AsyncASRBaseExtension):
         start_ms: int = 0,
         duration_ms: int = 0,
         language: str = "",
-        metadata: dict = None,
+        metadata: Optional[dict] = None,
     ):
         """Process ASR recognition result"""
         assert self.config is not None
