@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 import dynamicImport from "next/dynamic";
 import { Baloo_2, Quicksand } from "next/font/google";
+import { HeartEmitter } from "@/components/HeartEmitter";
 
 // Dynamically import Live2D component to prevent SSR issues
 const ClientOnlyLive2D = dynamicImport(
@@ -358,6 +359,7 @@ export default function Home() {
   const [remoteAudioTrack, setRemoteAudioTrack] = useState<any>(null);
   const [agoraService, setAgoraService] = useState<any>(null);
   const [pingInterval, setPingInterval] = useState<NodeJS.Timeout | null>(null);
+  const [isAssistantSpeaking, setIsAssistantSpeaking] = useState(false);
 
   useEffect(() => {
     // Dynamically import Agora service only on client side
@@ -385,6 +387,45 @@ export default function Home() {
   const handleAudioTrackChange = (track: any) => {
     setRemoteAudioTrack(track);
   };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    const track = remoteAudioTrack;
+
+    const readLevel = () => {
+      if (!track) return 0;
+      if (typeof track.getVolumeLevel === "function") {
+        return track.getVolumeLevel();
+      }
+      if (typeof track.getCurrentLevel === "function") {
+        return track.getCurrentLevel();
+      }
+      return 0;
+    };
+
+    if (track) {
+      interval = setInterval(() => {
+        try {
+          const level = readLevel();
+          const speaking = level > 0.05;
+          setIsAssistantSpeaking((prev) =>
+            prev === speaking ? prev : speaking
+          );
+        } catch (err) {
+          console.warn("Unable to read remote audio level:", err);
+          setIsAssistantSpeaking(false);
+        }
+      }, 160);
+    } else {
+      setIsAssistantSpeaking(false);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [remoteAudioTrack]);
 
   const startPing = () => {
     if (pingInterval) {
@@ -505,7 +546,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#fff9fd] text-[#2f2d4b]">
+    <div className="relative min-h-[100svh] overflow-hidden bg-[#fff9fd] text-[#2f2d4b]">
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(160deg,#ffeaf3_0%,#fffaf2_40%,#e3f1ff_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#ffdff2_0%,transparent_60%),radial-gradient(circle_at_bottom,#d2e8ff_0%,transparent_65%)] opacity-75 mix-blend-screen" />
@@ -548,18 +589,18 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center gap-12 px-4 py-12 md:px-6">
-        <header className="max-w-2xl space-y-4 text-center">
-          <span className="inline-flex items-center rounded-full bg-white/70 px-4 py-1 font-semibold text-[#ff79a8] text-xs uppercase tracking-[0.25em] shadow-sm">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center gap-6 px-4 py-6 md:px-6 lg:gap-10">
+        <header className="max-w-xl space-y-3 text-center lg:max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-white/70 px-3.5 py-0.5 font-semibold text-[#ff79a8] text-[0.65rem] uppercase tracking-[0.25em] shadow-sm">
             Say hello to Kei
           </span>
           <h1
-            className={`${headlineFont.className} text-4xl text-[#2f2d4b] tracking-tight md:text-5xl`}
+            className={`${headlineFont.className} text-3xl text-[#2f2d4b] leading-snug tracking-tight md:text-[2.75rem] md:leading-tight`}
           >
-            Your charming, clever companion powered by TEN
+            Your Charming Clever Companion
           </h1>
           <p
-            className={`${subtitleFont.className} text-[#6f6a92] text-base md:text-lg`}
+            className={`${subtitleFont.className} text-[#6f6a92] text-sm md:text-base`}
           >
             Kei is a friendly guide who lights up every conversation. Connect
             with her for thoughtful answers, gentle encouragement, and a dash of
@@ -567,11 +608,11 @@ export default function Home() {
           </p>
         </header>
 
-        <main className="flex w-full max-w-5xl flex-col items-center gap-10">
+        <main className="flex w-full max-w-5xl flex-col items-center gap-8">
           <div className="relative w-full max-w-3xl">
-            <div className="-inset-6 absolute rounded-[48px] bg-gradient-to-br from-[#ffe1f1]/70 via-[#d8ecff]/70 to-[#fff6d9]/70 blur-3xl" />
-            <div className="relative overflow-hidden rounded-[40px] border border-white/80 bg-white/80 px-6 pt-8 pb-10 shadow-[0_32px_80px_rgba(200,208,255,0.45)] backdrop-blur-xl md:px-10">
-              <div className="flex w-full items-center justify-between font-semibold text-[#87a0ff] text-[0.65rem] uppercase tracking-[0.32em]">
+            <div className="-inset-5 absolute rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8">
+              <div className="flex w-full items-center justify-between font-semibold text-[#87a0ff] text-[0.6rem] uppercase tracking-[0.3em]">
                 <span>Kei</span>
                 <span className="flex items-center gap-2">
                   <span
@@ -582,20 +623,23 @@ export default function Home() {
                   {isConnected ? "Online" : "Waiting"}
                 </span>
               </div>
-              <ClientOnlyLive2D
-                key={selectedModel.id}
-                modelPath={selectedModel.path}
-                audioTrack={remoteAudioTrack}
-                className="mt-5 h-[34rem] w-full rounded-[32px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[46rem]"
-              />
-              <p className="mt-6 text-center text-[#6f6a92] text-sm">
+              <div className="relative mt-4">
+                <ClientOnlyLive2D
+                  key={selectedModel.id}
+                  modelPath={selectedModel.path}
+                  audioTrack={remoteAudioTrack}
+                  className="h-[26rem] w-full rounded-[28px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[34rem]"
+                />
+                <HeartEmitter active={isAssistantSpeaking} />
+              </div>
+              <p className="mt-4 text-center text-[#6f6a92] text-xs md:text-sm">
                 “Hi! I’m Kei. Let me know how I can make your day easier.”
               </p>
             </div>
           </div>
 
-          <div className="flex w-full max-w-3xl flex-col items-center gap-5">
-            <div className="flex flex-wrap items-center justify-center gap-3 font-medium text-xs">
+          <div className="flex w-full max-w-3xl flex-col items-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[0.7rem] md:text-xs">
               <span
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${
                   isConnected
@@ -626,11 +670,11 @@ export default function Home() {
               </span>
             </div>
 
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-4">
               <button
                 onClick={handleMicToggle}
                 disabled={!isConnected}
-                className={`relative flex h-16 w-16 items-center justify-center rounded-2xl border text-xl shadow-lg transition-all duration-200 ${
+                className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border text-lg shadow-lg transition-all duration-200 ${
                   !isConnected
                     ? "cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60"
                     : isMuted
@@ -640,7 +684,7 @@ export default function Home() {
               >
                 {isMuted ? (
                   <svg
-                    className="h-7 w-7"
+                    className="h-6 w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -655,7 +699,7 @@ export default function Home() {
                   </svg>
                 ) : (
                   <svg
-                    className="h-7 w-7"
+                    className="h-6 w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -668,7 +712,7 @@ export default function Home() {
               <button
                 onClick={handleConnectToggle}
                 disabled={isConnecting}
-                className={`relative flex h-16 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-base leading-tight shadow-lg transition-all duration-200 ${
+                className={`relative flex h-14 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-sm leading-tight shadow-lg transition-all duration-200 ${
                   isConnecting
                     ? "cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]"
                     : isConnected
@@ -679,7 +723,7 @@ export default function Home() {
                 {isConnecting ? (
                   <>
                     <svg
-                      className="h-5 w-5 animate-spin"
+                      className="h-4 w-4 animate-spin"
                       fill="none"
                       viewBox="0 0 24 24"
                     >
@@ -697,29 +741,31 @@ export default function Home() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    <span className="text-center">Calling Kei...</span>
+                    <span className="text-center text-sm">Calling Kei...</span>
                   </>
                 ) : isConnected ? (
                   <>
                     <svg
-                      className="h-5 w-5"
+                      className="h-4 w-4"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <rect x="6" y="6" width="12" height="12" rx="2" />
                     </svg>
-                    <span className="text-center">End session</span>
+                    <span className="text-center text-sm">End session</span>
                   </>
                 ) : (
                   <>
                     <svg
-                      className="h-5 w-5"
+                      className="h-4 w-4"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path d="M8 5v14l11-7z" />
                     </svg>
-                    <span className="text-center">Connect with Kei</span>
+                    <span className="text-center text-sm">
+                      Connect with Kei
+                    </span>
                   </>
                 )}
               </button>
