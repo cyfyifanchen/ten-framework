@@ -31,6 +31,12 @@ class MainControlExtension(AsyncExtension):
     Consumes semantic AgentEvents from the Agent class and drives the runtime behavior.
     """
 
+    SPEAKER_NAME_MAP = {
+        "S1": "Elliot",
+        "S2": "Trump",
+        "S3": "Kanye",
+    }
+
     def __init__(self, name: str):
         super().__init__(name)
         self.ten_env: AsyncTenEnv = None
@@ -99,11 +105,14 @@ class MainControlExtension(AsyncExtension):
 
         # Format speaker label as [S1], [S2], etc.
         speaker_label = ""
-        if speaker_str:
-            speaker_label = f"[{speaker_str}] "
+        display_speaker = self.SPEAKER_NAME_MAP.get(speaker_str, speaker_str)
+        display_channel = self.SPEAKER_NAME_MAP.get(channel_str, channel_str)
+
+        if display_speaker:
+            speaker_label = f"[{display_speaker}] "
             self.ten_env.log_info(f"[ASR] Using speaker label: {speaker_label}")
-        elif channel_str:
-            speaker_label = f"[{channel_str}] "
+        elif display_channel:
+            speaker_label = f"[{display_channel}] "
             self.ten_env.log_info(f"[ASR] Using channel label: {speaker_label}")
         else:
             # If no speaker/channel info, use last known speaker or default
@@ -121,8 +130,8 @@ class MainControlExtension(AsyncExtension):
         if event.final:
             self.turn_id += 1
             # Track the current speaker
-            if speaker_str or channel_str:
-                self.last_speaker = speaker_str if speaker_str else channel_str
+            if display_speaker or display_channel:
+                self.last_speaker = display_speaker if display_speaker else display_channel
             # Include speaker info in LLM context
             text_with_speaker = f"{speaker_label}{event.text}"
             await self.agent.queue_llm_input(text_with_speaker)
