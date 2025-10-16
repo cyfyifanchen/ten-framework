@@ -1,7 +1,7 @@
 import asyncio
 import json
 import time
-from typing import Literal
+from typing import Literal, Optional
 
 from .agent.decorators import agent_event_handler
 from ten_runtime import (
@@ -43,6 +43,14 @@ class MainControlExtension(AsyncExtension):
         self.turn_id: int = 0
         self.session_id: str = "0"
         self.last_speaker: str = ""  # Track the last speaker for context
+        # === Game state for "Who Said What" ===
+        self.player_names: list[str] = ["Elliot", "Trump", "Musk"]
+        self.speaker_assignments: dict[str, str] = {}
+        self.enrollment_prompted: bool = False
+        self.enrollment_complete: bool = False
+        self.pending_response_target: Optional[str] = None
+        self.last_enrollment_reminder_ts: float = 0.0
+        self.last_unknown_speaker_ts: float = 0.0
 
     def _current_metadata(self) -> dict:
         return {"session_id": self.session_id, "turn_id": self.turn_id}
@@ -73,6 +81,8 @@ class MainControlExtension(AsyncExtension):
             await self._send_transcript(
                 "assistant", self.config.greeting, True, 100
             )
+        if not self.enrollment_prompted:
+            await self._prompt_enrollment()
 
     @agent_event_handler(UserLeftEvent)
     async def _on_user_left(self, event: UserLeftEvent):
@@ -92,6 +102,7 @@ class MainControlExtension(AsyncExtension):
         channel = event.metadata.get("channel", "")
         speaker_str = self._normalize_label(speaker)
         channel_str = self._normalize_label(channel)
+        speaker_key = self._build_speaker_key(speaker_str, channel_str)
 
         # Debug logging to check if speaker info is received
         if event.final:
@@ -99,7 +110,17 @@ class MainControlExtension(AsyncExtension):
 
         # Format speaker label as [S1], [S2], etc.
         speaker_label = ""
-        if speaker_str:
+        assigned_name = (
+            self.speaker_assignments[speaker_key]
+            if speaker_key and speaker_key in self.speaker_assignments
+            else None
+        )
+        if assigned_name:
+            speaker_label = f"[{assigned_name}] "
+            self.ten_env.log_info(
+                f"[ASR] Using enrolled label: {speaker_label}"
+            )
+        elif speaker_str:
             speaker_label = f"[{speaker_str}] "
             self.ten_env.log_info(f"[ASR] Using speaker label: {speaker_label}")
         elif channel_str:
@@ -118,14 +139,37 @@ class MainControlExtension(AsyncExtension):
             return
         if event.final or len(event.text) > 2:
             await self._interrupt()
+        queue_text: Optional[str] = None
         if event.final:
             self.turn_id += 1
             # Track the current speaker
-            if speaker_str or channel_str:
-                self.last_speaker = speaker_str if speaker_str else channel_str
-            # Include speaker info in LLM context
-            text_with_speaker = f"{speaker_label}{event.text}"
-            await self.agent.queue_llm_input(text_with_speaker)
+            resolved_label = speaker_str if speaker_str else channel_str
+            registered_name = await self._assign_player_if_needed(speaker_key)
+            if registered_name:
+                assigned_name = registered_name
+                speaker_label = f"[{assigned_name}] "
+            elif speaker_key and speaker_key in self.speaker_assignments:
+                assigned_name = self.speaker_assignments[speaker_key]
+                speaker_label = f"[{assigned_name}] "
+            if assigned_name:
+                resolved_label = assigned_name
+            if resolved_label:
+                self.last_speaker = resolved_label
+
+            if not self.enrollment_complete:
+                await self._maybe_remind_pending_players()
+            else:
+                if assigned_name:
+                    self.pending_response_target = assigned_name
+                    queue_text = (
+                        f"{assigned_name} says: {event.text}\n"
+                        f"Respond directly to {assigned_name}."
+                    )
+                else:
+                    await self._handle_unknown_speaker(event.text)
+
+        if queue_text:
+            await self.agent.queue_llm_input(queue_text)
 
         # Add speaker label to transcript display (always include label)
         transcript_text = f"{speaker_label}{event.text}"
@@ -134,22 +178,30 @@ class MainControlExtension(AsyncExtension):
 
     @agent_event_handler(LLMResponseEvent)
     async def _on_llm_response(self, event: LLMResponseEvent):
+        target_player = self.pending_response_target
         if not event.is_final and event.type == "message":
             sentences, self.sentence_fragment = parse_sentences(
                 self.sentence_fragment, event.delta
             )
             for s in sentences:
-                await self._send_to_tts(s, False)
+                if target_player:
+                    await self._send_to_tts(s, False, target_player)
 
         if event.is_final and event.type == "message":
             remaining_text = self.sentence_fragment or ""
             self.sentence_fragment = ""
-            await self._send_to_tts(remaining_text, True)
+            if target_player and remaining_text:
+                await self._send_to_tts(remaining_text, True, target_player)
+            # Clear target when the turn is done
+            self.pending_response_target = None
 
         # No label for assistant responses
+        display_text = event.text
+        if target_player and display_text:
+            display_text = f"[{target_player}] {display_text}"
         await self._send_transcript(
             "assistant",
-            event.text,
+            display_text,
             event.is_final,
             100,
             data_type=("reasoning" if event.type == "reasoning" else "text"),
@@ -164,6 +216,108 @@ class MainControlExtension(AsyncExtension):
         if value == "":
             return ""
         return str(value).upper()
+
+    def _build_speaker_key(self, speaker: str, channel: str) -> str:
+        if speaker:
+            return f"speaker:{speaker}"
+        if channel:
+            return f"channel:{channel}"
+        return ""
+
+    async def _prompt_enrollment(self):
+        """
+        Guide the players through the initial enrollment pass so diarization can map voices.
+        """
+        self.enrollment_prompted = True
+        instructions = (
+            "Welcome to Who Said What. Elliot, Trump, and Kanye, please each say something so I can learn your voices."
+        )
+        await self._send_to_tts(instructions, True)
+        await self._send_transcript("assistant", instructions, True, 100)
+
+    async def _assign_player_if_needed(self, speaker_key: str) -> Optional[str]:
+        """
+        Attach the diarization speaker key to the next available player name.
+        """
+        if not speaker_key:
+            return None
+        if speaker_key in self.speaker_assignments:
+            return self.speaker_assignments[speaker_key]
+
+        if len(self.speaker_assignments) >= len(self.player_names):
+            return None
+
+        player_name = self.player_names[len(self.speaker_assignments)]
+        self.speaker_assignments[speaker_key] = player_name
+        self.ten_env.log_info(
+            f"[Enrollment] Registered {speaker_key} as {player_name}"
+        )
+
+        await self._announce_enrollment(player_name)
+
+        if len(self.speaker_assignments) == len(self.player_names):
+            self.enrollment_complete = True
+            await self._announce_enrollment_completion()
+
+        return player_name
+
+    async def _announce_enrollment(self, player_name: str):
+        confirmation = f"Great, I now know {player_name}'s voice."
+        await self._send_transcript("assistant", confirmation, True, 100)
+        await self._send_to_tts(confirmation, True)
+
+    async def _announce_enrollment_completion(self):
+        wrap_up = "All players are registered. When you speak, I will reply only to you."
+        await self._send_transcript("assistant", wrap_up, True, 100)
+        await self._send_to_tts(wrap_up, True)
+
+    async def _maybe_remind_pending_players(self):
+        """
+        Periodically remind everyone which players still need to enroll.
+        """
+        remaining = [
+            name
+            for name in self.player_names
+            if name not in self.speaker_assignments.values()
+        ]
+        if not remaining:
+            return
+
+        now = time.time()
+        if now - self.last_enrollment_reminder_ts < 5:
+            return
+
+        self.last_enrollment_reminder_ts = now
+        if len(remaining) == 1:
+            reminder = f"Waiting for {remaining[0]} to check in."
+        elif len(remaining) == 2:
+            reminder = f"Waiting for {remaining[0]} and {remaining[1]} to check in."
+        else:
+            reminder = "Waiting for Elliot, Trump, and Musk to check in."
+
+        await self._send_transcript("assistant", reminder, True, 100)
+        await self._send_to_tts(reminder, True)
+
+    async def _handle_unknown_speaker(self, text: str):
+        """
+        Notify the room when speech comes from an unregistered voice.
+        """
+        now = time.time()
+        if now - self.last_unknown_speaker_ts < 5:
+            self.ten_env.log_warn(
+                "[MainControlExtension] Ignoring unknown speaker (rate limited)."
+            )
+            return
+
+        self.last_unknown_speaker_ts = now
+        message = (
+            "I don't recognize that voice. Only Elliot, Trump, and Musk can play."
+        )
+        await self._send_transcript("assistant", message, True, 100)
+        await self._send_to_tts(message, True)
+        self.ten_env.log_warn(
+            f"[MainControlExtension] Unrecognized speaker for text='{text}'"
+        )
 
     async def on_start(self, ten_env: AsyncTenEnv):
         ten_env.log_info("[MainControlExtension] on_start")
@@ -230,11 +384,16 @@ class MainControlExtension(AsyncExtension):
             f"[MainControlExtension] Sent transcript: {role}, final={final}, text={text}"
         )
 
-    async def _send_to_tts(self, text: str, is_final: bool):
+    async def _send_to_tts(
+        self, text: str, is_final: bool, target_player: Optional[str] = None
+    ):
         """
         Sends a sentence to the TTS system.
         """
-        request_id = f"tts-request-{self.turn_id}"
+        request_id = f"tts-request-{self.turn_id}-{uuid.uuid4().hex[:8]}"
+        metadata = self._current_metadata()
+        if target_player:
+            metadata = {**metadata, "target_player": target_player}
         await _send_data(
             self.ten_env,
             "tts_text_input",
@@ -243,7 +402,7 @@ class MainControlExtension(AsyncExtension):
                 "request_id": request_id,
                 "text": text,
                 "text_input_end": is_final,
-                "metadata": self._current_metadata(),
+                "metadata": metadata,
             },
         )
         self.ten_env.log_info(
