@@ -112,7 +112,7 @@ export default function HomePage() {
   const audioRef = useRef<IMicrophoneAudioTrack | null>(null)
   const remoteTracksRef = useRef<Map<string, IRemoteAudioTrack>>(new Map())
   const cacheRef = useRef<Record<string, TextChunk[]>>({})
-  const listEndRef = useRef<HTMLDivElement | null>(null)
+  const transcriptContainerRef = useRef<HTMLDivElement | null>(null)
 
   const appendOrUpdateItem = useCallback((incoming: ChatItem) => {
     setItems((prev) => {
@@ -428,8 +428,13 @@ export default function HomePage() {
   }, [userId])
 
   useEffect(() => {
-    if (!joined) return
-    listEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    if (!joined || items.length === 0) return
+    const container = transcriptContainerRef.current
+    if (!container) return
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    })
   }, [items, joined])
 
   useEffect(() => {
@@ -713,6 +718,7 @@ export default function HomePage() {
           </div>
 
           <div
+            ref={transcriptContainerRef}
             style={{
               maxHeight: 380,
               overflowY: "auto",
@@ -733,7 +739,6 @@ export default function HomePage() {
             {items.map((item) => (
               <TranscriptRow key={item.id} item={item} />
             ))}
-            <div ref={listEndRef} />
           </div>
         </section>
       </div>
