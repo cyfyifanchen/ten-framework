@@ -107,12 +107,14 @@ export default function HomePage() {
   const [pending, setPending] = useState<boolean>(false)
   const [micEnabled, setMicEnabled] = useState<boolean>(false)
   const [lastReplySpeaker, setLastReplySpeaker] = useState<string | null>(null)
+  const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null)
 
   const clientRef = useRef<IAgoraRTCClient | null>(null)
   const audioRef = useRef<IMicrophoneAudioTrack | null>(null)
   const remoteTracksRef = useRef<Map<string, IRemoteAudioTrack>>(new Map())
   const cacheRef = useRef<Record<string, TextChunk[]>>({})
   const transcriptContainerRef = useRef<HTMLDivElement | null>(null)
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   const appendOrUpdateItem = useCallback((incoming: ChatItem) => {
     setItems((prev) => {
@@ -125,6 +127,9 @@ export default function HomePage() {
       return next.sort((a, b) => a.ts - b.ts)
     })
 
+    if (incoming.speaker) {
+      setActiveSpeaker(incoming.speaker)
+    }
     if (incoming.role === "assistant" && incoming.isFinal && incoming.speaker) {
       setLastReplySpeaker(incoming.speaker)
     }
@@ -166,6 +171,8 @@ export default function HomePage() {
     return map
   }, [items])
 
+  const focusSpeaker = activeSpeaker || lastReplySpeaker
+
   type SpeakerCard = {
     name: string
     accent: string
@@ -175,12 +182,13 @@ export default function HomePage() {
   }
 
   const speakerCards = useMemo<SpeakerCard[]>(() => {
+    const currentFocus = focusSpeaker
     const base: SpeakerCard[] = KNOWN_SPEAKERS.map((name) => {
       const recognised = recognisedSpeakers.includes(name)
       const accent = recognised ? SPEAKER_ACCENTS[name] || "#4b5563" : "#d1d5db"
       const transcriptEntries = speakerTranscriptMap.get(name) || []
       const transcriptLines = transcriptEntries
-        .slice(0, 3)
+        .slice(0, 4)
         .map((entry) => entry.text?.trim() || "")
         .filter((line) => line.length > 0)
       const fallbackDetail = lastSpeakerLines.get(name)
@@ -194,7 +202,7 @@ export default function HomePage() {
         }
       }
       const status: "active" | "idle" | "waiting" =
-        lastReplySpeaker === name
+        currentFocus === name
           ? "active"
           : recognised
             ? "idle"
@@ -218,8 +226,8 @@ export default function HomePage() {
       return base
     }
 
-    if (lastReplySpeaker) {
-      const activeIndex = base.findIndex((card) => card.name === lastReplySpeaker)
+    if (currentFocus) {
+      const activeIndex = base.findIndex((card) => card.name === currentFocus)
       if (activeIndex !== -1) {
         const leftIndex = (activeIndex - 1 + base.length) % base.length
         const rightIndex = (activeIndex + 1) % base.length
@@ -249,7 +257,48 @@ export default function HomePage() {
     }
 
     return base
-  }, [recognisedSpeakers, speakerTranscriptMap, lastSpeakerLines, lastReplySpeaker])
+  }, [recognisedSpeakers, speakerTranscriptMap, lastSpeakerLines, focusSpeaker, activeSpeaker, lastReplySpeaker])
+
+  useEffect(() => {
+    const focus = focusSpeaker
+    if (!focus) return
+    const node = cardRefs.current[focus]
+    if (node) {
+      node.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      })
+    }
+  }, [focusSpeaker, speakerCards])
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+    const styleId = "spotlight-slide-style"
+    if (document.getElementById(styleId)) {
+      return
+    }
+    const style = document.createElement("style")
+    style.id = styleId
+    style.innerHTML = `
+@keyframes spotlight-slide-in {
+  0% {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}`
+    document.head.appendChild(style)
+  }, [])
 
   const handleStreamMessage = useCallback(
     (stream: ArrayBuffer) => {
@@ -413,6 +462,7 @@ export default function HomePage() {
     } finally {
       setJoined(false)
       setMicEnabled(false)
+      setActiveSpeaker(null)
       setPending(false)
     }
   }, [channel])
@@ -469,8 +519,8 @@ export default function HomePage() {
     >
       <Threads
         color={[0.85, 0.89, 0.96]}
-        amplitude={0.8}
-        distance={0.55}
+        amplitude={0.6}
+        distance={0.4}
         enableMouseInteraction={false}
         style={{
           position: "absolute",
@@ -480,7 +530,7 @@ export default function HomePage() {
           height: "140vh",
           transform: "translate(-50%, -50%)",
           pointerEvents: "none",
-          opacity: 0.18,
+          opacity: 0.3,
         }}
       />
       <div
@@ -501,91 +551,124 @@ export default function HomePage() {
           </div>
         )}
 
+          <h1
+            style={{
+              fontSize: 34,
+              fontWeight: 700,
+              letterSpacing: 0.4,
+              margin: 0,
+              color: TEXT_PRIMARY,
+            }}
+          >
+            Guess Who Eat What
+          </h1>
+
         <section
           style={{
             ...panelBaseStyle,
+            padding: "36px 36px 32px",
             display: "flex",
             flexDirection: "column",
             gap: 20,
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <div>
-            <h2 style={sectionTitleStyle}>Session Control</h2>
-            <p style={{ ...sectionSubtitleStyle, marginTop: 8 }}>
-              Launch the diarization graph instantly. Default channel and user
-              identity are preconfigured.
-            </p>
-          </div>
-
-          <div>
-            {!joined ? (
-              <button
-                onClick={start}
-                disabled={!userId || !channel || pending}
-                style={primaryButtonStyle(!userId || !channel || pending)}
-              >
-                {pending ? "Connecting…" : "Start Session"}
-              </button>
-            ) : (
-              <button onClick={stop} style={dangerButtonStyle(pending)}>
-                {pending ? "Stopping…" : "Disconnect"}
-              </button>
-            )}
-          </div>
-        </section>
-
-        <section
-          style={{
-            ...panelBaseStyle,
-            padding: "24px 28px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
+            minHeight: 560,
           }}
         >
           <div
             style={{
               display: "flex",
-              alignItems: "baseline",
+              alignItems: "center",
               justifyContent: "space-between",
               gap: 16,
               flexWrap: "wrap",
               color: TEXT_PRIMARY,
             }}
           >
-            <h2 style={{ ...sectionTitleStyle, letterSpacing: 0.2 }}>
-              Speaker Spotlight
-            </h2>
-            <span
+            <div
               style={{
-                fontSize: 12,
-                letterSpacing: 0.5,
-                color: TEXT_MUTED,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
               }}
             >
-              Active speaker centers automatically; cards update with recent lines
-            </span>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                }}
+              >
+                <h2
+                  style={{
+                    ...sectionTitleStyle,
+                    letterSpacing: 0.2,
+                    marginBottom: 0,
+                  }}
+                >
+                  Speaker Spotlight
+                </h2>
+              </div>
+              <span
+                style={{
+                  fontSize: 12,
+                  letterSpacing: 0.5,
+                  color: TEXT_MUTED,
+                  maxWidth: 360,
+                }}
+              >
+                Active speaker centers automatically; cards capture the latest lines.
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              {!joined ? (
+                <button
+                  onClick={start}
+                  disabled={!userId || !channel || pending}
+                  style={primaryButtonStyle(!userId || !channel || pending)}
+                >
+                  {pending ? "Connecting…" : "Start"}
+                </button>
+              ) : (
+                <button onClick={stop} style={dangerButtonStyle(pending)}>
+                  {pending ? "Stopping…" : "Disconnect"}
+                </button>
+              )}
+            </div>
           </div>
           <div
+            key={focusSpeaker || "default"}
             style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              justifyContent: "center",
-              gap: 24,
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              columnGap: 24,
               width: "100%",
-              overflowX: "auto",
-              paddingBottom: 6,
+              maxWidth: 960,
+              padding: "0 16px 28px",
+              margin: "0 auto",
+              alignItems: "stretch",
+              animation: "spotlight-slide-in 0.95s cubic-bezier(0.16, 0.72, 0.24, 1)",
             }}
           >
             {speakerCards.map((card) => (
               <div
                 key={card.name}
                 style={{
-                  flex: "0 0 320px",
                   display: "flex",
                   justifyContent: "center",
+                  transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                  transform: card.status === "active" ? "translateY(-8px)" : "translateY(0)",
+                }}
+                ref={(el) => {
+                  if (el) {
+                    cardRefs.current[card.name] = el
+                  } else {
+                    delete cardRefs.current[card.name]
+                  }
                 }}
               >
                 <div
@@ -593,18 +676,20 @@ export default function HomePage() {
                     width: "100%",
                     maxWidth: 320,
                     borderRadius: 16,
-                    border: card.status === "active" ? "2px solid #111827" : "1px solid #e5e7eb",
+                    border: card.status === "active" ? "2px solid #1f2937" : "1px solid #e5e7eb",
                     background: "#ffffff",
                     boxShadow:
                       card.status === "active"
-                        ? "0 20px 40px rgba(15, 23, 42, 0.15)"
-                        : "0 10px 20px rgba(15, 23, 42, 0.08)",
-                    padding: "20px 22px",
+                        ? "0 32px 56px rgba(15, 23, 42, 0.18)"
+                        : "0 12px 24px rgba(15, 23, 42, 0.08)",
+                    padding: "26px 24px",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 12,
-                    transform: card.status === "active" ? "scale(1.03)" : "scale(1)",
-                    transition: "transform 0.2s ease",
+                    gap: 16,
+                    minHeight: 420,
+                    transformOrigin: "center",
+                    transform: card.status === "active" ? "scale(1.02)" : "scale(1)",
+                    transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border 0.3s ease",
                   }}
                 >
                   <div
@@ -652,8 +737,16 @@ export default function HomePage() {
                         width: 10,
                         height: 10,
                         borderRadius: "50%",
-                        background: card.accent,
-                        border: "1px solid #d1d5db",
+                        background:
+                          card.status === "active" ? "#22c55e" : card.accent,
+                        border:
+                          card.status === "active"
+                            ? "1px solid rgba(34, 197, 94, 0.4)"
+                            : "1px solid #d1d5db",
+                        boxShadow:
+                          card.status === "active"
+                            ? "0 0 8px rgba(34, 197, 94, 0.45)"
+                            : "none",
                       }}
                     />
                     <span
@@ -669,7 +762,8 @@ export default function HomePage() {
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: 6,
+                      gap: 8,
+                      flexGrow: 1,
                     }}
                   >
                     {card.transcriptLines.map((line, idx) => (
@@ -681,7 +775,7 @@ export default function HomePage() {
                           color: TEXT_PRIMARY,
                           background: "#f9fafb",
                           borderRadius: 8,
-                          padding: "10px 12px",
+                          padding: "12px 14px",
                         }}
                       >
                         {line}
@@ -720,7 +814,7 @@ export default function HomePage() {
           <div
             ref={transcriptContainerRef}
             style={{
-              maxHeight: 380,
+              maxHeight: 520,
               overflowY: "auto",
               border: `1px solid ${transcriptBorderColor}`,
               borderRadius: 16,

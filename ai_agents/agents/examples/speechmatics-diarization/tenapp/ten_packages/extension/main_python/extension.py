@@ -43,14 +43,17 @@ class MainControlExtension(AsyncExtension):
         self.turn_id: int = 0
         self.session_id: str = "0"
         self.last_speaker: str = ""  # Track the last speaker for context
-        # === Game state for "Who Said What" ===
-        self.player_names: list[str] = ["Elliot", "Trump", "Musk"]
+        # === Game state for "Guess Who Eat What" ===
+        self.player_names: list[str] = ["Elliot", "Musk", "Trump"]
         self.speaker_assignments: dict[str, str] = {}
         self.enrollment_prompted: bool = False
         self.enrollment_complete: bool = False
         self.pending_response_target: Optional[str] = None
         self.last_enrollment_reminder_ts: float = 0.0
         self.last_unknown_speaker_ts: float = 0.0
+        self.game_stage: str = "enrollment"
+        self.food_preferences: dict[str, str] = {}
+        self.questions_answered: set[str] = set()
 
     def _current_metadata(self) -> dict:
         return {"session_id": self.session_id, "turn_id": self.turn_id}
@@ -144,7 +147,9 @@ class MainControlExtension(AsyncExtension):
             self.turn_id += 1
             # Track the current speaker
             resolved_label = speaker_str if speaker_str else channel_str
-            registered_name = await self._assign_player_if_needed(speaker_key)
+        registered_name = await self._assign_player_if_needed(
+            speaker_key, event.text, not self.enrollment_complete
+        )
             if registered_name:
                 assigned_name = registered_name
                 speaker_label = f"[{assigned_name}] "
@@ -159,14 +164,12 @@ class MainControlExtension(AsyncExtension):
             if not self.enrollment_complete:
                 await self._maybe_remind_pending_players()
             else:
-                if assigned_name:
-                    self.pending_response_target = assigned_name
-                    queue_text = (
-                        f"{assigned_name} says: {event.text}\n"
-                        f"Respond directly to {assigned_name}."
-                    )
-                else:
+                handled = await self._handle_game_flow(
+                    assigned_name or resolved_label, event.text
+                )
+                if not handled and not assigned_name:
                     await self._handle_unknown_speaker(event.text)
+                queue_text = None
 
         if queue_text:
             await self.agent.queue_llm_input(queue_text)
@@ -224,52 +227,105 @@ class MainControlExtension(AsyncExtension):
             return f"channel:{channel}"
         return ""
 
+    @staticmethod
+    def _detect_declared_player(text: str) -> Optional[str]:
+        if not text:
+            return None
+        lowered = text.lower()
+        alias_map = {
+            "Elliot": ["elliot", "elliott", "elyot"],
+            "Musk": ["musk", "elon"],
+            "Trump": ["trump", "donald"],
+        }
+        for player, aliases in alias_map.items():
+            for alias in aliases:
+                if alias in lowered:
+                    return player
+        return None
+
     async def _prompt_enrollment(self):
         """
         Guide the players through the initial enrollment pass so diarization can map voices.
         """
         self.enrollment_prompted = True
         instructions = (
-            "Welcome to Who Said What. Elliot, Trump, and Kanye, please each say something so I can learn your voices."
+            "Welcome to Guess Who Eat What! Elliot, Trump, and Musk, please each say a quick hello so I can learn your voices before we begin."
         )
         await self._send_to_tts(instructions, True)
         await self._send_transcript("assistant", instructions, True, 100)
 
-    async def _assign_player_if_needed(self, speaker_key: str) -> Optional[str]:
+    async def _assign_player_if_needed(
+        self,
+        speaker_key: str,
+        transcript_text: str = "",
+        allow_reassignment: bool = True,
+    ) -> Optional[str]:
         """
         Attach the diarization speaker key to the next available player name.
         """
         if not speaker_key:
             return None
-        if speaker_key in self.speaker_assignments:
-            return self.speaker_assignments[speaker_key]
+        declared = (
+            self._detect_declared_player(transcript_text) if allow_reassignment else None
+        )
+
+        existing = self.speaker_assignments.get(speaker_key)
+        if existing:
+            if allow_reassignment and declared and declared != existing:
+                for key, value in list(self.speaker_assignments.items()):
+                    if key != speaker_key and value == declared:
+                        del self.speaker_assignments[key]
+                        break
+                self.speaker_assignments[speaker_key] = declared
+                self.ten_env.log_info(
+                    f"[Enrollment] Corrected {speaker_key} -> {declared}"
+                )
+                if not self.enrollment_complete:
+                    await self._announce_enrollment(declared)
+                    if len(self.speaker_assignments) == len(self.player_names):
+                        self.enrollment_complete = True
+                        await self._announce_enrollment_completion()
+                return declared
+            return existing
 
         if len(self.speaker_assignments) >= len(self.player_names):
             return None
 
-        player_name = self.player_names[len(self.speaker_assignments)]
-        self.speaker_assignments[speaker_key] = player_name
+        candidate: Optional[str] = None
+        if allow_reassignment and declared and declared not in self.speaker_assignments.values():
+            candidate = declared
+        else:
+            for name in self.player_names:
+                if name not in self.speaker_assignments.values():
+                    candidate = name
+                    break
+
+        if not candidate:
+            return None
+
+        self.speaker_assignments[speaker_key] = candidate
         self.ten_env.log_info(
-            f"[Enrollment] Registered {speaker_key} as {player_name}"
+            f"[Enrollment] Registered {speaker_key} as {candidate}"
         )
 
-        await self._announce_enrollment(player_name)
+        if not self.enrollment_complete:
+            await self._announce_enrollment(candidate)
+            if len(self.speaker_assignments) == len(self.player_names):
+                self.enrollment_complete = True
+                await self._announce_enrollment_completion()
 
-        if len(self.speaker_assignments) == len(self.player_names):
-            self.enrollment_complete = True
-            await self._announce_enrollment_completion()
-
-        return player_name
+        return candidate
 
     async def _announce_enrollment(self, player_name: str):
-        confirmation = f"Great, I now know {player_name}'s voice."
+        confirmation = f"{player_name}'s voice is locked in."
         await self._send_transcript("assistant", confirmation, True, 100)
         await self._send_to_tts(confirmation, True)
 
     async def _announce_enrollment_completion(self):
-        wrap_up = "All players are registered. When you speak, I will reply only to you."
+        wrap_up = "All players are registered. Let's play Guess Who Eat What!"
         await self._send_transcript("assistant", wrap_up, True, 100)
         await self._send_to_tts(wrap_up, True)
+        await self._start_food_round()
 
     async def _maybe_remind_pending_players(self):
         """
@@ -289,11 +345,11 @@ class MainControlExtension(AsyncExtension):
 
         self.last_enrollment_reminder_ts = now
         if len(remaining) == 1:
-            reminder = f"Waiting for {remaining[0]} to check in."
+            reminder = f"Waiting for {remaining[0]} to give me a quick hello so I can lock in their voice."
         elif len(remaining) == 2:
-            reminder = f"Waiting for {remaining[0]} and {remaining[1]} to check in."
+            reminder = f"Waiting for {remaining[0]} and {remaining[1]} to check in with a hello."
         else:
-            reminder = "Waiting for Elliot, Trump, and Musk to check in."
+            reminder = "Waiting for Elliot, Trump, and Musk to say hello for enrollment."
 
         await self._send_transcript("assistant", reminder, True, 100)
         await self._send_to_tts(reminder, True)
@@ -311,7 +367,7 @@ class MainControlExtension(AsyncExtension):
 
         self.last_unknown_speaker_ts = now
         message = (
-            "I don't recognize that voice. Only Elliot, Trump, and Musk can play."
+            "I don't recognize that voice. Only Elliot, Trump, and Musk are part of Guess Who Eat What."
         )
         await self._send_transcript("assistant", message, True, 100)
         await self._send_to_tts(message, True)
@@ -319,13 +375,164 @@ class MainControlExtension(AsyncExtension):
             f"[MainControlExtension] Unrecognized speaker for text='{text}'"
         )
 
+    async def _start_food_round(self):
+        self.game_stage = "await_elliot_food"
+        self.food_preferences = {}
+        self.questions_answered = set()
+        intro = (
+            "Time for Guess Who Eat What! Elliot, Trump, and Musk: we're guessing favorite foods."
+        )
+        await self._send_transcript("assistant", intro, True, 100)
+        await self._send_to_tts(intro, True)
+        await self._prompt_player_for_food("Elliot")
+
+    async def _prompt_player_for_food(self, player_name: str):
+        stage_map = {
+            "Elliot": "await_elliot_food",
+            "Musk": "await_musk_food",
+            "Trump": "await_trump_food",
+        }
+        if player_name in stage_map:
+            self.game_stage = stage_map[player_name]
+        prompt = f"{player_name}, tell me something you love to eat."
+        await self._send_transcript("assistant", prompt, True, 100)
+        await self._send_to_tts(prompt, True, player_name)
+
+    async def _acknowledge_food(self, player_name: str, food_text: str):
+        summary = f"Got it, {player_name}! You love to eat {food_text}."
+        await self._send_transcript("assistant", summary, True, 100)
+        await self._send_to_tts(summary, True, player_name)
+
+    async def _remind_turn(self, expected_player: str, interrupting_player: str):
+        reminder = (
+            f"Hang tight, {interrupting_player}. It's {expected_player}'s turn to share their food."
+        )
+        await self._send_transcript("assistant", reminder, True, 100)
+        await self._send_to_tts(reminder, True, interrupting_player)
+
+    async def _prompt_question_round(self):
+        self.game_stage = "qa_phase"
+        self.questions_answered = set()
+        cue = (
+            "Elliot, now quiz me! Ask what Musk likes to eat, then Trump, and finally ask what you like to eat."
+        )
+        await self._send_transcript("assistant", cue, True, 100)
+        await self._send_to_tts(cue, True, "Elliot")
+
+    async def _respond_with_food(self, about_player: str, recipient: str):
+        food_text = self.food_preferences.get(about_player)
+        if not food_text:
+            reply = f"I'm still waiting to hear what {about_player} loves to eat."
+        else:
+            reply = f"{about_player} said they love to eat {food_text}."
+        await self._send_transcript("assistant", reply, True, 100)
+        await self._send_to_tts(reply, True, recipient)
+
+    async def _handle_game_flow(self, speaker: Optional[str], text: str) -> bool:
+        if not speaker:
+            return False
+        clean_text = text.strip()
+        if clean_text == "":
+            return True
+
+        stage = self.game_stage
+        lower = clean_text.lower()
+
+        if stage == "await_elliot_food":
+            if speaker == "Elliot":
+                self.food_preferences["Elliot"] = clean_text
+                await self._acknowledge_food("Elliot", clean_text)
+                await self._prompt_player_for_food("Musk")
+                return True
+            if speaker in self.player_names:
+                await self._remind_turn("Elliot", speaker)
+                return True
+            return False
+
+        if stage == "await_musk_food":
+            if speaker == "Musk":
+                self.food_preferences["Musk"] = clean_text
+                await self._acknowledge_food("Musk", clean_text)
+                await self._prompt_player_for_food("Trump")
+                return True
+            if speaker in self.player_names:
+                await self._remind_turn("Musk", speaker)
+                return True
+            return False
+
+        if stage == "await_trump_food":
+            if speaker == "Trump":
+                self.food_preferences["Trump"] = clean_text
+                await self._acknowledge_food("Trump", clean_text)
+                await self._prompt_question_round()
+                return True
+            if speaker in self.player_names:
+                await self._remind_turn("Trump", speaker)
+                return True
+            return False
+
+        if stage == "qa_phase":
+            if speaker != "Elliot":
+                return False
+
+            handled = False
+            normalized = lower.replace("turmp", "trump")
+
+            if (
+                "musk" in normalized
+                and "eat" in normalized
+                and "what" in normalized
+                and "like" in normalized
+                and "musk" not in self.questions_answered
+            ):
+                await self._respond_with_food("Musk", "Elliot")
+                self.questions_answered.add("musk")
+                handled = True
+            elif (
+                "trump" in normalized
+                and "eat" in normalized
+                and "what" in normalized
+                and "like" in normalized
+                and "trump" not in self.questions_answered
+            ):
+                await self._respond_with_food("Trump", "Elliot")
+                self.questions_answered.add("trump")
+                handled = True
+            elif (
+                ("what do i" in normalized or "what i like" in normalized)
+                and "eat" in normalized
+                and "elliot" not in self.questions_answered
+            ):
+                await self._respond_with_food("Elliot", "Elliot")
+                self.questions_answered.add("elliot")
+                handled = True
+
+            if handled and self.questions_answered.issuperset(
+                {"musk", "trump", "elliot"}
+            ):
+                closing = "That's the whole round of Guess Who Eat What. Nice guessing!"
+                await self._send_transcript("assistant", closing, True, 100)
+                await self._send_to_tts(closing, True)
+            return handled
+
+        return False
+
     async def on_start(self, ten_env: AsyncTenEnv):
         ten_env.log_info("[MainControlExtension] on_start")
 
     async def on_stop(self, ten_env: AsyncTenEnv):
         ten_env.log_info("[MainControlExtension] on_stop")
         self.stopped = True
+        self.pending_response_target = None
+        self.food_preferences = {}
+        self.questions_answered = set()
+        self.game_stage = "enrollment"
+        self.speaker_assignments = {}
+        self.enrollment_prompted = False
+        self.enrollment_complete = False
+        ten_env.log_info("[MainControlExtension] stopping agent...")
         await self.agent.stop()
+        ten_env.log_info("[MainControlExtension] agent stopped")
 
     async def on_cmd(self, ten_env: AsyncTenEnv, cmd: Cmd):
         await self.agent.on_cmd(cmd)
