@@ -13,6 +13,7 @@ import {
   apiStartService,
   apiStopService,
 } from "../common/request"
+import Threads from "@/components/Threads"
 
 type ChatItem = {
   id: string
@@ -453,14 +454,34 @@ export default function HomePage() {
   return (
     <div
       style={{
+        position: "relative",
         minHeight: "100vh",
         background: PAGE_BACKGROUND,
         padding: "56px 24px 72px",
         fontFamily: "Inter, system-ui, Arial",
+        overflow: "hidden",
       }}
     >
+      <Threads
+        color={[0.85, 0.89, 0.96]}
+        amplitude={0.8}
+        distance={0.55}
+        enableMouseInteraction={false}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: "140vw",
+          height: "140vh",
+          transform: "translate(-50%, -50%)",
+          pointerEvents: "none",
+          opacity: 0.18,
+        }}
+      />
       <div
         style={{
+          position: "relative",
+          zIndex: 1,
           maxWidth: 1120,
           margin: "0 auto",
           display: "flex",
@@ -468,28 +489,6 @@ export default function HomePage() {
           gap: 28,
         }}
       >
-        <header
-          style={{
-            ...panelBaseStyle,
-            padding: "32px 36px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 28,
-              fontWeight: 700,
-              color: TEXT_PRIMARY,
-            }}
-          >
-            Who said what
-          </h1>
-
-        </header>
-
         {error && (
           <div style={errorBannerStyle}>
             <span style={{ fontWeight: 600 }}>Connection issue:</span>

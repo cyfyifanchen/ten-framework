@@ -2,7 +2,9 @@
   "name": "ten_agent_speechmatics_web",
   "version": "0.1.0",
   "private": true,
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -13,6 +15,7 @@
     "axios": "^1.7.7",
     "motion": "^12.23.24",
     "next": "^15.0.2",
+    "ogl": "^1.0.11",
     "react": "^18",
     "react-dom": "^18"
   },
