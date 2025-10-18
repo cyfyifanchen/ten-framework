@@ -1,5 +1,7 @@
 import asyncio
 import json
+import re
+import string
 import time
 from typing import Literal, Optional
 
@@ -31,6 +33,28 @@ class MainControlExtension(AsyncExtension):
     Consumes semantic AgentEvents from the Agent class and drives the runtime behavior.
     """
 
+    PLAYER_ALIAS_MAP: dict[str, list[str]] = {
+        "Elliot": ["elliot", "elliott", "elyot"],
+        "Musk": ["musk", "elon"],
+        "Trump": ["trump", "donald"],
+    }
+
+    INTRODUCTION_PATTERNS: list[str] = [
+        r"\bthis is\s+{alias}\b",
+        r"\bi['\s]*m\s+{alias}\b",
+        r"\bi am\s+{alias}\b",
+        r"\bit['\s]*s\s+{alias}\b",
+        r"\bmy name is\s+{alias}\b",
+        r"\bname['\s]*s\s+{alias}\b",
+    ]
+
+    GREETING_TEMPLATES: set[str] = {
+        "hello {alias}",
+        "hi {alias}",
+        "hey {alias}",
+        "{alias} here",
+    }
+
     def __init__(self, name: str):
         super().__init__(name)
         self.ten_env: AsyncTenEnv = None
@@ -43,7 +67,7 @@ class MainControlExtension(AsyncExtension):
         self.turn_id: int = 0
         self.session_id: str = "0"
         self.last_speaker: str = ""  # Track the last speaker for context
-        # === Game state for "Guess Who Eat What" ===
+        # === Game state for "Who Likes What" ===
         self.player_names: list[str] = ["Elliot", "Musk", "Trump"]
         self.speaker_assignments: dict[str, str] = {}
         self.enrollment_prompted: bool = False
@@ -97,8 +121,23 @@ class MainControlExtension(AsyncExtension):
 
     @agent_event_handler(ASRResultEvent)
     async def _on_asr_result(self, event: ASRResultEvent):
-        self.session_id = event.metadata.get("session_id", "100")
-        stream_id = int(self.session_id)
+        raw_session_id = event.metadata.get("session_id", "100")
+        self.session_id = str(raw_session_id)
+        stream_id = 100
+        for candidate in (
+            event.metadata.get("stream_id"),
+            raw_session_id,
+        ):
+            try:
+                if candidate is not None:
+                    stream_id = int(candidate)
+                    break
+            except (TypeError, ValueError):
+                continue
+        else:
+            self.ten_env.log_warn(
+                f"[ASR] Unable to parse stream_id from metadata; defaulting to {stream_id}. metadata={event.metadata}"
+            )
 
         # Extract speaker information for diarization
         speaker = event.metadata.get("speaker", "")
@@ -147,9 +186,9 @@ class MainControlExtension(AsyncExtension):
             self.turn_id += 1
             # Track the current speaker
             resolved_label = speaker_str if speaker_str else channel_str
-        registered_name = await self._assign_player_if_needed(
-            speaker_key, event.text, not self.enrollment_complete
-        )
+            registered_name = await self._assign_player_if_needed(
+                speaker_key, event.text, not self.enrollment_complete
+            )
             if registered_name:
                 assigned_name = registered_name
                 speaker_label = f"[{assigned_name}] "
@@ -232,16 +271,115 @@ class MainControlExtension(AsyncExtension):
         if not text:
             return None
         lowered = text.lower()
-        alias_map = {
-            "Elliot": ["elliot", "elliott", "elyot"],
-            "Musk": ["musk", "elon"],
-            "Trump": ["trump", "donald"],
-        }
-        for player, aliases in alias_map.items():
+        stripped = lowered.strip(string.whitespace + string.punctuation)
+        for player, aliases in MainControlExtension.PLAYER_ALIAS_MAP.items():
             for alias in aliases:
-                if alias in lowered:
+                alias_lower = alias.lower()
+                # Direct match such as "Elliot" or "Elliot."
+                if stripped == alias_lower:
                     return player
+                # Greeting phrases like "Hello Elliot"
+                for template in MainControlExtension.GREETING_TEMPLATES:
+                    if stripped == template.format(alias=alias_lower):
+                        return player
+                # Introduction statements
+                escaped_alias = re.escape(alias_lower)
+                for pattern in MainControlExtension.INTRODUCTION_PATTERNS:
+                    if re.search(pattern.format(alias=escaped_alias), lowered):
+                        return player
         return None
+
+    @staticmethod
+    def _normalize_food_text(text: str) -> str:
+        if not text:
+            return text
+
+        working = text.strip()
+        lowered = working.lower()
+
+        leading_patterns = [
+            r"^i\s+really\s+like\s+",
+            r"^i\s+really\s+love\s+",
+            r"^i\s+really\s+enjoy\s+",
+            r"^i\s+like\s+",
+            r"^i\s+love\s+",
+            r"^i\s+enjoy\s+",
+            r"^i['\s]*m\s+into\s+",
+            r"^i\s+am\s+into\s+",
+            r"^my\s+(favorite|favourite)\s+(food\s+)?(is|would be)\s+",
+            r"^favorite\s+(food\s+)?(is|would be)\s+",
+        ]
+
+        for pattern in leading_patterns:
+            if re.match(pattern, lowered):
+                span = re.match(pattern, lowered).span()
+                working = working[span[1]:]
+                break
+
+        working = working.strip(string.whitespace + string.punctuation)
+        return working or text.strip()
+
+    @staticmethod
+    def _looks_like_reassignment(
+        text: str, current_name: str, new_name: str, enrollment_active: bool
+    ) -> bool:
+        if not text:
+            return False
+
+        lowered = text.lower()
+        stripped = lowered.strip(string.whitespace + string.punctuation)
+        current = current_name.lower()
+        candidate = new_name.lower()
+
+        correction_markers = [
+            "actually",
+            "sorry",
+            "correction",
+            "i mean",
+        ]
+        if any(marker in lowered for marker in correction_markers):
+            return True
+
+        negatives = [
+            f"not {current}",
+            f"no {current}",
+            f"isn't {current}",
+            f"i'm {candidate} not {current}",
+            f"i am {candidate} not {current}",
+        ]
+        if any(pattern in lowered for pattern in negatives):
+            return True
+
+        if enrollment_active:
+            aliases = MainControlExtension.PLAYER_ALIAS_MAP.get(
+                new_name, [new_name]
+            )
+            for alias in aliases:
+                alias_lower = alias.lower()
+                if stripped == alias_lower:
+                    return True
+                for template in MainControlExtension.GREETING_TEMPLATES:
+                    if stripped == template.format(alias=alias_lower):
+                        return True
+                escaped_alias = re.escape(alias_lower)
+                for pattern in MainControlExtension.INTRODUCTION_PATTERNS:
+                    if re.search(pattern.format(alias=escaped_alias), lowered):
+                        return True
+
+        explicit_phrases = [
+            f"my name is {candidate}",
+            f"this is {candidate}",
+            f"i am {candidate}",
+            f"i'm {candidate}",
+            f"it's {candidate}",
+            f"{candidate} here",
+        ]
+        if any(pattern in lowered for pattern in explicit_phrases) and (
+            "not" in lowered or "actually" in lowered
+        ):
+            return True
+
+        return False
 
     async def _prompt_enrollment(self):
         """
@@ -249,7 +387,7 @@ class MainControlExtension(AsyncExtension):
         """
         self.enrollment_prompted = True
         instructions = (
-            "Welcome to Guess Who Eat What! Elliot, Trump, and Musk, please each say a quick hello so I can learn your voices before we begin."
+            "Welcome to Who Likes What! Elliot, Trump, and Musk, please each say a quick hello so I can learn your voices before we begin."
         )
         await self._send_to_tts(instructions, True)
         await self._send_transcript("assistant", instructions, True, 100)
@@ -272,6 +410,16 @@ class MainControlExtension(AsyncExtension):
         existing = self.speaker_assignments.get(speaker_key)
         if existing:
             if allow_reassignment and declared and declared != existing:
+                if not self._looks_like_reassignment(
+                    transcript_text,
+                    existing,
+                    declared,
+                    not self.enrollment_complete,
+                ):
+                    self.ten_env.log_info(
+                        f"[Enrollment] Ignoring mention of {declared} from already registered {existing}"
+                    )
+                    return existing
                 for key, value in list(self.speaker_assignments.items()):
                     if key != speaker_key and value == declared:
                         del self.speaker_assignments[key]
@@ -322,7 +470,7 @@ class MainControlExtension(AsyncExtension):
         await self._send_to_tts(confirmation, True)
 
     async def _announce_enrollment_completion(self):
-        wrap_up = "All players are registered. Let's play Guess Who Eat What!"
+        wrap_up = "All players are registered. Let's play Guess Who Likes What!"
         await self._send_transcript("assistant", wrap_up, True, 100)
         await self._send_to_tts(wrap_up, True)
         await self._start_food_round()
@@ -367,7 +515,7 @@ class MainControlExtension(AsyncExtension):
 
         self.last_unknown_speaker_ts = now
         message = (
-            "I don't recognize that voice. Only Elliot, Trump, and Musk are part of Guess Who Eat What."
+            "I don't recognize that voice. Only Elliot, Trump, and Musk are part of Who Likes What."
         )
         await self._send_transcript("assistant", message, True, 100)
         await self._send_to_tts(message, True)
@@ -380,7 +528,7 @@ class MainControlExtension(AsyncExtension):
         self.food_preferences = {}
         self.questions_answered = set()
         intro = (
-            "Time for Guess Who Eat What! Elliot, Trump, and Musk: we're guessing favorite foods."
+            "Time for Guess Who Likes What! Elliot, Trump, and Musk: we're guessing favorite foods."
         )
         await self._send_transcript("assistant", intro, True, 100)
         await self._send_to_tts(intro, True)
@@ -399,7 +547,9 @@ class MainControlExtension(AsyncExtension):
         await self._send_to_tts(prompt, True, player_name)
 
     async def _acknowledge_food(self, player_name: str, food_text: str):
-        summary = f"Got it, {player_name}! You love to eat {food_text}."
+        normalized_text = self._normalize_food_text(food_text)
+        printable = normalized_text.rstrip(".!?") or food_text.strip()
+        summary = f"Got it, {player_name}! You love to eat {printable}."
         await self._send_transcript("assistant", summary, True, 100)
         await self._send_to_tts(summary, True, player_name)
 
@@ -428,6 +578,84 @@ class MainControlExtension(AsyncExtension):
         await self._send_transcript("assistant", reply, True, 100)
         await self._send_to_tts(reply, True, recipient)
 
+    def _question_mentions_player(self, normalized: str, target: str) -> bool:
+        """
+        Returns True if the question text clearly references the target player (by name or alias).
+        """
+        aliases = {target.lower()}
+        aliases.update(alias.lower() for alias in self.PLAYER_ALIAS_MAP.get(target, []))
+        for alias in aliases:
+            if re.search(rf"\b{re.escape(alias)}\b", normalized):
+                return True
+        return False
+
+    def _is_food_question_for(self, normalized: str, target: str) -> bool:
+        """
+        Heuristic matching for questions asking about a target player's food preference.
+        """
+        if not self._question_mentions_player(normalized, target):
+            return False
+
+        question_markers = [
+            "what",
+            "tell me",
+            "do you know",
+            "could you tell",
+            "can you tell",
+            "remind me",
+        ]
+        if not any(marker in normalized for marker in question_markers):
+            return False
+
+        preference_markers = [
+            "eat",
+            "food",
+            "favorite",
+            "favourite",
+            "like",
+            "love",
+            "enjoy",
+        ]
+        if not any(marker in normalized for marker in preference_markers):
+            return False
+
+        if "like" not in normalized and "love" not in normalized:
+            if not any(marker in normalized for marker in ["eat", "food", "favorite", "favourite"]):
+                return False
+
+        return True
+
+    @staticmethod
+    def _is_self_food_question(normalized: str) -> bool:
+        """
+        Detects when Elliot asks about their own preference without naming themselves.
+        """
+        padded = f" {normalized} "
+        if not any(
+            phrase in padded
+            for phrase in [
+                " what do i ",
+                " what i like",
+                " what is my ",
+                " what's my ",
+                " what would i ",
+                " remind me what i ",
+                " tell me what i ",
+            ]
+        ):
+            return False
+
+        preference_markers = [
+            "eat",
+            "food",
+            "favorite",
+            "favourite",
+            "like",
+            "love",
+            "enjoy",
+        ]
+        return any(marker in normalized for marker in preference_markers)
+
     async def _handle_game_flow(self, speaker: Optional[str], text: str) -> bool:
         if not speaker:
             return False
@@ -440,7 +668,7 @@ class MainControlExtension(AsyncExtension):
 
         if stage == "await_elliot_food":
             if speaker == "Elliot":
-                self.food_preferences["Elliot"] = clean_text
+                self.food_preferences["Elliot"] = self._normalize_food_text(clean_text)
                 await self._acknowledge_food("Elliot", clean_text)
                 await self._prompt_player_for_food("Musk")
                 return True
@@ -451,7 +679,7 @@ class MainControlExtension(AsyncExtension):
 
         if stage == "await_musk_food":
             if speaker == "Musk":
-                self.food_preferences["Musk"] = clean_text
+                self.food_preferences["Musk"] = self._normalize_food_text(clean_text)
                 await self._acknowledge_food("Musk", clean_text)
                 await self._prompt_player_for_food("Trump")
                 return True
@@ -462,7 +690,7 @@ class MainControlExtension(AsyncExtension):
 
         if stage == "await_trump_food":
             if speaker == "Trump":
-                self.food_preferences["Trump"] = clean_text
+                self.food_preferences["Trump"] = self._normalize_food_text(clean_text)
                 await self._acknowledge_food("Trump", clean_text)
                 await self._prompt_question_round()
                 return True
@@ -475,33 +703,29 @@ class MainControlExtension(AsyncExtension):
             if speaker != "Elliot":
                 return False
 
-            handled = False
             normalized = lower.replace("turmp", "trump")
 
+            handled = False
             if (
-                "musk" in normalized
-                and "eat" in normalized
-                and "what" in normalized
-                and "like" in normalized
-                and "musk" not in self.questions_answered
+                "musk" not in self.questions_answered
+                and self._is_food_question_for(normalized, "Musk")
             ):
                 await self._respond_with_food("Musk", "Elliot")
                 self.questions_answered.add("musk")
                 handled = True
             elif (
-                "trump" in normalized
-                and "eat" in normalized
-                and "what" in normalized
-                and "like" in normalized
-                and "trump" not in self.questions_answered
+                "trump" not in self.questions_answered
+                and self._is_food_question_for(normalized, "Trump")
             ):
                 await self._respond_with_food("Trump", "Elliot")
                 self.questions_answered.add("trump")
                 handled = True
             elif (
-                ("what do i" in normalized or "what i like" in normalized)
-                and "eat" in normalized
-                and "elliot" not in self.questions_answered
+                "elliot" not in self.questions_answered
+                and (
+                    self._is_food_question_for(normalized, "Elliot")
+                    or self._is_self_food_question(normalized)
+                )
             ):
                 await self._respond_with_food("Elliot", "Elliot")
                 self.questions_answered.add("elliot")
@@ -510,7 +734,7 @@ class MainControlExtension(AsyncExtension):
             if handled and self.questions_answered.issuperset(
                 {"musk", "trump", "elliot"}
             ):
-                closing = "That's the whole round of Guess Who Eat What. Nice guessing!"
+                closing = "That's the whole round of Who Likes What. Nice guessing!"
                 await self._send_transcript("assistant", closing, True, 100)
                 await self._send_to_tts(closing, True)
             return handled

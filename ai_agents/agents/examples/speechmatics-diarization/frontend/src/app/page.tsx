@@ -10,6 +10,7 @@ import type {
 } from "agora-rtc-sdk-ng"
 import {
   apiGenAgoraData,
+  apiPing,
   apiStartService,
   apiStopService,
 } from "../common/request"
@@ -488,6 +489,39 @@ export default function HomePage() {
   }, [items, joined])
 
   useEffect(() => {
+    if (!joined) {
+      return
+    }
+
+    let cancelled = false
+    let pingInFlight = false
+
+    const sendPing = async () => {
+      if (pingInFlight || cancelled) {
+        return
+      }
+      pingInFlight = true
+      try {
+        await apiPing(channel)
+      } catch (err) {
+        console.warn("[UI] ping error", err)
+      } finally {
+        pingInFlight = false
+      }
+    }
+
+    void sendPing()
+    const timer = setInterval(() => {
+      void sendPing()
+    }, 20000)
+
+    return () => {
+      cancelled = true
+      clearInterval(timer)
+    }
+  }, [joined, channel])
+
+  useEffect(() => {
     return () => {
       if (audioRef.current) {
         audioRef.current.close()
@@ -551,17 +585,17 @@ export default function HomePage() {
           </div>
         )}
 
-          <h1
-            style={{
-              fontSize: 34,
-              fontWeight: 700,
-              letterSpacing: 0.4,
-              margin: 0,
-              color: TEXT_PRIMARY,
-            }}
-          >
-            Guess Who Eat What
-          </h1>
+        <h1
+          style={{
+            fontSize: 34,
+            fontWeight: 700,
+            letterSpacing: 0.4,
+            margin: 0,
+            color: TEXT_PRIMARY,
+          }}
+        >
+              Who Likes What
+        </h1>
 
         <section
           style={{

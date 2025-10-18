@@ -38,3 +38,13 @@ export const apiStopService = async (channel: string) => {
   const resp = await axios.post(url, data)
   return resp.data
 }
+
+export const apiPing = async (channel: string) => {
+  const url = '/api/agents/ping'
+  const data = {
+    request_id: crypto.randomUUID(),
+    channel_name: channel,
+  }
+  const resp = await axios.post(url, data)
+  return resp.data
+}
