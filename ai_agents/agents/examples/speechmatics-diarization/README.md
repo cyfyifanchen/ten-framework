@@ -111,7 +111,7 @@ You can customize diarization settings in `property.json`:
 
 **Transcript**: "[Musk] This is Elon."
 
-**Agent**: "Elliot's voice is locked in. Waiting for Trump to give me a quick hello so I can lock in their voice."
+**Agent**: "Elliot's voice is locked in. Waiting for Taytay to give me a quick hello so I can lock in their voice."
 
 ## Troubleshooting
 

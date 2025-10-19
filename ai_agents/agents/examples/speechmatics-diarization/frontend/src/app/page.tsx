@@ -38,11 +38,11 @@ const DEFAULT_CHANNEL = "ten_diarization"
 
 const SPEAKER_REGEX = /^\[([^\]]+)\]\s*/
 
-const KNOWN_SPEAKERS = ["Elliot", "Trump", "Musk"] as const
+const KNOWN_SPEAKERS = ["Elliot", "Taytay", "Musk"] as const
 
 const SPEAKER_ACCENTS: Record<string, string> = {
   Elliot: "#111827",
-  Trump: "#4b5563",
+  Taytay: "#4b5563",
   Musk: "#9ca3af",
 }
 
@@ -859,7 +859,7 @@ export default function HomePage() {
           >
             {items.length === 0 && (
               <div style={{ color: TEXT_MUTED, fontSize: 14 }}>
-                Say hello to start the enrollment flow for Elliot, Trump, and
+                Say hello to start the enrollment flow for Elliot, Taytay, and
                 Musk.
               </div>
             )}

@@ -36,7 +36,7 @@ class MainControlExtension(AsyncExtension):
     PLAYER_ALIAS_MAP: dict[str, list[str]] = {
         "Elliot": ["elliot", "elliott", "elyot"],
         "Musk": ["musk", "elon"],
-        "Trump": ["trump", "donald"],
+        "Taytay": ["taytay", "taylor", "swift", "tay"],
     }
 
     INTRODUCTION_PATTERNS: list[str] = [
@@ -68,7 +68,7 @@ class MainControlExtension(AsyncExtension):
         self.session_id: str = "0"
         self.last_speaker: str = ""  # Track the last speaker for context
         # === Game state for "Who Likes What" ===
-        self.player_names: list[str] = ["Elliot", "Musk", "Trump"]
+        self.player_names: list[str] = ["Elliot", "Musk", "Taytay"]
         self.speaker_assignments: dict[str, str] = {}
         self.enrollment_prompted: bool = False
         self.enrollment_complete: bool = False
@@ -387,7 +387,7 @@ class MainControlExtension(AsyncExtension):
         """
         self.enrollment_prompted = True
         instructions = (
-            "Welcome to Who Likes What! Elliot, Trump, and Musk, please each say a quick hello so I can learn your voices before we begin."
+            "Welcome to Who Likes What! Elliot, Taytay, and Musk, please each say a quick hello so I can learn your voices before we begin."
         )
         await self._send_to_tts(instructions, True)
         await self._send_transcript("assistant", instructions, True, 100)
@@ -497,7 +497,7 @@ class MainControlExtension(AsyncExtension):
         elif len(remaining) == 2:
             reminder = f"Waiting for {remaining[0]} and {remaining[1]} to check in with a hello."
         else:
-            reminder = "Waiting for Elliot, Trump, and Musk to say hello for enrollment."
+            reminder = "Waiting for Elliot, Taytay, and Musk to say hello for enrollment."
 
         await self._send_transcript("assistant", reminder, True, 100)
         await self._send_to_tts(reminder, True)
@@ -515,7 +515,7 @@ class MainControlExtension(AsyncExtension):
 
         self.last_unknown_speaker_ts = now
         message = (
-            "I don't recognize that voice. Only Elliot, Trump, and Musk are part of Who Likes What."
+            "I don't recognize that voice. Only Elliot, Taytay, and Musk are part of Who Likes What."
         )
         await self._send_transcript("assistant", message, True, 100)
         await self._send_to_tts(message, True)
@@ -528,7 +528,7 @@ class MainControlExtension(AsyncExtension):
         self.food_preferences = {}
         self.questions_answered = set()
         intro = (
-            "Time for Guess Who Likes What! Elliot, Trump, and Musk: we're guessing favorite foods."
+            "Time for Guess Who Likes What! Elliot, Taytay, and Musk: we're guessing favorite foods."
         )
         await self._send_transcript("assistant", intro, True, 100)
         await self._send_to_tts(intro, True)
@@ -538,7 +538,7 @@ class MainControlExtension(AsyncExtension):
         stage_map = {
             "Elliot": "await_elliot_food",
             "Musk": "await_musk_food",
-            "Trump": "await_trump_food",
+            "Taytay": "await_taytay_food",
         }
         if player_name in stage_map:
             self.game_stage = stage_map[player_name]
@@ -564,7 +564,7 @@ class MainControlExtension(AsyncExtension):
         self.game_stage = "qa_phase"
         self.questions_answered = set()
         cue = (
-            "Elliot, now quiz me! Ask what Musk likes to eat, then Trump, and finally ask what you like to eat."
+            "Elliot, now quiz me! Ask what Musk likes to eat, then Taytay, and finally ask what you like to eat."
         )
         await self._send_transcript("assistant", cue, True, 100)
         await self._send_to_tts(cue, True, "Elliot")
@@ -681,21 +681,21 @@ class MainControlExtension(AsyncExtension):
             if speaker == "Musk":
                 self.food_preferences["Musk"] = self._normalize_food_text(clean_text)
                 await self._acknowledge_food("Musk", clean_text)
-                await self._prompt_player_for_food("Trump")
+                await self._prompt_player_for_food("Taytay")
                 return True
             if speaker in self.player_names:
                 await self._remind_turn("Musk", speaker)
                 return True
             return False
 
-        if stage == "await_trump_food":
-            if speaker == "Trump":
-                self.food_preferences["Trump"] = self._normalize_food_text(clean_text)
-                await self._acknowledge_food("Trump", clean_text)
+        if stage == "await_taytay_food":
+            if speaker == "Taytay":
+                self.food_preferences["Taytay"] = self._normalize_food_text(clean_text)
+                await self._acknowledge_food("Taytay", clean_text)
                 await self._prompt_question_round()
                 return True
             if speaker in self.player_names:
-                await self._remind_turn("Trump", speaker)
+                await self._remind_turn("Taytay", speaker)
                 return True
             return False
 
@@ -703,7 +703,7 @@ class MainControlExtension(AsyncExtension):
             if speaker != "Elliot":
                 return False
 
-            normalized = lower.replace("turmp", "trump")
+            normalized = lower.replace("turmp", "taytay")
 
             handled = False
             if (
@@ -714,11 +714,11 @@ class MainControlExtension(AsyncExtension):
                 self.questions_answered.add("musk")
                 handled = True
             elif (
-                "trump" not in self.questions_answered
-                and self._is_food_question_for(normalized, "Trump")
+                "taytay" not in self.questions_answered
+                and self._is_food_question_for(normalized, "Taytay")
             ):
-                await self._respond_with_food("Trump", "Elliot")
-                self.questions_answered.add("trump")
+                await self._respond_with_food("Taytay", "Elliot")
+                self.questions_answered.add("taytay")
                 handled = True
             elif (
                 "elliot" not in self.questions_answered
@@ -732,7 +732,7 @@ class MainControlExtension(AsyncExtension):
                 handled = True
 
             if handled and self.questions_answered.issuperset(
-                {"musk", "trump", "elliot"}
+                {"musk", "taytay", "elliot"}
             ):
                 closing = "That's the whole round of Who Likes What. Nice guessing!"
                 await self._send_transcript("assistant", closing, True, 100)
