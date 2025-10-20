@@ -996,7 +996,25 @@ function dangerButtonStyle(disabled: boolean): CSSProperties {
 }
 
 function reconstructMessage(chunks: TextChunk[]): string {
+  if (chunks.length === 0) {
+    return ""
+  }
   const ordered = [...chunks].sort((a, b) => a.part_index - b.part_index)
+  const total = ordered[0].total_parts
+  if (ordered.length !== total) {
+    console.warn(
+      `[UI] Incomplete chunk set: expected ${total}, got ${ordered.length}`,
+    )
+    throw new Error("Incomplete message chunks")
+  }
+  for (let i = 0; i < ordered.length; i++) {
+    if (ordered[i].part_index !== i) {
+      console.warn(
+        `[UI] Gap in chunk indices: expected ${i}, got ${ordered[i].part_index}`,
+      )
+      throw new Error("Missing chunk index")
+    }
+  }
   return ordered.map((chunk) => chunk.content).join("")
 }
 
