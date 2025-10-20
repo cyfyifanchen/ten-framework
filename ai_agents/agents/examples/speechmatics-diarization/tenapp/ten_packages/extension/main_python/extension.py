@@ -35,8 +35,8 @@ class MainControlExtension(AsyncExtension):
 
     PLAYER_ALIAS_MAP: dict[str, list[str]] = {
         "Elliot": ["elliot", "elliott", "elyot"],
-        "Musk": ["musk", "elon"],
-        "Taytay": ["taytay", "taylor", "swift", "tay"],
+        "Musk": ["musk", "elon", "mass", "mask"],
+        "Taytay": ["taytay", "tay tay", "tate", "taylor", "swift", "tay"],
     }
 
     INTRODUCTION_PATTERNS: list[str] = [
@@ -73,11 +73,15 @@ class MainControlExtension(AsyncExtension):
         self.enrollment_prompted: bool = False
         self.enrollment_complete: bool = False
         self.pending_response_target: Optional[str] = None
-        self.last_enrollment_reminder_ts: float = 0.0
         self.last_unknown_speaker_ts: float = 0.0
+        self.last_turn_reminder_ts: dict[str, float] = {}
         self.game_stage: str = "enrollment"
         self.food_preferences: dict[str, str] = {}
         self.questions_answered: set[str] = set()
+        self.enrollment_order: list[str] = list(self.player_names)
+        self.enrollment_index: int = 0
+        self.completed_enrollments: set[str] = set()
+        self.awaiting_additional_request: bool = False
 
     def _current_metadata(self) -> dict:
         return {"session_id": self.session_id, "turn_id": self.turn_id}
@@ -109,7 +113,7 @@ class MainControlExtension(AsyncExtension):
                 "assistant", self.config.greeting, True, 100
             )
         if not self.enrollment_prompted:
-            await self._prompt_enrollment()
+            await self._start_enrollment_flow()
 
     @agent_event_handler(UserLeftEvent)
     async def _on_user_left(self, event: UserLeftEvent):
@@ -201,7 +205,11 @@ class MainControlExtension(AsyncExtension):
                 self.last_speaker = resolved_label
 
             if not self.enrollment_complete:
-                await self._maybe_remind_pending_players()
+                await self._handle_enrollment_stage(
+                    assigned_name or resolved_label,
+                    speaker_key,
+                    event.text,
+                )
             else:
                 handled = await self._handle_game_flow(
                     assigned_name or resolved_label, event.text
@@ -316,6 +324,30 @@ class MainControlExtension(AsyncExtension):
                 working = working[span[1]:]
                 break
 
+        # Strip lingering helper words like "to eat" that can remain after the leading pattern removal.
+        def _strip_prefix(text: str) -> str:
+            prefixes = [
+                "to eat ",
+                "to eat",
+                "eat ",
+                "eat",
+                "to ",
+                "to",
+            ]
+            trimmed = text
+            changed = True
+            while changed:
+                changed = False
+                lowered_text = trimmed.lower()
+                for prefix in prefixes:
+                    if lowered_text.startswith(prefix):
+                        trimmed = trimmed[len(prefix):]
+                        changed = True
+                        break
+            return trimmed
+
+        working = _strip_prefix(working.lstrip())
+
         working = working.strip(string.whitespace + string.punctuation)
         return working or text.strip()
 
@@ -381,16 +413,57 @@ class MainControlExtension(AsyncExtension):
 
         return False
 
-    async def _prompt_enrollment(self):
+    async def _start_enrollment_flow(self):
         """
-        Guide the players through the initial enrollment pass so diarization can map voices.
+        Kick off the enrollment flow by prompting each player one at a time.
         """
+        if self.enrollment_prompted:
+            return
         self.enrollment_prompted = True
-        instructions = (
-            "Welcome to Who Likes What! Elliot, Taytay, and Musk, please each say a quick hello so I can learn your voices before we begin."
-        )
-        await self._send_to_tts(instructions, True)
-        await self._send_transcript("assistant", instructions, True, 100)
+        self.enrollment_complete = False
+        self.enrollment_index = 0
+        self.completed_enrollments.clear()
+        self.speaker_assignments.clear()
+        self.last_turn_reminder_ts.clear()
+        await self._prompt_current_enrollment()
+
+    async def _prompt_current_enrollment(self):
+        if self.enrollment_index >= len(self.enrollment_order):
+            return
+        player_name = self.enrollment_order[self.enrollment_index]
+        self.game_stage = f"enrollment_{player_name.lower()}"
+        prompt = f"{player_name}, please say hello so I can learn your voice."
+        await self._send_transcript("assistant", prompt, True, 100)
+        await self._send_to_tts(prompt, True, player_name)
+
+    async def _handle_enrollment_stage(
+        self,
+        speaker: Optional[str],
+        speaker_key: str,
+        transcript_text: str,
+    ):
+        if self.enrollment_index >= len(self.enrollment_order):
+            return
+
+        expected_player = self.enrollment_order[self.enrollment_index]
+        if speaker != expected_player:
+            self.ten_env.log_info(
+                f"[Enrollment] Received speech from {speaker or 'unknown'} while awaiting {expected_player}"
+            )
+            return
+
+        if expected_player in self.completed_enrollments:
+            return
+
+        self.completed_enrollments.add(expected_player)
+        await self._announce_enrollment(expected_player)
+        self.enrollment_index += 1
+
+        if self.enrollment_index < len(self.enrollment_order):
+            await self._prompt_current_enrollment()
+        else:
+            self.enrollment_complete = True
+            await self._announce_enrollment_completion()
 
     async def _assign_player_if_needed(
         self,
@@ -456,7 +529,11 @@ class MainControlExtension(AsyncExtension):
             f"[Enrollment] Registered {speaker_key} as {candidate}"
         )
 
-        if not self.enrollment_complete:
+        should_announce = True
+        if self.enrollment_prompted and candidate not in self.completed_enrollments:
+            should_announce = False
+
+        if not self.enrollment_complete and should_announce:
             await self._announce_enrollment(candidate)
             if len(self.speaker_assignments) == len(self.player_names):
                 self.enrollment_complete = True
@@ -474,33 +551,6 @@ class MainControlExtension(AsyncExtension):
         await self._send_transcript("assistant", wrap_up, True, 100)
         await self._send_to_tts(wrap_up, True)
         await self._start_food_round()
-
-    async def _maybe_remind_pending_players(self):
-        """
-        Periodically remind everyone which players still need to enroll.
-        """
-        remaining = [
-            name
-            for name in self.player_names
-            if name not in self.speaker_assignments.values()
-        ]
-        if not remaining:
-            return
-
-        now = time.time()
-        if now - self.last_enrollment_reminder_ts < 5:
-            return
-
-        self.last_enrollment_reminder_ts = now
-        if len(remaining) == 1:
-            reminder = f"Waiting for {remaining[0]} to give me a quick hello so I can lock in their voice."
-        elif len(remaining) == 2:
-            reminder = f"Waiting for {remaining[0]} and {remaining[1]} to check in with a hello."
-        else:
-            reminder = "Waiting for Elliot, Taytay, and Musk to say hello for enrollment."
-
-        await self._send_transcript("assistant", reminder, True, 100)
-        await self._send_to_tts(reminder, True)
 
     async def _handle_unknown_speaker(self, text: str):
         """
@@ -540,6 +590,7 @@ class MainControlExtension(AsyncExtension):
             "Musk": "await_musk_food",
             "Taytay": "await_taytay_food",
         }
+        self.last_turn_reminder_ts.clear()
         if player_name in stage_map:
             self.game_stage = stage_map[player_name]
         prompt = f"{player_name}, tell me something you love to eat."
@@ -549,11 +600,20 @@ class MainControlExtension(AsyncExtension):
     async def _acknowledge_food(self, player_name: str, food_text: str):
         normalized_text = self._normalize_food_text(food_text)
         printable = normalized_text.rstrip(".!?") or food_text.strip()
-        summary = f"Got it, {player_name}! You love to eat {printable}."
+        pronoun, verb = self._player_pronoun(player_name)
+        summary = f"Got it, {player_name}! {pronoun.capitalize()} {verb} to eat {printable}."
         await self._send_transcript("assistant", summary, True, 100)
         await self._send_to_tts(summary, True, player_name)
 
     async def _remind_turn(self, expected_player: str, interrupting_player: str):
+        now = time.time()
+        last_reminder = self.last_turn_reminder_ts.get(interrupting_player, 0.0)
+        if now - last_reminder < 4.0:
+            self.ten_env.log_info(
+                f"[MainControlExtension] Suppressing duplicate turn reminder for {interrupting_player}"
+            )
+            return
+        self.last_turn_reminder_ts[interrupting_player] = now
         reminder = (
             f"Hang tight, {interrupting_player}. It's {expected_player}'s turn to share their food."
         )
@@ -563,6 +623,8 @@ class MainControlExtension(AsyncExtension):
     async def _prompt_question_round(self):
         self.game_stage = "qa_phase"
         self.questions_answered = set()
+        self.awaiting_additional_request = False
+        self.last_turn_reminder_ts.clear()
         cue = (
             "Elliot, now quiz me! Ask what Musk likes to eat, then Taytay, and finally ask what you like to eat."
         )
@@ -574,7 +636,37 @@ class MainControlExtension(AsyncExtension):
         if not food_text:
             reply = f"I'm still waiting to hear what {about_player} loves to eat."
         else:
-            reply = f"{about_player} said they love to eat {food_text}."
+            pronoun, verb = self._player_pronoun(about_player)
+            reply = f"{about_player} said {pronoun} {verb} to eat {food_text}."
+        await self._send_transcript("assistant", reply, True, 100)
+        await self._send_to_tts(reply, True, recipient)
+
+    async def _prompt_anything_else(self):
+        if self.awaiting_additional_request:
+            return
+        self.awaiting_additional_request = True
+        self.game_stage = "await_additional_request"
+        self.last_turn_reminder_ts.clear()
+        question = "Anything else I can do?"
+        await self._send_transcript("assistant", question, True, 100)
+        await self._send_to_tts(question, True, "Elliot")
+
+    @staticmethod
+    def _is_shanghai_restaurant_request(normalized: str) -> bool:
+        if "shanghai" not in normalized or "restaurant" not in normalized:
+            return False
+        if "food" not in normalized and "these" not in normalized:
+            return False
+        return True
+
+    async def _respond_with_shanghai_restaurant(self, recipient: str):
+        elliot_food = self.food_preferences.get("Elliot", "burger and fries")
+        musk_food = self.food_preferences.get("Musk", "steak and seasoned rice")
+        taytay_food = self.food_preferences.get("Taytay", "chocolate cookies and strawberry muffins")
+        reply = (
+            "Since you're all in Shanghai, you could visit The Bund Food Hall. "
+            f"They serve {elliot_food} for Elliot, {musk_food} for Musk, and sweet treats like {taytay_food} for Taytay."
+        )
         await self._send_transcript("assistant", reply, True, 100)
         await self._send_to_tts(reply, True, recipient)
 
@@ -589,12 +681,32 @@ class MainControlExtension(AsyncExtension):
                 return True
         return False
 
+    def _is_follow_up_question_for(self, normalized: str, target: str) -> bool:
+        """
+        Detects short follow-up prompts like 'what about Taytay?' that rely on prior context.
+        """
+        aliases = {target.lower()}
+        aliases.update(alias.lower() for alias in self.PLAYER_ALIAS_MAP.get(target, []))
+        for alias in aliases:
+            if any(
+                re.search(pattern, normalized)
+                for pattern in [
+                    rf"\bwhat about {re.escape(alias)}\b",
+                    rf"\bhow about {re.escape(alias)}\b",
+                    rf"\band {re.escape(alias)}\b",
+                    rf"\bwhat about the {re.escape(alias)}\b",
+                ]
+            ):
+                return True
+        return False
+
     def _is_food_question_for(self, normalized: str, target: str) -> bool:
         """
         Heuristic matching for questions asking about a target player's food preference.
         """
         if not self._question_mentions_player(normalized, target):
             return False
+        follow_up = self._is_follow_up_question_for(normalized, target)
 
         question_markers = [
             "what",
@@ -604,7 +716,19 @@ class MainControlExtension(AsyncExtension):
             "can you tell",
             "remind me",
         ]
-        if not any(marker in normalized for marker in question_markers):
+        has_question_marker = any(marker in normalized for marker in question_markers)
+        if not has_question_marker and not follow_up:
+            if "?" in normalized:
+                implied_patterns = [
+                    " like to eat",
+                    " love to eat",
+                    " like eating",
+                    " love eating",
+                    " prefer to eat",
+                ]
+                if any(pattern in normalized for pattern in implied_patterns):
+                    has_question_marker = True
+        if not has_question_marker and not follow_up:
             return False
 
         preference_markers = [
@@ -616,10 +740,10 @@ class MainControlExtension(AsyncExtension):
             "love",
             "enjoy",
         ]
-        if not any(marker in normalized for marker in preference_markers):
+        if not follow_up and not any(marker in normalized for marker in preference_markers):
             return False
 
-        if "like" not in normalized and "love" not in normalized:
+        if not follow_up and "like" not in normalized and "love" not in normalized:
             if not any(marker in normalized for marker in ["eat", "food", "favorite", "favourite"]):
                 return False
 
@@ -644,6 +768,16 @@ class MainControlExtension(AsyncExtension):
             ]
         ):
             return False
+
+        follow_up_phrases = [
+            "what about me",
+            "how about me",
+            "what about myself",
+            "how about myself",
+            "and me",
+        ]
+        if any(phrase in normalized for phrase in follow_up_phrases):
+            return True
 
         preference_markers = [
             "eat",
@@ -734,10 +868,19 @@ class MainControlExtension(AsyncExtension):
             if handled and self.questions_answered.issuperset(
                 {"musk", "taytay", "elliot"}
             ):
-                closing = "That's the whole round of Who Likes What. Nice guessing!"
-                await self._send_transcript("assistant", closing, True, 100)
-                await self._send_to_tts(closing, True)
+                await self._prompt_anything_else()
             return handled
+
+        if stage == "await_additional_request":
+            if speaker != "Elliot":
+                return False
+            normalized = lower
+            if self._is_shanghai_restaurant_request(normalized):
+                await self._respond_with_shanghai_restaurant("Elliot")
+                self.awaiting_additional_request = False
+                self.game_stage = "complete"
+                return True
+            return False
 
         return False
 
@@ -754,6 +897,10 @@ class MainControlExtension(AsyncExtension):
         self.speaker_assignments = {}
         self.enrollment_prompted = False
         self.enrollment_complete = False
+        self.enrollment_index = 0
+        self.completed_enrollments = set()
+        self.awaiting_additional_request = False
+        self.last_turn_reminder_ts = {}
         ten_env.log_info("[MainControlExtension] stopping agent...")
         await self.agent.stop()
         ten_env.log_info("[MainControlExtension] agent stopped")
@@ -851,3 +998,10 @@ class MainControlExtension(AsyncExtension):
         )
         await _send_cmd(self.ten_env, "flush", "agora_rtc")
         self.ten_env.log_info("[MainControlExtension] Interrupt signal sent")
+    def _player_pronoun(self, player_name: str) -> tuple[str, str]:
+        pronoun_map = {
+            "Elliot": ("he", "loves"),
+            "Musk": ("he", "loves"),
+            "Taytay": ("she", "loves"),
+        }
+        return pronoun_map.get(player_name, ("they", "love"))

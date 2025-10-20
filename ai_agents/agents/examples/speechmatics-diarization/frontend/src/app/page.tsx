@@ -34,7 +34,7 @@ type TextChunk = {
 
 type StatusTone = "positive" | "neutral" | "warning" | "muted"
 
-const DEFAULT_CHANNEL = "ten_diarization"
+const DEFAULT_CHANNEL = "ten_diarization_who_likes_what"
 
 const SPEAKER_REGEX = /^\[([^\]]+)\]\s*/
 
@@ -594,7 +594,7 @@ export default function HomePage() {
             color: TEXT_PRIMARY,
           }}
         >
-              Who Likes What
+          Who Likes What
         </h1>
 
         <section
