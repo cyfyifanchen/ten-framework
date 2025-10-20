@@ -111,7 +111,7 @@ export default function HomePage() {
   const clientRef = useRef<IAgoraRTCClient | null>(null)
   const audioRef = useRef<IMicrophoneAudioTrack | null>(null)
   const remoteTracksRef = useRef<Map<string, IRemoteAudioTrack>>(new Map())
-  const cacheRef = useRef<Record<string, TextChunk[]>>({})
+  const cacheRef = useRef<Record<string, Map<number, TextChunk>>>({})
   const transcriptContainerRef = useRef<HTMLDivElement | null>(null)
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -340,12 +340,13 @@ export default function HomePage() {
         }
         const cache = cacheRef.current
         if (!cache[message_id]) {
-          cache[message_id] = []
+          cache[message_id] = new Map()
         }
-        cache[message_id].push(chunk)
+        const messageCache = cache[message_id]
+        messageCache.set(part_index, chunk)
 
-        if (cache[message_id].length === total_parts) {
-          const payloadRaw = reconstructMessage(cache[message_id])
+        if (messageCache.size === total_parts) {
+          const payloadRaw = reconstructMessage(Array.from(messageCache.values()))
           const payload = JSON.parse(base64ToUtf8(payloadRaw))
           const { text, is_final, text_ts, role } = payload
           if (text && String(text).trim().length > 0) {
@@ -421,7 +422,11 @@ export default function HomePage() {
     } catch (err: any) {
       console.error("[UI] join error", err)
       setError(err?.message || String(err))
-      await stop() // ensure state is clean
+      try {
+        await stop() // ensure state is clean
+      } catch (cleanupErr) {
+        console.warn("[UI] stop cleanup error after join failure", cleanupErr)
+      }
       throw err
     } finally {
       setPending(false)
