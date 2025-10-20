@@ -111,13 +111,6 @@ class LLMExec:
                 pass
         self._queue_task = None
         self.ten_env.log_info("[LLMExec] stop complete")
-        if self._queue_task and not self._queue_task.done():
-            self._queue_task.cancel()
-            try:
-                await self._queue_task
-            except asyncio.CancelledError:
-                pass
-        self._queue_task = None
 
     async def register_tool(self, tool: LLMToolMetadata, source: str) -> None:
         """

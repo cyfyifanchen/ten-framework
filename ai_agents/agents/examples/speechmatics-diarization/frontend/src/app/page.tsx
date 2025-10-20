@@ -32,8 +32,6 @@ type TextChunk = {
   content: string
 }
 
-type StatusTone = "positive" | "neutral" | "warning" | "muted"
-
 const DEFAULT_CHANNEL = "ten_diarization_who_likes_what"
 
 const SPEAKER_REGEX = /^\[([^\]]+)\]\s*/
@@ -963,83 +961,6 @@ function TranscriptRow({ item }: { item: ChatItem }) {
       >
         {item.text}
       </div>
-    </div>
-  )
-}
-
-function StatusCard({
-  title,
-  value,
-  tone = "neutral",
-}: {
-  title: string
-  value: string
-  tone?: StatusTone
-}) {
-  const toneStyles: Record<
-    StatusTone,
-    { background: string; border: string; label: string; value: string }
-  > = {
-    positive: {
-      background: "#ffffff",
-      border: "#d1d5db",
-      label: "#4b5563",
-      value: "#111827",
-    },
-    neutral: {
-      background: "#f8fafc",
-      border: "#d1d5db",
-      label: "#4b5563",
-      value: "#111827",
-    },
-    warning: {
-      background: "#f9fafb",
-      border: "#e5e7eb",
-      label: "#6b7280",
-      value: "#111827",
-    },
-    muted: {
-      background: "#f9fafb",
-      border: "#e5e7eb",
-      label: "#9ca3af",
-      value: "#6b7280",
-    },
-  }
-
-  const styles = toneStyles[tone]
-  return (
-    <div
-      style={{
-        flex: "1 1 200px",
-        minWidth: 200,
-        background: styles.background,
-        border: `1px solid ${styles.border}`,
-        borderRadius: 16,
-        padding: "18px 20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-      }}
-    >
-      <span
-        style={{
-          fontSize: 11,
-          fontWeight: 600,
-          letterSpacing: 0.4,
-          color: styles.label,
-        }}
-      >
-        {title.toUpperCase()}
-      </span>
-      <span
-        style={{
-          fontSize: 20,
-          fontWeight: 600,
-          color: styles.value,
-        }}
-      >
-        {value}
-      </span>
     </div>
   )
 }
