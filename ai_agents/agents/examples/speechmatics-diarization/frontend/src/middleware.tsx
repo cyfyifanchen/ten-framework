@@ -10,15 +10,17 @@ export function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith('/api/token/')) {
-    const url = req.nextUrl.clone();
-    url.href = `${AGENT_SERVER_URL}${pathname.replace('/api/token/', '/token/')}`;
-    return NextResponse.rewrite(url);
+    const target = new URL(AGENT_SERVER_URL);
+    target.pathname = pathname.replace('/api/token/', '/token/');
+    target.search = req.nextUrl.search;
+    return NextResponse.rewrite(target);
   }
 
   if (pathname.startsWith('/api/agents/') && !pathname.startsWith('/api/agents/start')) {
-    const url = req.nextUrl.clone();
-    url.href = `${AGENT_SERVER_URL}${pathname.replace('/api/agents/', '/')}`;
-    return NextResponse.rewrite(url);
+    const target = new URL(AGENT_SERVER_URL);
+    target.pathname = pathname.replace('/api/agents/', '/');
+    target.search = req.nextUrl.search;
+    return NextResponse.rewrite(target);
   }
 
   return NextResponse.next();

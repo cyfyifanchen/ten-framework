@@ -3,7 +3,7 @@ import json
 import re
 import string
 import time
-from typing import Literal, Optional
+from typing import ClassVar, Literal, Optional
 
 from .agent.decorators import agent_event_handler
 from ten_runtime import (
@@ -33,13 +33,13 @@ class MainControlExtension(AsyncExtension):
     Consumes semantic AgentEvents from the Agent class and drives the runtime behavior.
     """
 
-    PLAYER_ALIAS_MAP: dict[str, list[str]] = {
+    PLAYER_ALIAS_MAP: ClassVar[dict[str, list[str]]] = {
         "Elliot": ["elliot", "elliott", "elyot"],
         "Musk": ["musk", "elon", "mass", "mask"],
         "Taytay": ["taytay", "tay tay", "tate", "taylor", "swift", "tay"],
     }
 
-    INTRODUCTION_PATTERNS: list[str] = [
+    INTRODUCTION_PATTERNS: ClassVar[list[str]] = [
         r"\bthis is\s+{alias}\b",
         r"\bi['\s]*m\s+{alias}\b",
         r"\bi am\s+{alias}\b",
@@ -48,7 +48,7 @@ class MainControlExtension(AsyncExtension):
         r"\bname['\s]*s\s+{alias}\b",
     ]
 
-    GREETING_TEMPLATES: set[str] = {
+    GREETING_TEMPLATES: ClassVar[set[str]] = {
         "hello {alias}",
         "hi {alias}",
         "hey {alias}",
