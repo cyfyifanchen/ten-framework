@@ -301,19 +301,36 @@ export default function HomePage() {
     document.head.appendChild(style)
   }, [])
 
+  const streamDecoder = useMemo(() => new TextDecoder(), [])
+
   const handleStreamMessage = useCallback(
-    (stream: ArrayBuffer) => {
+    (stream: Uint8Array) => {
       try {
-        const ascii = String.fromCharCode(...new Uint8Array(stream))
-        const [message_id, partIndexStr, totalPartsStr, content] =
-          ascii.split("|")
+        const decoded = streamDecoder.decode(stream)
+        const firstSep = decoded.indexOf("|")
+        if (firstSep === -1) {
+          return
+        }
+        const secondSep = decoded.indexOf("|", firstSep + 1)
+        if (secondSep === -1) {
+          return
+        }
+        const thirdSep = decoded.indexOf("|", secondSep + 1)
+        if (thirdSep === -1) {
+          return
+        }
+
+        const message_id = decoded.slice(0, firstSep)
+        const partIndexStr = decoded.slice(firstSep + 1, secondSep)
+        const totalPartsStr = decoded.slice(secondSep + 1, thirdSep)
+        const content = decoded.slice(thirdSep + 1)
         const part_index = parseInt(partIndexStr, 10)
         const total_parts =
           totalPartsStr === "???" ? -1 : parseInt(totalPartsStr, 10)
-        if (Number.isNaN(part_index) || Number.isNaN(total_parts)) {
+        if (Number.isNaN(part_index)) {
           return
         }
-        if (total_parts === -1) {
+        if (total_parts === -1 || Number.isNaN(total_parts)) {
           return
         }
 
@@ -350,7 +367,7 @@ export default function HomePage() {
         console.warn("[UI] Failed to parse stream-message", e)
       }
     },
-    [appendOrUpdateItem],
+    [appendOrUpdateItem, streamDecoder],
   )
 
   const join = useCallback(async () => {
@@ -370,7 +387,7 @@ export default function HomePage() {
       const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" })
       clientRef.current = client
 
-      client.on("stream-message", (_uid: UID, stream: ArrayBuffer) => {
+      client.on("stream-message", (_uid: UID, stream: Uint8Array) => {
         handleStreamMessage(stream)
       })
 
