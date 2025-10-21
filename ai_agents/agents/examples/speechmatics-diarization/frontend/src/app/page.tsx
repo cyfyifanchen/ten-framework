@@ -111,7 +111,7 @@ export default function HomePage() {
   const clientRef = useRef<IAgoraRTCClient | null>(null)
   const audioRef = useRef<IMicrophoneAudioTrack | null>(null)
   const remoteTracksRef = useRef<Map<string, IRemoteAudioTrack>>(new Map())
-  const cacheRef = useRef<Record<string, Map<number, TextChunk>>>({})
+  const cacheRef = useRef<Map<string, Map<number, TextChunk>>>(new Map())
   const transcriptContainerRef = useRef<HTMLDivElement | null>(null)
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -339,10 +339,11 @@ export default function HomePage() {
           content,
         }
         const cache = cacheRef.current
-        if (!cache[message_id]) {
-          cache[message_id] = new Map()
+        let messageCache = cache.get(message_id)
+        if (!messageCache) {
+          messageCache = new Map()
+          cache.set(message_id, messageCache)
         }
-        const messageCache = cache[message_id]
         messageCache.set(part_index, chunk)
 
         if (messageCache.size === total_parts) {
@@ -360,7 +361,7 @@ export default function HomePage() {
               ts: text_ts || Date.now(),
             })
           }
-          delete cache[message_id]
+          cache.delete(message_id)
         }
       } catch (e) {
         console.warn("[UI] Failed to parse stream-message", e)
@@ -458,7 +459,7 @@ export default function HomePage() {
   const stop = useCallback(async () => {
     setPending(true)
     try {
-      cacheRef.current = {}
+      cacheRef.current.clear()
       setItems([])
       setLastReplySpeaker(null)
       if (audioRef.current) {
