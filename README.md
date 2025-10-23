@@ -43,10 +43,17 @@
 #### Table of Contents
 
 - [👋 Welcome to TEN](#-welcome-to-ten)
-- [✨ Agent Examples](#-agent-examples)
+- [✨ Features](#-features)
+  - [1️⃣ Real-time Avatar](#1️⃣-real-time-avatar)
+  - [2️⃣ Real-time voice with MCP servers](#2️⃣-real-time-voice-with-mcp-servers)
+  - [3️⃣ Real-time communication with hardware](#3️⃣-real-time-communication-with-hardware)
+  - [4️⃣ Real-time vision and real-time screenshare detection](#4️⃣-real-time-vision-and-real-time-screenshare-detection)
+  - [5️⃣ TEN with other LLM platforms](#5️⃣-ten-with-other-llm-platforms)
+  - [6️⃣ StoryTeller - TEN image generation](#6️⃣-storyteller---ten-image-generation)
 - [👩‍💻 Get TEN up and running](#-get-ten-up-and-running)
   - [🅰️ Run TEN on localhost](#🅰️-run-ten-on-localhost)
   - [🅱️ Run TEN Agent in Codespaces (no Docker)](#🅱️-run-ten-agent-in-codespaces-no-docker)
+- [✨ Agent Examples](#-agent-examples)
 - [🛳️ TEN Agent Self-Hosting](#️-ten-agent-self-hosting)
   - [🅰️ Deploying with Docker](#🅰️-deploying-with-docker)
   - [🅱️ Deploying with other cloud services](#🅱️-deploying-with-other-cloud-services)
@@ -99,99 +106,7 @@ TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [T
 
 <br>
 
-## ✨ Agent Examples
-
-<table>
-<tr>
-<td width="50%">
-<h3>Voice Assistant</h3>
-<p>A voice assistant optimized for voice conversations.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant/">Code</a>
-</p>
-</td>
-<td width="50%">
-<h3>Real-time Voice Assistant</h3>
-<p>A voice assistant optimized for real-time conversations.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-realtime/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>Voice Assistant Node.js</h3>
-<p>A voice assistant written in Node.js.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-nodejs/">Code</a>
-</p>
-</td>
-
-<td width="50%">
-<h3>Voice Assistant Video</h3>
-<p>A voice assistant with video capabilities.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-video/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>Voice Assistant SIP (Twilio)</h3>
-<p>A voice assistant that places outbound phone calls with Twilio.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-sip-twilio/">Code</a>
-</p>
-</td>
-<td width="50%">
-
-<h3>Voice Assistant with MemU</h3>
-<p>A voice assistant that uses MemU's memory management capabilities for persistent conversation context.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-with-memU/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>Voice Assistant with TEN VAD</h3>
-<p>A voice assistant that uses TEN VAD for voice activity detection.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-with-ten-vad/">Code</a>
-</p>
-</td>
-<td width="50%">
-<h3>Voice Assistant with TEN Turn Detection</h3>
-<p>A voice assistant that uses TEN Turn Detection to manage conversation turns.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-with-ten-turn-detector/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>Transcription</h3>
-<p>A transcription agent that captures audio from every user in the room.</p>
-<p>
-<a href="ai_agents/agents/examples/transcription/">Code</a>
-</p>
-</td>
-<td width="50%">
-<h3>Speech Diarization</h3>
-<p>Identifies different speakers in multi-user conversations.</p>
-<p>
-<a href="ai_agents/agents/examples/speechmatics-diarization/">Code</a>
-</p>
-</td>
-</tr>
-
-</table>
-
-<!-- ## ✨ Features
+## ✨ Features
 
 ![TEN Agent with Trulience](https://github.com/user-attachments/assets/c6702995-de94-4d3e-8cae-af097f087ac1)
 
@@ -202,12 +117,7 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 1. Follow the README to finish setting up and running the Playground
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<br>
 <br>
 
 ![TEN with MCP servers](https://github.com/user-attachments/assets/afb77ad3-9c23-452f-b870-216687779017)
@@ -223,12 +133,7 @@ TEN Agent now integrates seamlessly with MCP servers, expanding its LLM capabili
 
 This integration allows you to leverage MCP's diverse servers offerings while maintaining TEN Agent's powerful conversational abilities.
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<br>
 <br>
 
 <https://github.com/user-attachments/assets/78647eef-2d66-44e6-99a8-1918a940fb9f>
@@ -239,12 +144,7 @@ TEN Agent is now running on the Espressif ESP32-S3 Korvo V3 development board, a
 
 Check out the [integration guide](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client) for more details.
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<br>
 <br>
 
 ![Real-time Vision](https://github.com/user-attachments/assets/a1addb02-a450-47be-8cb2-d25e3b574f53)
@@ -253,12 +153,7 @@ Check out the [integration guide](https://github.com/TEN-framework/ten-framework
 
 Try Google Gemini Multimodal Live API with realtime vision and realtime screenshare detection capabilities, it is a ready-to-use extension, along with powerful tools like Weather Check and Web Search integrated perfectly into TEN Agent.
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<br>
 <br>
 
 ![TEN with Dify](https://github.com/user-attachments/assets/234ff443-bef8-4cc4-9a10-09d6ec3f5bc1)
@@ -269,12 +164,7 @@ Try Google Gemini Multimodal Live API with realtime vision and realtime screensh
 
 TEN offers a great support to make the realtime interactive experience even better on other LLM platform as well, check out docs for more.
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<br>
 <br>
 
 ![TEN StoryTeller](https://github.com/user-attachments/assets/fe28a549-ddb9-431e-9282-57539fb87371)
@@ -288,8 +178,6 @@ Experience the real-time image generation with StoryTeller, it is a ready-to-use
 [![][back-to-top]](#readme-top)
 
 </div>
-
-<br> -->
 
 <br>
 
@@ -393,12 +281,6 @@ task run
  5. Right under the Actions, click the ▶ to run the App.
  6. Check the 'Run with TEN Agent' option and click the Run button.
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
 <br>
 
 ### 🅱️ Run TEN Agent in Codespaces (no Docker)
@@ -415,6 +297,98 @@ Check out [this guide](https://theten.ai/docs/ten_agent/setup_development_env/se
 [![][back-to-top]](#readme-top)
 
 </div>
+
+## ✨ Agent Examples
+
+<table>
+<tr>
+<td width="50%">
+<h3>Chained Voice Assistant</h3>
+<p>A voice assistant optimized for voice conversations.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant/">Code</a>
+</p>
+</td>
+<td width="50%">
+<h3>Real-time Voice Assistant</h3>
+<p>A voice assistant optimized for real-time conversations.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-realtime/">Code</a>
+</p>
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+<h3>Voice Assistant Node.js</h3>
+<p>A voice assistant written in Node.js.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-nodejs/">Code</a>
+</p>
+</td>
+
+<td width="50%">
+<h3>Voice Assistant Video</h3>
+<p>A voice assistant with video capabilities.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-video/">Code</a>
+</p>
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+<h3>SIP (Twilio)</h3>
+<p>A voice assistant that places outbound phone calls with Twilio.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-sip-twilio/">Code</a>
+</p>
+</td>
+<td width="50%">
+
+<h3>Memory with MemU</h3>
+<p>A voice assistant that uses MemU's memory management capabilities for persistent conversation context.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-with-memU/">Code</a>
+</p>
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+<h3>TEN VAD</h3>
+<p>A voice assistant that uses TEN VAD for voice activity detection.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-with-ten-vad/">Code</a>
+</p>
+</td>
+<td width="50%">
+<h3>TEN Turn Detection</h3>
+<p>A voice assistant that uses TEN Turn Detection to manage conversation turns.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-with-ten-turn-detector/">Code</a>
+</p>
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+<h3>Transcription</h3>
+<p>A transcription agent that captures audio from every user in the room.</p>
+<p>
+<a href="ai_agents/agents/examples/transcription/">Code</a>
+</p>
+</td>
+<td width="50%">
+<h3>Speech Diarization</h3>
+<p>Identifies different speakers in multi-user conversations.</p>
+<p>
+<a href="ai_agents/agents/examples/speechmatics-diarization/">Code</a>
+</p>
+</td>
+</tr>
+
+</table>
 
 <br>
 
