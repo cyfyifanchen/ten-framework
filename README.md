@@ -98,13 +98,6 @@ TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [T
 
 <br>
 
-<details>
-  <summary><kbd>Star History</kbd></summary>
-  <picture>
-    <img width="100%" src="https://api.star-history.com/svg?repos=ten-framework/ten-framework&type=Date">
-  </picture>
-</details>
-
 <div align="right">
 
 [![][back-to-top]](#readme-top)
@@ -113,25 +106,99 @@ TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [T
 
 <br>
 
-## 🎨 TMAN Designer
+## ✨ Agent Examples
 
-<https://github.com/user-attachments/assets/44c6a087-ec7a-45b0-a084-dab5dac5e36b>
+<table>
+<tr>
+<td width="50%">
+<h3>Voice Assistant</h3>
+<p>A voice assistant optimized for voice conversations.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant/">Code</a>
+</p>
+</td>
+<td width="50%">
+<h3>Voice Assistant Real-time</h3>
+<p>A voice assistant optimized for real-time voice conversations.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-realtime/">Code</a>
+</p>
+</td>
+</tr>
 
-### TMAN Designer
+<tr>
+<td width="50%">
+<h3>Voice Assistant NodeJS</h3>
+<p>A voice assistant that written in NodeJS.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-nodejs/">Code</a>
+</p>
+</td>
 
-TMAN Designer is a low/no-code option to create voice agents with an easy-to-use workflow UI. It can load apps and graphs, and includes an online editor, log viewer, and much more.
+<td width="50%">
+<h3>Voice Assistant Video</h3>
+<p>Voice Assistant with video capabilities.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-video/">Code</a>
+</p>
+</td>
+</tr>
 
-Check out [this blog](https://theten.ai/blog/tman-designer-of-ten-framework) for more details.
+<tr>
+<td width="50%">
+<h3>Voice Assistant SIP Twilio</h3>
+<p>A voice assistant that makes outbound phone calls.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-sip-twilio/">Code</a>
+</p>
+</td>
+<td width="50%">
 
-<div align="right">
+<h3>Voice Assistant with MemU</h3>
+<p>A voice assistant that uses MemU memory management capabilities for persistent conversation context.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-with-memU/">Code</a>
+</p>
+</td>
+</tr>
 
-[![][back-to-top]](#readme-top)
+<tr>
+<td width="50%">
+<h3>Voice Assistant with TEN VAD</h3>
+<p>A voice assistant that uses TEN VAD for voice activity detection.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-with-ten-vad/">Code</a>
+</p>
+</td>
+<td width="50%">
+<h3>Voice Assistant with TEN Turn Detection</h3>
+<p>A voice assistant that uses TEN Turn Detection for turn detection.</p>
+<p>
+<a href="ai_agents/agents/examples/voice-assistant-with-ten-turn-detector/">Code</a>
+</p>
+</td>
+</tr>
 
-</div>
+<tr>
+<td width="50%">
+<h3>Transcription</h3>
+<p>A transcription agent that produces transcriptions from user.</p>
+<p>
+<a href="ai_agents/agents/examples/transcription/">Code</a>
+</p>
+</td>
+<td width="50%">
+<h3>Speech Diarization</h3>
+<p>Who likes what - a game knows different speakers.</p>
+<p>
+<a href="ai_agents/agents/examples/speechmatics-diarization/">Code</a>
+</p>
+</td>
+</tr>
 
-<br>
+</table>
 
-## ✨ Features
+<!-- ## ✨ Features
 
 ![TEN Agent with Trulience](https://github.com/user-attachments/assets/c6702995-de94-4d3e-8cae-af097f087ac1)
 
@@ -229,11 +296,13 @@ Experience the real-time image generation with StoryTeller, it is a ready-to-use
 
 </div>
 
+<br> -->
+
 <br>
 
-## 👩‍💻 Get TEN Agent up and running
+## 👩‍💻 Get TEN up and running
 
-#### 🅰️ Run TEN Agent in localhost
+#### 🅰️ Run TEN in localhost
 
 #### Step ⓵ - Prerequisites
 
@@ -245,15 +314,14 @@ Experience the real-time image generation with StoryTeller, it is a ready-to-use
 
 <br>
 
-> \[!NOTE]
->
+> \[!NOTE
 > **macOS: Docker setting on Apple Silicon**
 >
 > Uncheck "Use Rosetta for x86/amd64 emulation" in Docker settings, it may result in slower build times on ARM, but performance will be normal when deployed to x64 servers.
 
 <br>
 
-#### Step ⓶ - Build agent in VM
+#### Step ⓶ - Build agent examples in VM
 
 ##### 1. Clone down the repo,`cd` to `ai-agents` and create `.env` file from `.env.example`
 
@@ -294,7 +362,9 @@ docker exec -it ten_agent_dev bash
 
 ##### 5. Build agent with the default example ( ~5min - ~8min)
 
-check the `/examples` folder for more examples
+Check the `/examples` folder for more examples. Explore popular starters below:
+
+<
 
 ```bash
 # use the chained voice assistant
@@ -316,10 +386,9 @@ task run
 
 ##### 7. Access the agent
 
-- Frontend: http://localhost:3000
-- API Server: http://localhost:8080
-- TMAN Designer: http://localhost:49483
-
+- TMAN Designer: <http://localhost:49483>
+- Frontend UI: <http://localhost:3000>
+- API Server: <http://localhost:8080>
 
 <br>
 
@@ -384,7 +453,17 @@ docker run --rm -it --env-file .env -p 3000:3000 example-app
 
 #### 🅱️ Deploying with other cloud services
 
-*coming soon*
+You can split the deployment into two pieces when you want to host TEN on providers such as Vercel or Netlify.
+
+1. Run the TEN backend on any container-friendly platform (a VM with Docker, Fly.io, Render, ECS, Cloud Run, and similar). Use the example Docker image without modifying it and expose port `8080` from that service.
+
+2. Deploy only the frontend to Vercel or Netlify. Point the project root to `ai_agents/agents/examples/<example>/frontend`, run `pnpm install` (or `bun install`) followed by `pnpm build` (or `bun run build`), and keep the default `.next` output directory.
+
+3. Configure environment variables in your hosting dashboard so that `AGENT_SERVER_URL` points to the backend URL, and add any `NEXT_PUBLIC_*` keys the UI needs (for example, Agora credentials you surface to the browser).
+
+4. Make sure the backend allows requests from the frontend origin (either by opening CORS on your container host or leaving the built-in middleware proxy in place).
+
+With this setup the backend handles long-running worker processes, while the hosted frontend simply forwards API traffic to it.
 
 <div align="right">
 
