@@ -106,11 +106,11 @@ TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [T
 
 <br>
 
-## ✨ Features
-
-![TEN Agent with Trulience](https://github.com/user-attachments/assets/c6702995-de94-4d3e-8cae-af097f087ac1)
+## ✨ Examples
 
 ### 1️⃣ Real-time Avatar
+
+![TEN Agent with Trulience](https://github.com/user-attachments/assets/c6702995-de94-4d3e-8cae-af097f087ac1)
 
 Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com)'s diverse collection of free avatar options. To get it up and running, you only need 2 steps:
 
@@ -120,9 +120,9 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 <br>
 <br>
 
-![TEN with MCP servers](https://github.com/user-attachments/assets/afb77ad3-9c23-452f-b870-216687779017)
+### 2️⃣ Voice with MCP servers
 
-### 2️⃣ Real-time voice with MCP servers
+![TEN with MCP servers](https://github.com/user-attachments/assets/afb77ad3-9c23-452f-b870-216687779017)
 
 TEN Agent now integrates seamlessly with MCP servers, expanding its LLM capabilities. To get started:
 
@@ -136,9 +136,9 @@ This integration allows you to leverage MCP's diverse servers offerings while ma
 <br>
 <br>
 
-<https://github.com/user-attachments/assets/78647eef-2d66-44e6-99a8-1918a940fb9f>
+### 3️⃣ Communication with hardware
 
-### 3️⃣ Real-time communication with hardware
+<https://github.com/user-attachments/assets/78647eef-2d66-44e6-99a8-1918a940fb9f>
 
 TEN Agent is now running on the Espressif ESP32-S3 Korvo V3 development board, an excellent way to integrate realtime communication with LLM on hardware.
 
@@ -147,18 +147,18 @@ Check out the [integration guide](https://github.com/TEN-framework/ten-framework
 <br>
 <br>
 
-![Real-time Vision](https://github.com/user-attachments/assets/a1addb02-a450-47be-8cb2-d25e3b574f53)
+### 4️⃣ Real-time vision and screenshare detection
 
-### 4️⃣ Real-time vision and real-time screenshare detection
+![Real-time Vision](https://github.com/user-attachments/assets/a1addb02-a450-47be-8cb2-d25e3b574f53)
 
 Try Google Gemini Multimodal Live API with realtime vision and realtime screenshare detection capabilities, it is a ready-to-use extension, along with powerful tools like Weather Check and Web Search integrated perfectly into TEN Agent.
 
 <br>
 <br>
 
-![TEN with Dify](https://github.com/user-attachments/assets/234ff443-bef8-4cc4-9a10-09d6ec3f5bc1)
-
 ### 5️⃣ TEN with other LLM platforms
+
+![TEN with Dify](https://github.com/user-attachments/assets/234ff443-bef8-4cc4-9a10-09d6ec3f5bc1)
 
 [TEN Agent + Dify](https://theten.ai/docs/ten_agent/playground/use-cases/voice-assistant/run_dify#steps)
 
@@ -167,9 +167,9 @@ TEN offers a great support to make the realtime interactive experience even bett
 <br>
 <br>
 
-![TEN StoryTeller](https://github.com/user-attachments/assets/fe28a549-ddb9-431e-9282-57539fb87371)
-
 ### 6️⃣ StoryTeller - TEN image generation
+
+![TEN StoryTeller](https://github.com/user-attachments/assets/fe28a549-ddb9-431e-9282-57539fb87371)
 
 Experience the real-time image generation with StoryTeller, it is a ready-to-use extension, along with powerful tools like Weather Check and Web Search integrated perfectly into TEN.
 
