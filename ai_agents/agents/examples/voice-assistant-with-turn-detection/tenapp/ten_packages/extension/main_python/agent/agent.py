@@ -123,6 +123,7 @@ class Agent:
 
     # === Incoming from runtime ===
     async def on_cmd(self, cmd: Cmd):
+        src_extname = cmd.get_source().extension_name
         try:
             name = cmd.get_name()
             if name == "on_user_joined":
@@ -139,6 +140,8 @@ class Agent:
                         tool=tool, source=cmd.get_source().extension_name
                     )
                 )
+            elif name == "flush" and src_extname == "turn_detection":
+                await self._emit_direct(TurnInterruptedEvent())
             else:
                 self.ten_env.log_warn(f"Unhandled cmd: {name}")
 
@@ -165,7 +168,7 @@ class Agent:
                     )
                 )
             elif (
-                src_extname == "turn_detector"
+                src_extname == "turn_detection"
                 and data.get_name() == "text_data"
             ):
                 turn_detected_asr_json, _ = data.get_property_to_json(None)
