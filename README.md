@@ -98,7 +98,9 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
 <br>
-<hr>
+
+![image](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
 <br>
 
 ![Image](https://github.com/user-attachments/assets/b4028d45-1523-44a6-ae15-5a47f7af1c21)
@@ -111,7 +113,9 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
 <br>
-<hr>
+
+![image](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
 <br>
 
 ![Image](https://github.com/user-attachments/assets/44be01c1-9630-42d0-a30a-779cd78b92c5)
