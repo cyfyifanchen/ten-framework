@@ -98,17 +98,12 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
 <br>
-<div align="left">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<hr>
 <br>
 
 ![Image](https://github.com/user-attachments/assets/b4028d45-1523-44a6-ae15-5a47f7af1c21)
 
-#### Anime Chompanion with Lip Sync
+### Anime Chompanion with Lip Sync
 
 Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com)'s diverse collection of free avatar options. To get it up and running, you only need 2 steps:
 
@@ -116,12 +111,7 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
 <br>
-<div align="left">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<hr>
 <br>
 
 ![Image](https://github.com/user-attachments/assets/44be01c1-9630-42d0-a30a-779cd78b92c5)
@@ -134,12 +124,7 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
 <br>
-<div align="left">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<hr>
 <br>
 
 ![Image](https://github.com/user-attachments/assets/2ef3a6c3-c370-43f7-86b1-46ee8d4c55da)
@@ -152,12 +137,7 @@ Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com
 2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
 
 <br>
-<div align="left">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
+<hr>
 <br>
 
 <https://github.com/user-attachments/assets/78647eef-2d66-44e6-99a8-1918a940fb9f>
