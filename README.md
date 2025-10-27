@@ -83,43 +83,70 @@ TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework)
 <br>
 
 <table>
-  <colgroup>
-    <col width="420">
-    <col>
-  </colgroup>
   <thead>
     <tr>
-      <th>Preview</th>
-      <th>Highlights</th>
+      <th width="65%" align="left">Preview</th>
+      <th width="35%" align="left">Highlights</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/e809cd73-6066-48db-9e9d-b6bb4cecdad9" alt="Multi-Purpose Voice Assistant" width="400"></td>
-      <td><strong>Multi-Purpose Voice Assistant</strong> — Low-latency, high-quality, real-time assistant that you can extend with memory, weather, voice activity detection (VAD), and turn detection modules. <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant">Example code</a></td>
+      <td style="width:65%;">
+        <img src="https://github.com/user-attachments/assets/e809cd73-6066-48db-9e9d-b6bb4cecdad9">
+      </td>
+      <td style="width:35%;">
+        <strong>Multi-Purpose Voice Assistant</strong> — Low-latency, high-quality, real-time assistant that you can extend with memory, weather, voice activity detection (VAD), and turn detection modules.
+        <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant">Example code</a>
+      </td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/af7085f6-c208-4235-bdab-b104dce49f66" alt="Lip Sync Avatars" width="400"></td>
-      <td><strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors; the demo features Key, an anime character with Live2D-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon). <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-live2d">Example code</a></td>
+      <td>
+        <img src="https://github.com/user-attachments/assets/af7085f6-c208-4235-bdab-b104dce49f66">
+      </td>
+      <td>
+        <strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors; the demo features Key, an anime character with Live2D-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon).
+        <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-live2d">Example code</a>
+      </td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/b94d610d-94af-432f-8cfd-ec9ad30254ba" alt="SIP Call" width="400"></td>
-      <td><strong>SIP Call</strong> — SIP extension that enables phone calls handled end-to-end by TEN Agent. <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio">Example code</a></td>
+      <td>
+        <img src="https://github.com/user-attachments/assets/b94d610d-94af-432f-8cfd-ec9ad30254ba">
+      </td>
+      <td>
+        <strong>SIP Call</strong> — SIP extension that enables phone calls handled end-to-end by TEN Agent.
+        <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio">Example code</a>
+      </td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/f83db27c-c3c1-49c9-b545-f8d0464d5408" alt="Speech Diarization" width="400"></td>
-      <td><strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers; the Who Likes What game shows an interactive use case. <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/speechmatics-diarization">Example code</a></td>
+      <td>
+        <img src="https://github.com/user-attachments/assets/f83db27c-c3c1-49c9-b545-f8d0464d5408">
+      </td>
+      <td>
+        <strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers; the Who Likes What game shows an interactive use case.
+        <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/speechmatics-diarization">Example code</a>
+      </td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/29e7853f-afbe-4cb3-94fd-8a9856df98eb" alt="Transcription" width="400"></td>
-      <td><strong>Transcription</strong> — Real-time transcription pipeline that streams speech to text for downstream use. <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/transcription">Example code</a></td>
+      <td>
+        <img src="https://github.com/user-attachments/assets/29e7853f-afbe-4cb3-94fd-8a9856df98eb">
+      </td>
+      <td>
+        <strong>Transcription</strong> — Real-time transcription pipeline that streams speech to text for downstream use.
+        <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/transcription">Example code</a>
+      </td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/2dc4b53a-2686-47d2-8bf2-8e440b709adc" alt="ESP32-S3 Korvo V3" width="400"></td>
-      <td><strong>ESP32-S3 Korvo V3</strong> — Runs TEN Agent on the Espressif ESP32-S3 Korvo V3 development board to integrate LLM-powered communication with hardware. <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client">Integration guide</a></td>
+      <td>
+        <img src="https://github.com/user-attachments/assets/2dc4b53a-2686-47d2-8bf2-8e440b709adc">
+      </td>
+      <td>
+        <strong>ESP32-S3 Korvo V3</strong> — Runs TEN Agent on the Espressif ESP32-S3 Korvo V3 development board to integrate LLM-powered communication with hardware.
+        <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client">Integration guide</a>
+      </td>
     </tr>
   </tbody>
 </table>
+
 
 <br>
 <div align="right">
