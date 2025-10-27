@@ -239,7 +239,7 @@ task run
 
 ##### 7. Access the agent
 
-Once the agent is running, you can access the following interfaces:
+Once the agent example is running, you can access the following interfaces:
 
 <table>
   <tr>
