@@ -42,8 +42,13 @@
 
 - [Welcome to TEN](#welcome-to-ten)
 - [Agent Examples](#agent-examples)
-- [Get Agent Examples up and running](#get-agent-examples-up-and-running)
+- [Quick Start with Agent Examples](#quick-start-with-agent-examples)
+  - [Localhost](#localhost)
+  - [Codespaces](#codespaces)
 - [Agent Examples Self-Hosting](#agent-examples-self-hosting)
+  - [Deploying with Docker](#deploying-with-docker)
+  - [Deploying with other cloud services](#deploying-with-other-cloud-services)
+- [Stay Tuned](#stay-tuned)
 - [TEN Ecosystem](#ten-ecosystem)
 - [Questions](#questions)
 - [Contributing](#contributing)
@@ -59,7 +64,7 @@
 
 TEN is a comprehensive open-source ecosystem for creating, customizing, and deploying real-time conversational AI agents with multimodal capabilities including voice, vision, and avatar interactions.
 
-TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [TEN VAD](https://github.com/ten-framework/ten-vad), [TEN Turn Detection](https://github.com/ten-framework/ten-turn-detection) and [TEN Portal](https://github.com/ten-framework/portal). Check out [TEN Ecosystem](#ten-ecosystem) for more details.
+TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework), [TEN VAD](https://github.com/ten-framework/ten-vad), [TEN Turn Detection](https://github.com/ten-framework/ten-turn-detection) and [TEN Portal](https://github.com/ten-framework/portal). See [TEN Ecosystem](#ten-ecosystem) for more details.
 
 <br>
 
@@ -93,7 +98,7 @@ TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [T
 
 </div>
 
-## Get Agent Examples up and running
+## Quick Start with Agent Examples
 
 ### Localhost
 
@@ -168,12 +173,12 @@ cd agents/examples/voice-assistant-realtime
 
 ##### 6. Start the web server
 
+Run `task build` if you changed any local source code. This step is required for compiled languages (for example, TypeScript or Go) and not needed for Python.
+
 ```bash
 task install
 task run
 ```
-
-Run `task build` if you changed any local source code. This step is required for compiled languages (for example, TypeScript or Go) and not needed for Python.
 
 ##### 7. Access the agent
 
@@ -201,7 +206,7 @@ Run `task build` if you changed any local source code. This step is required for
 
 ### Codespaces
 
-GitHub offers free Codespaces for each repository. You can run Agent Examples in Codespaces without using Docker. Codespaces are typically faster than running locally.
+GitHub offers free Codespaces for each repository. You can run Agent Examples in Codespaces without using Docker. Codespaces typically start faster than local Docker environments.
 
 [codespaces-shield]: <https://github.com/codespaces/badge.svg>
 [![][codespaces-shield]](https://codespaces.new/ten-framework/ten-agent)
@@ -220,7 +225,7 @@ Check out [this guide](https://theten.ai/docs/ten_agent/setup_development_env/se
 
 ### Deploying with Docker
 
-Once you have customized your agent (either by using the TMAN Manager, Playground, or editing `property.json` directly), you can deploy it by creating a release Docker image for your service.
+Once you have customized your agent (either by using the TMAN Designer or editing `property.json` directly), you can deploy it by creating a release Docker image for your service.
 
 ##### Release as Docker image
 
@@ -253,7 +258,7 @@ You can split the deployment into two pieces when you want to host TEN on provid
 
 3. Configure environment variables in your hosting dashboard so that `AGENT_SERVER_URL` points to the backend URL, and add any `NEXT_PUBLIC_*` keys the UI needs (for example, Agora credentials you surface to the browser).
 
-4. Make sure the backend allows requests from the frontend origin (either by opening CORS on your container host or leaving the built-in middleware proxy in place).
+4. Ensure your backend accepts requests from the frontend origin — via open CORS or by using the built-in proxy middleware.
 
 With this setup, the backend handles long-running worker processes, while the hosted frontend simply forwards API traffic to it.
 
