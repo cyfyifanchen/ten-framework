@@ -40,26 +40,18 @@
 <details>
   <summary><kbd>Table of Contents</kbd></summary>
 
-#### Table of Contents
-
-- [Welcome to TEN](#-welcome-to-ten)
-- [Features](#-features)
-  - [1️⃣ Real-time Avatar](#1️⃣-real-time-avatar)
-  - [2️⃣ Real-time voice with MCP servers](#2️⃣-real-time-voice-with-mcp-servers)
-  - [3️⃣ Real-time communication with hardware](#3️⃣-real-time-communication-with-hardware)
-  - [4️⃣ Real-time vision and real-time screenshare detection](#4️⃣-real-time-vision-and-real-time-screenshare-detection)
-  - [5️⃣ TEN with other LLM platforms](#5️⃣-ten-with-other-llm-platforms)
-  - [6️⃣ StoryTeller - TEN image generation](#6️⃣-storyteller---ten-image-generation)
-- [Get TEN up and running](#-get-ten-up-and-running)
-  - [🅰️ Run TEN on localhost](#🅰️-run-ten-on-localhost)
-  - [🅱️ Run TEN Agent in Codespaces (no Docker)](#🅱️-run-ten-agent-in-codespaces-no-docker)
-- [Agent Examples](#-agent-examples)
-- [️TEN Agent Self-Hosting](#️-ten-agent-self-hosting)
-  - [🅰️ Deploying with Docker](#🅰️-deploying-with-docker)
-  - [🅱️ Deploying with other cloud services](#🅱️-deploying-with-other-cloud-services)
-- [TEN Ecosystem](#-ten-ecosystem)
-- [Questions](#-ask-questions)
-- [Contributing](#-contributing)
+- [Welcome to TEN](#welcome-to-ten)
+- [Agent Examples](#agent-examples)
+- [Quick Start with Agent Examples](#quick-start-with-agent-examples)
+  - [Localhost](#localhost)
+  - [Codespaces](#codespaces)
+- [Agent Examples Self-Hosting](#agent-examples-self-hosting)
+  - [Deploying with Docker](#deploying-with-docker)
+  - [Deploying with other cloud services](#deploying-with-other-cloud-services)
+- [Stay Tuned](#stay-tuned)
+- [TEN Ecosystem](#ten-ecosystem)
+- [Questions](#questions)
+- [Contributing](#contributing)
   - [Code Contributors](#code-contributors)
   - [Contribution Guidelines](#contribution-guidelines)
   - [License](#license)
@@ -72,7 +64,7 @@
 
 TEN is a comprehensive open-source ecosystem for creating, customizing, and deploying real-time conversational AI agents with multimodal capabilities including voice, vision, and avatar interactions.
 
-TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [TEN VAD](https://github.com/ten-framework/ten-vad), [TEN Turn Detection](https://github.com/ten-framework/ten-turn-detection) and [TEN Portal](https://github.com/ten-framework/portal). Check out [TEN Ecosystem](#-ten-ecosystem) for more details.
+TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework), [TEN VAD](https://github.com/ten-framework/ten-vad), [TEN Turn Detection](https://github.com/ten-framework/ten-turn-detection) and [TEN Portal](https://github.com/ten-framework/portal). See [TEN Ecosystem](#ten-ecosystem) for more details.
 
 <br>
 
@@ -88,169 +80,27 @@ TEN includes [TEN Framework](https://github.com/ten-framework/ten-framework), [T
 
 ## Agent Examples
 
-![Image](https://github.com/user-attachments/assets/f6744299-d987-4b26-8edd-8385204c2950)
-
-### Multi-Purpose Voice Assistant
-
-Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com)'s diverse collection of free avatar options. To get it up and running, you only need 2 steps:
-
-1. Follow the README to finish setting up and running the Playground
-2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
-
 <br>
 
-![image](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+| Preview | Highlights |
+| --- | --- |
+| ![Multi-Purpose Voice Assistant](https://github.com/user-attachments/assets/e809cd73-6066-48db-9e9d-b6bb4cecdad9) | **Multi-Purpose Voice Assistant** — Low-latency, high-quality, real-time assistant that you can extend with memory, weather, voice activity detection (VAD), and turn detection modules. [Example code](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant) |
+| ![Lip Sync Avatars](https://github.com/user-attachments/assets/af7085f6-c208-4235-bdab-b104dce49f66) | **Lip Sync Avatars** — Works with multiple avatar vendors; the demo features Key, an anime character with Live2D-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon). [Example code](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-live2d) |
+| ![SIP Call](https://github.com/user-attachments/assets/b94d610d-94af-432f-8cfd-ec9ad30254ba) | **SIP Call** — SIP extension that enables phone calls handled end-to-end by TEN Agent. [Example code](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio) |
+| ![Speech Diarization](https://github.com/user-attachments/assets/f83db27c-c3c1-49c9-b545-f8d0464d5408) | **Speech Diarization** — Real-time diarization that detects and labels speakers; the Who Likes What game shows an interactive use case. [Example code](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/speechmatics-diarization) |
+| ![Transcription](https://github.com/user-attachments/assets/29e7853f-afbe-4cb3-94fd-8a9856df98eb) | **Transcription** — Real-time transcription pipeline that streams speech to text for downstream use. [Example code](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/transcription) |
+| ![Image](https://github.com/user-attachments/assets/2dc4b53a-2686-47d2-8bf2-8e440b709adc)| **ESP32-S3 Korvo V3** — Runs TEN Agent on the Espressif ESP32-S3 Korvo V3 development board to integrate LLM-powered communication with hardware. [Integration guide](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client) |
 
 <br>
+<div align="right">
 
-![Image](https://github.com/user-attachments/assets/b4028d45-1523-44a6-ae15-5a47f7af1c21)
+[![][back-to-top]](#readme-top)
 
-### Anime Chompanion with Lip Sync
+</div>
 
-Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com)'s diverse collection of free avatar options. To get it up and running, you only need 2 steps:
+## Quick Start with Agent Examples
 
-1. Follow the README to finish setting up and running the Playground
-2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
-
-<br>
-
-![image](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
-
-<br>
-
-![Image](https://github.com/user-attachments/assets/44be01c1-9630-42d0-a30a-779cd78b92c5)
-
-### Speech Diarization
-
-Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com)'s diverse collection of free avatar options. To get it up and running, you only need 2 steps:
-
-1. Follow the README to finish setting up and running the Playground
-2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
-
-<br>
-<hr>
-<br>
-
-![Image](https://github.com/user-attachments/assets/2ef3a6c3-c370-43f7-86b1-46ee8d4c55da)
-
-### Transcription
-
-Build engaging AI avatars with TEN Agent using [Trulience](https://trulience.com)'s diverse collection of free avatar options. To get it up and running, you only need 2 steps:
-
-1. Follow the README to finish setting up and running the Playground
-2. Enter the avatar ID and [token](https://trulience.com/docs#/authentication/jwt-tokens/jwt-tokens?id=use-your-custom-userid) you get from [Trulience](https://trulience.com)
-
-<br>
-<hr>
-<br>
-
-<https://github.com/user-attachments/assets/78647eef-2d66-44e6-99a8-1918a940fb9f>
-
-### ESP32-S3 Korvo V3
-
-TEN Agent is now running on the Espressif ESP32-S3 Korvo V3 development board, an excellent way to integrate realtime communication with LLM on hardware.
-
-Check out the [integration guide](https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client) for more details.
-
-<br>
-
-<!-- ## Agent Examples
-
-<table>
-<tr>
-<td width="50%">
-<h3>Chained Voice Assistant</h3>
-<p>A voice assistant optimized for voice conversations.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant/">Code</a>
-</p>
-</td>
-<td width="50%">
-<h3>Real-time Voice Assistant</h3>
-<p>A voice assistant optimized for real-time conversations.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-realtime/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>Voice Assistant Node.js</h3>
-<p>A voice assistant written in Node.js.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-nodejs/">Code</a>
-</p>
-</td>
-
-<td width="50%">
-<h3>Voice Assistant Video</h3>
-<p>A voice assistant with video capabilities.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-video/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>SIP (Twilio)</h3>
-<p>A voice assistant that places outbound phone calls with Twilio.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-sip-twilio/">Code</a>
-</p>
-</td>
-<td width="50%">
-
-<h3>Memory with MemU</h3>
-<p>A voice assistant that uses MemU's memory management capabilities for persistent conversation context.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-with-memU/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>TEN VAD</h3>
-<p>A voice assistant that uses TEN VAD for voice activity detection.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-with-ten-vad/">Code</a>
-</p>
-</td>
-<td width="50%">
-<h3>TEN Turn Detection</h3>
-<p>A voice assistant that uses TEN Turn Detection to manage conversation turns.</p>
-<p>
-<a href="ai_agents/agents/examples/voice-assistant-with-ten-turn-detector/">Code</a>
-</p>
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-<h3>Transcription</h3>
-<p>A transcription agent that captures audio from every user in the room.</p>
-<p>
-<a href="ai_agents/agents/examples/transcription/">Code</a>
-</p>
-</td>
-<td width="50%">
-<h3>Speech Diarization</h3>
-<p>Identifies different speakers in multi-user conversations.</p>
-<p>
-<a href="ai_agents/agents/examples/speechmatics-diarization/">Code</a>
-</p>
-</td>
-</tr>
-
-</table>
-
-<br> -->
-
-## Get Agent Examples up and running
-
-### 🅰️ Locahost
+### Localhost
 
 #### Step ⓵ - Prerequisites
 
@@ -261,6 +111,8 @@ Check out the [integration guide](https://github.com/TEN-framework/ten-framework
 | **Minimum System Requirements** | • CPU >= 2 cores<br>• RAM >= 4 GB |
 
 <br>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
 <!-- > [!NOTE]
 > **macOS: Docker setting on Apple Silicon**
@@ -308,7 +160,8 @@ docker exec -it ten_agent_dev bash
 
 ##### 5. Build the agent with the default example (~5-8 min)
 
-Check the `/examples` folder for more options. Start with one of the defaults below:
+Check the `agents/examples` folder for additional samples.
+Start with one of these defaults:
 
 ```bash
 # use the chained voice assistant
@@ -320,34 +173,55 @@ cd agents/examples/voice-assistant-realtime
 
 ##### 6. Start the web server
 
+Run `task build` if you changed any local source code. This step is required for compiled languages (for example, TypeScript or Go) and not needed for Python.
+
 ```bash
 task install
-# run task build if you changed any local source code.
-# This is necessary for compiled languages (e.g., TypeScript or Go) and not needed for Python.
-# task build
-
 task run
 ```
 
 ##### 7. Access the agent
 
+Once the agent is running, you can access the following interfaces:
+
+<table>
+  <tr>
+    <td align="center">
+      <b>localhost:49483</b>
+      <img src="https://github.com/user-attachments/assets/5d8499cb-1d5a-4319-9b68-95c10f86479f" alt="Screenshot 1" width="500"/><br/>
+    </td>
+    <td align="center">
+      <b>localhost:3000</b>
+      <img src="https://github.com/user-attachments/assets/dfa7e077-e6b4-4862-9649-8d07f8aa599a" alt="Screenshot 2" width="400"/><br/>
+    </td>
+  </tr>
+</table>
+
 - TMAN Designer: <http://localhost:49483>
 - Example UI: <http://localhost:3000>
 
+<br>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
 #### Step ⓷ - Customize your agent
 
- 1. Open [localhost:49483](http://localhost:49483).
- 2. Right-click on the STT, LLM, and TTS extensions.
- 3. Open their properties and enter APIs respectively.
- 4. Right-click the canvas and select 'Manage Apps' to open the Apps Manager.
- 5. Right under the Actions, click the ▶ to run the App.
- 6. Check the 'Run with TEN Agent' option and click the Run button.
+1. Open [localhost:49483](http://localhost:49483).
+2. Right-click the STT, LLM, and TTS extensions.
+3. Open their properties and enter the corresponding API keys.
+4. Right-click the canvas and select **Manage Apps** to open the Apps Manager.
+5. Under **Actions**, click ▶ to run the app.
+6. Select **Run with TEN Agent**, then click **Run**.
 
 <br>
 
-### 🅱️ Codespaces
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
-GitHub offers free Codespaces for each repository. You can run Agent Examples in Codespaces without using Docker. Also, Codespaces are typically much faster than localhost.
+<br>
+
+### Codespaces
+
+GitHub offers free Codespaces for each repository. You can run Agent Examples in Codespaces without using Docker. Codespaces typically start faster than local Docker environments.
 
 [codespaces-shield]: <https://github.com/codespaces/badge.svg>
 [![][codespaces-shield]](https://codespaces.new/ten-framework/ten-agent)
@@ -364,9 +238,9 @@ Check out [this guide](https://theten.ai/docs/ten_agent/setup_development_env/se
 
 ## Agent Examples Self-Hosting
 
-#### 🅰️ Deploying with Docker
+### Deploying with Docker
 
-Once you have customized your agent (either by using the TMAN Manager, Playground, or editing `property.json` directly), you can deploy it by creating a release Docker image for your service.
+Once you have customized your agent (either by using the TMAN Designer or editing `property.json` directly), you can deploy it by creating a release Docker image for your service.
 
 ##### Release as Docker image
 
@@ -387,9 +261,11 @@ docker run --rm -it --env-file .env -p 3000:3000 example-app
 
 <br>
 
-#### 🅱️ Deploying with other cloud services
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
-You can split the deployment into two pieces when you want to host TEN on providers such as Vercel or Netlify.
+### Deploying with other cloud services
+
+You can split the deployment into two pieces when you want to host TEN on providers such as [Vercel](https://vercel.com) or [Netlify](https://www.netlify.com).
 
 1. Run the TEN backend on any container-friendly platform (a VM with Docker, Fly.io, Render, ECS, Cloud Run, or similar). Use the example Docker image without modifying it and expose port `8080` from that service.
 
@@ -397,7 +273,7 @@ You can split the deployment into two pieces when you want to host TEN on provid
 
 3. Configure environment variables in your hosting dashboard so that `AGENT_SERVER_URL` points to the backend URL, and add any `NEXT_PUBLIC_*` keys the UI needs (for example, Agora credentials you surface to the browser).
 
-4. Make sure the backend allows requests from the frontend origin (either by opening CORS on your container host or leaving the built-in middleware proxy in place).
+4. Ensure your backend accepts requests from the frontend origin — via open CORS or by using the built-in proxy middleware.
 
 With this setup, the backend handles long-running worker processes, while the hosted frontend simply forwards API traffic to it.
 
@@ -427,6 +303,8 @@ Get instant notifications for new releases and updates. Your support helps us gr
 <br>
 
 ## TEN Ecosystem
+
+<br>
 
 | Project | Preview |
 | ------- | ------- |
@@ -474,9 +352,11 @@ We welcome all forms of open-source collaboration! Whether you're fixing bugs, a
 >
 > Join us in building TEN better! Every contribution makes a difference, from code to documentation. Share your TEN Agent projects on social media to inspire others!
 >
-> Connect with one of the TEN maintainers [@elliotchen100](https://x.com/elliotchen100) on 𝕏 or [@cyfyifanchen](https://github.com/cyfyifanchen) on GitHub for project updates, discussions, and collaboration opportunities.
+> Connect with one of the TEN maintainers [@elliotchen200](https://x.com/elliotchen200) on 𝕏 or [@cyfyifanchen](https://github.com/cyfyifanchen) on GitHub for project updates, discussions, and collaboration opportunities.
 
 <br>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
 ### Code Contributors
 
@@ -485,6 +365,10 @@ We welcome all forms of open-source collaboration! Whether you're fixing bugs, a
 ### Contribution Guidelines
 
 Contributions are welcome! Please read the [contribution guidelines](./docs/code-of-conduct/contributing.md) first.
+
+<br>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
 ### License
 
