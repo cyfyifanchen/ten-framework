@@ -182,6 +182,21 @@ task run
 
 ##### 7. Access the agent
 
+Once the agent is running, you can access the following interfaces:
+
+<table>
+  <tr>
+    <td align="center">
+      <b>localhost:49483</b>
+      <img src="https://github.com/user-attachments/assets/5d8499cb-1d5a-4319-9b68-95c10f86479f" alt="Screenshot 1" width="500"/><br/>
+    </td>
+    <td align="center">
+      <b>localhost:3000</b>
+      <img src="https://github.com/user-attachments/assets/dfa7e077-e6b4-4862-9649-8d07f8aa599a" alt="Screenshot 2" width="400"/><br/>
+    </td>
+  </tr>
+</table>
+
 - TMAN Designer: <http://localhost:49483>
 - Example UI: <http://localhost:3000>
 
