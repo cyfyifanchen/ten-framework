@@ -86,8 +86,11 @@ TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework)
 
 See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant">Example code</a> for more details.
 
+<br>
+
 ![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
+<br>
 
 ![Image](https://github.com/user-attachments/assets/b1c815a0-b665-4f65-b8e1-911a7c8e15f3)
 
@@ -95,7 +98,11 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-live2d">Example code</a> for Live2D avatars.
 
+<br>
+
 ![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+<br>
 
 ![Image](https://github.com/user-attachments/assets/ad82b6e6-03af-401a-8650-ca8c3dc049f4)
 
@@ -103,7 +110,11 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/speechmatics-diarization">Example code</a>
 
+<br>
+
 ![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+<br>
 
 ![Image](https://github.com/user-attachments/assets/3dcf5f5f-9969-40fb-a444-9010a2bb2690)
 
@@ -111,7 +122,11 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio">Example code</a>
 
+<br>
+
 ![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+<br>
 
 ![Image](https://github.com/user-attachments/assets/7487d7b1-621e-449e-a9f7-4d993d1e21a4)
 
@@ -119,7 +134,11 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/transcription">Example code</a>
 
+<br>
+
 ![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+<br>
 
 ![Image](https://github.com/user-attachments/assets/949674af-c30e-477a-b0b8-6d80fbd656bb)
 
