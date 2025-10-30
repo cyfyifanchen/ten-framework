@@ -1,6 +1,6 @@
 <div align="center"> <a name="readme-top"></a>
 
-![TEN banner][ten-framework-banner]
+![Image](https://github.com/user-attachments/assets/f4a147c2-d8c5-4242-83ce-5360f03539e7)
 
 [![TEN Releases]( https://img.shields.io/github/v/release/ten-framework/ten-framework?color=369eff&labelColor=gray&logo=github&style=flat-square )](https://github.com/TEN-framework/ten-framework/releases)
 [![](https://img.shields.io/github/release-date/ten-framework/ten-framework?labelColor=gray&style=flat-square)](https://github.com/TEN-framework/ten-framework/releases)
@@ -80,7 +80,55 @@ TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework)
 
 ## Agent Examples
 
-<br>
+![Image](https://github.com/user-attachments/assets/a6721c47-635b-408d-b7d8-9a4843985284)
+
+<strong>Multi-Purpose Voice Assistant</strong> — Low-latency, high-quality, real-time assistant that you can extend with  <a href="ai_agents/agents/examples/voice-assistant-with-memU">memory</a>, <a href="ai_agents/agents/examples/voice-assistant-with-ten-vad">VAD</a>, <a href="ai_agents/agents/examples/voice-assistant-with-turn-detection">TEN Turn Detection</a> and other extensions.
+
+See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant">Example code</a> for more details.
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+
+![Image](https://github.com/user-attachments/assets/b1c815a0-b665-4f65-b8e1-911a7c8e15f3)
+
+<strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors, the demo features Kei, an anime character with Live2D-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon).
+
+See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-live2d">Example code</a> for Live2D avatars.
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+![Image](https://github.com/user-attachments/assets/ad82b6e6-03af-401a-8650-ca8c3dc049f4)
+
+<strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers, the Who Likes What game shows an interactive use case.
+
+<a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/speechmatics-diarization">Example code</a>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+![Image](https://github.com/user-attachments/assets/3dcf5f5f-9969-40fb-a444-9010a2bb2690)
+
+<strong>SIP Call</strong> — SIP extension that enables phone calls powered by TEN.
+
+<a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio">Example code</a>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+![Image](https://github.com/user-attachments/assets/7487d7b1-621e-449e-a9f7-4d993d1e21a4)
+
+<strong>Transcription</strong> — A transcription tool that transcribes audio to text.
+
+<a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/transcription">Example code</a>
+
+![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+
+![Image](https://github.com/user-attachments/assets/949674af-c30e-477a-b0b8-6d80fbd656bb)
+
+<strong>ESP32-S3 Korvo V3</strong> — Runs TEN Agent example on the Espressif ESP32-S3 Korvo V3 development board to integrate LLM-powered communication with hardware.
+
+See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client">integration guide</a> for more details.
+
+
+<!-- <br>
 
 <table>
   <thead>
@@ -116,7 +164,7 @@ TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework)
         <img src="https://github.com/user-attachments/assets/b94d610d-94af-432f-8cfd-ec9ad30254ba">
       </td>
       <td>
-        <strong>SIP Call</strong> — SIP extension that enables phone calls powered by TEN.
+       <strong>SIP Call</strong> — SIP extension that enables phone calls powered by TEN.
         <br>
         <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio">Example code</a>
       </td>
@@ -150,7 +198,7 @@ TEN includes the [TEN Framework](https://github.com/ten-framework/ten-framework)
       </td>
     </tr>
   </tbody>
-</table>
+</table> -->
 
 <br>
 <div align="right">
