@@ -1,7 +1,7 @@
 {
   "type": "extension",
-  "name": "cartesia_tts2",
-  "version": "0.4.1",
+  "name": "cartesia_tts",
+  "version": "0.5.0",
   "dependencies": [
     {
       "type": "system",
@@ -88,6 +88,35 @@
                 "sample_rate": {
                   "type": "int64"
                 }
+              }
+            }
+          }
+        },
+        "ssml": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "bool"
+            },
+            "speed_ratio": {
+              "type": "float64"
+            },
+            "volume_ratio": {
+              "type": "float64"
+            },
+            "emotion": {
+              "type": "string"
+            },
+            "pre_break_time": {
+              "type": "string"
+            },
+            "post_break_time": {
+              "type": "string"
+            },
+            "spell_words": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }

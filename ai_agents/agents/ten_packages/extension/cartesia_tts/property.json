@@ -15,5 +15,14 @@
             "volume": 1.0
         },
         "language": "en"
+    },
+    "ssml": {
+        "enabled": true,
+        "speed_ratio": 1.0,
+        "volume_ratio": 1.0,
+        "emotion": "angry",
+        "pre_break_time": "",
+        "post_break_time": "",
+        "spell_words": []
     }
 }

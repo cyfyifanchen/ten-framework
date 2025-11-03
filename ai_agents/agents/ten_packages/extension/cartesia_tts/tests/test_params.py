@@ -55,7 +55,7 @@ class ExtensionTesterForPassthrough(ExtensionTester):
         ten_env_tester.on_start_done()
 
 
-@patch("cartesia_tts2.extension.CartesiaTTSClient")
+@patch("cartesia_tts.extension.CartesiaTTSClient")
 def test_params_passthrough(MockCartesiaTTSClient):
     """
     Tests that custom parameters passed in the configuration are correctly
@@ -93,7 +93,7 @@ def test_params_passthrough(MockCartesiaTTSClient):
     }
 
     tester = ExtensionTesterForPassthrough()
-    tester.set_test_mode_single("cartesia_tts2", json.dumps(real_config))
+    tester.set_test_mode_single("cartesia_tts", json.dumps(real_config))
 
     print("Running passthrough test...")
     tester.run()

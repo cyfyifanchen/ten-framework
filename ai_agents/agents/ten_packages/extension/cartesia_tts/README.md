@@ -1,4 +1,4 @@
-# cartesia_tts2
+# cartesia_tts
 
 TEN async TTS extension that streams audio from Cartesia’s Sonic family over
 WebSockets. The default configuration now targets the latest `sonic-3`
@@ -22,8 +22,11 @@ snapshot, giving you expressive, multilingual synthesis with low latency.
      control pacing and loudness per request.
    - `output_format.sample_rate`: choose one of Cartesia’s supported PCM
      sample rates (e.g. `44100`, `24000`, `16000`).
-   - `language`: specify the ISO language code; Sonic 3 covers 42 languages
-     across English, European, and Asian locales.
+   - `language`: defaults to `en`; swap to any ISO code from Cartesia’s
+     from Cartesia’s 42-language roster as needed.
+   - `ssml`: optional preset for Sonic’s beta SSML tags. Set `enabled=true`
+     and configure `speed_ratio`, `volume_ratio`, `emotion`, `pre/post`
+     breaks, or `spell_words` to automatically wrap outgoing transcripts.
 3. Attach the extension to your TEN agent via the manifest or TEN Studio and
    ensure the downstream audio sink matches the selected sample rate.
 
@@ -45,7 +48,7 @@ python3 -m pip install -r requirements.txt
 Run the mocked regression suite (no network calls) with:
 
 ```bash
-task test-extension EXTENSION=agents/ten_packages/extension/cartesia_tts2
+task test-extension EXTENSION=agents/ten_packages/extension/cartesia_tts
 ```
 
 ## Misc
@@ -54,3 +57,27 @@ task test-extension EXTENSION=agents/ten_packages/extension/cartesia_tts2
   disable this in production workloads.
 - For more Sonic 3 details, see Cartesia’s documentation:
   https://docs.cartesia.ai/build-with-cartesia/tts-models/latest
+### Runtime overrides
+
+You can override the SSML presets per request by attaching a metadata block to
+`TTSTextInput`:
+
+```python
+TTSTextInput(
+    text="你好，TEN！",
+    text_input_end=True,
+    metadata={
+        "ssml": {
+            "enabled": True,
+            "speed_ratio": 0.9,
+            "emotion": "excited",
+            "spell_words": ["TEN"],
+            "post_break_time": "500ms",
+        }
+    },
+)
+```
+
+The extension clamps ratios to Sonic’s documented ranges (`speed`: 0.6-1.5,
+`volume`: 0.5-2.0) and merges any spellings/breaks before streaming the text to
+Cartesia.
