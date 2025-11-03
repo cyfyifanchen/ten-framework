@@ -1,7 +1,7 @@
 {
   "type": "extension",
   "name": "cartesia_tts2",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "dependencies": [
     {
       "type": "system",
@@ -33,9 +33,64 @@
     ],
     "property": {
       "properties": {
+        "dump": {
+          "type": "bool"
+        },
+        "dump_path": {
+          "type": "string"
+        },
+        "enable_words": {
+          "type": "bool"
+        },
         "params": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "api_key": {
+              "type": "string"
+            },
+            "model_id": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            },
+            "voice": {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "generation_config": {
+              "type": "object",
+              "properties": {
+                "speed": {
+                  "type": "float64"
+                },
+                "volume": {
+                  "type": "float64"
+                }
+              }
+            },
+            "output_format": {
+              "type": "object",
+              "properties": {
+                "container": {
+                  "type": "string"
+                },
+                "sample_rate": {
+                  "type": "int64"
+                }
+              }
+            }
+          }
         }
       }
     }
