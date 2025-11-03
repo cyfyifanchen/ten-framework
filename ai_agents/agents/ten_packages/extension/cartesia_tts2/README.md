@@ -13,7 +13,7 @@ snapshot, giving you expressive, multilingual synthesis with low latency.
 
 ## Configuration
 
-1. Provide a Cartesia API key through `CARTESIA_TTS_KEY` or override
+1. Provide a Cartesia API key through `CARTESIA_API_KEY` or override
    `params.api_key` in the extension property.
 2. Adjust the TTS profile in [property.json](property.json):
    - `model_id`: defaults to `sonic-3` (update to a dated snapshot for prod).
