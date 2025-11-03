@@ -81,13 +81,14 @@ def test_params_passthrough(MockCartesiaTTSClient):
     }
 
     passthrough_params = {
-        "model_id": "sonic-2",
+        "model_id": "sonic-3",
         "voice": {"mode": "id", "id": "a0e99841-438c-4a64-b679-ae501e7d6091"},
         "output_format": {
             "container": "raw",
             "sample_rate": 44100,
             "encoding": "pcm_s16le",
         },
+        "generation_config": {"speed": 1.0, "volume": 1.0},
         "language": "en",
     }
 

@@ -49,6 +49,13 @@ class CartesiaTTSConfig(BaseModel):
         self.params["output_format"]["container"] = "raw"
         self.params["output_format"]["encoding"] = "pcm_s16le"
 
+        # Ensure generation_config defaults exist so speed/volume are always valid.
+        generation_config = self.params.setdefault("generation_config", {})
+        if "speed" not in generation_config:
+            generation_config["speed"] = 1.0
+        if "volume" not in generation_config:
+            generation_config["volume"] = 1.0
+
     def to_str(self, sensitive_handling: bool = True) -> str:
         """
         Convert the configuration to a string representation, masking sensitive data.
