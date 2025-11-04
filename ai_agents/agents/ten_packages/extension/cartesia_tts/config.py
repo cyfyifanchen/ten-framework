@@ -65,7 +65,8 @@ class CartesiaTTSConfig(BaseModel):
     ssml: CartesiaSSMLConfig = Field(default_factory=CartesiaSSMLConfig)
 
     def update_params(self) -> None:
-        params = cast(dict[str, Any], self.params)
+        params: dict[str, Any] = dict(self.params or {})
+        self.params = params
 
         # Remove params that are not used
         if "transcript" in params:
