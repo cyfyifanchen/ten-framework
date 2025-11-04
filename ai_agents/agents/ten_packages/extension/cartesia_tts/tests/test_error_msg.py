@@ -74,9 +74,7 @@ def test_empty_params_fatal_error():
     }
 
     tester = ExtensionTesterEmptyParams()
-    tester.set_test_mode_single(
-        "cartesia_tts", json.dumps(empty_params_config)
-    )
+    tester.set_test_mode_single("cartesia_tts", json.dumps(empty_params_config))
 
     print("Running test...")
     tester.run()

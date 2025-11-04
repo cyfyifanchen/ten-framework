@@ -411,12 +411,14 @@ def test_ssml_presets(MockCartesiaTTSClient):
     tester.set_test_mode_single("cartesia_tts", json.dumps(config))
     tester.run()
 
-    assert tester.audio_end_received, "Expected SSML test to finish with audio end"
+    assert (
+        tester.audio_end_received
+    ), "Expected SSML test to finish with audio end"
     assert captured_text is not None, "Expected Cartesia client to receive text"
     assert captured_text.startswith('<speed ratio="1.2"/>'), captured_text
     assert '<volume ratio="0.8"/>' in captured_text
     assert '<emotion value="happy"/>' in captured_text
-    assert '<spell>TEN</spell>' in captured_text
+    assert "<spell>TEN</spell>" in captured_text
     assert captured_text.endswith('<break time="500ms"/>'), captured_text
 
 
@@ -461,10 +463,12 @@ def test_ssml_metadata_overrides(MockCartesiaTTSClient):
     tester.set_test_mode_single("cartesia_tts", json.dumps(config))
     tester.run()
 
-    assert tester.audio_end_received, "Expected metadata override test to finish"
+    assert (
+        tester.audio_end_received
+    ), "Expected metadata override test to finish"
     assert captured_text is not None, "Expected metadata override to send text"
     assert captured_text.startswith('<break time="1s"/>'), captured_text
     assert '<speed ratio="1.5"/>' in captured_text
     assert '<volume ratio="0.5"/>' in captured_text
     assert '<emotion value="sad"/>' in captured_text
-    assert '<spell>1234</spell>' in captured_text
+    assert "<spell>1234</spell>" in captured_text

@@ -108,9 +108,7 @@ class CartesiaTTSExtension(AsyncTTS2BaseExtension):
         speed_ratio = overrides.get("speed_ratio", ssml_cfg.speed_ratio)
         speed_ratio = self._clamp_float(speed_ratio, 0.6, 1.5)
 
-        volume_ratio = overrides.get(
-            "volume_ratio", ssml_cfg.volume_ratio
-        )
+        volume_ratio = overrides.get("volume_ratio", ssml_cfg.volume_ratio)
         volume_ratio = self._clamp_float(volume_ratio, 0.5, 2.0)
 
         emotion = overrides.get("emotion", ssml_cfg.emotion)
@@ -174,9 +172,7 @@ class CartesiaTTSExtension(AsyncTTS2BaseExtension):
             mutated_text = f"{prefix} {mutated_text}".strip()
 
         if post_break_time:
-            mutated_text = (
-                f"{mutated_text} <break time=\"{post_break_time}\"/>"
-            )
+            mutated_text = f'{mutated_text} <break time="{post_break_time}"/>'
 
         return mutated_text
 
@@ -380,9 +376,7 @@ class CartesiaTTSExtension(AsyncTTS2BaseExtension):
                 )
                 self.current_request_finished = True
 
-            prepared_text = self._apply_ssml_tags_safe(
-                t.text, t.metadata
-            )
+            prepared_text = self._apply_ssml_tags_safe(t.text, t.metadata)
 
             if prepared_text.strip() != "":
                 # Get audio stream from Cartesia TTS

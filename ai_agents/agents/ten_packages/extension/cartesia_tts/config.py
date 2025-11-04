@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 import copy
 from ten_ai_base import utils
 
@@ -65,53 +65,63 @@ class CartesiaTTSConfig(BaseModel):
     ssml: CartesiaSSMLConfig = Field(default_factory=CartesiaSSMLConfig)
 
     def update_params(self) -> None:
-        # Remove params that are not used
-        if "transcript" in self.params:
-            del self.params["transcript"]
-
-        if "api_key" in self.params:
-            self.api_key = self.params["api_key"]
-            del self.params["api_key"]
+        params = cast(dict[str, Any], self.params)
 
         # Remove params that are not used
-        if "context_id" in self.params:
-            del self.params["context_id"]
+        if "transcript" in params:
+            del params["transcript"]
+
+        if "api_key" in params:
+            self.api_key = params["api_key"]
+            del params["api_key"]
 
         # Remove params that are not used
-        if "stream" in self.params:
-            del self.params["stream"]
+        if "context_id" in params:
+            del params["context_id"]
+
+        # Remove params that are not used
+        if "stream" in params:
+            del params["stream"]
 
         # Use default sample rate value
-        if "sample_rate" in self.params:
-            self.sample_rate = self.params["sample_rate"]
+        if "sample_rate" in params:
+            self.sample_rate = params["sample_rate"]
             # Remove sample_rate from params to avoid parameter error
-            del self.params["sample_rate"]
+            del params["sample_rate"]
 
-        if "output_format" not in self.params:
-            self.params["output_format"] = {}
+        output_format_candidate = params.get("output_format")
+        if not isinstance(output_format_candidate, dict):
+            output_format_candidate = {}
+            params["output_format"] = output_format_candidate
+        output_format = cast(dict[str, Any], output_format_candidate)
 
         # Use custom sample rate value
-        if "sample_rate" in self.params["output_format"]:
-            self.sample_rate = self.params["output_format"]["sample_rate"]
+        if "sample_rate" in output_format:
+            self.sample_rate = output_format["sample_rate"]
         else:
-            self.params["output_format"]["sample_rate"] = self.sample_rate
+            output_format["sample_rate"] = self.sample_rate
 
         ##### use fixed value #####
-        self.params["output_format"]["container"] = "raw"
-        self.params["output_format"]["encoding"] = "pcm_s16le"
+        output_format["container"] = "raw"
+        output_format["encoding"] = "pcm_s16le"
 
         # Ensure generation_config defaults exist so speed/volume are always valid.
-        generation_config = self.params.setdefault("generation_config", {})
+        generation_candidate = params.get("generation_config")
+        if not isinstance(generation_candidate, dict):
+            generation_candidate = {}
+            params["generation_config"] = generation_candidate
+        generation_config = cast(dict[str, Any], generation_candidate)
         if "speed" not in generation_config:
             generation_config["speed"] = 1.0
         if "volume" not in generation_config:
             generation_config["volume"] = 1.0
 
         # Extract accidental SSML configs from params and normalise.
-        if "ssml" in self.params:
-            if isinstance(self.params["ssml"], dict):
-                self.ssml = CartesiaSSMLConfig(**self.params["ssml"])
-            del self.params["ssml"]
+        if "ssml" in params:
+            ssml_config = params["ssml"]
+            if isinstance(ssml_config, dict):
+                self.ssml = CartesiaSSMLConfig(**ssml_config)
+            del params["ssml"]
 
         self.ssml.normalize()
 
