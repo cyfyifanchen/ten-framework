@@ -1,8 +1,21 @@
-from typing import Any, cast
+from __future__ import annotations
+
+from typing import Any, Optional
 import copy
+
 from ten_ai_base import utils
 
 from pydantic import BaseModel, Field
+
+
+def _clamp(value: Optional[float], lower: float, upper: float) -> Optional[float]:
+    if value is None:
+        return None
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return None
+    return max(lower, min(upper, numeric))
 
 
 class CartesiaSSMLConfig(BaseModel):
@@ -15,44 +28,52 @@ class CartesiaSSMLConfig(BaseModel):
     spell_words: list[str] = Field(default_factory=list)
 
     def normalize(self) -> None:
-        def clamp(value: Any, lower: float, upper: float) -> float | None:
-            if value is None:
-                return None
-            try:
-                numeric = float(value)
-            except (TypeError, ValueError):
-                return None
-            if numeric < lower:
-                return lower
-            if numeric > upper:
-                return upper
-            return numeric
-
-        self.speed_ratio = clamp(self.speed_ratio, 0.6, 1.5)
-        self.volume_ratio = clamp(self.volume_ratio, 0.5, 2.0)
+        self.speed_ratio = _clamp(self.speed_ratio, 0.6, 1.5)
+        self.volume_ratio = _clamp(self.volume_ratio, 0.5, 2.0)
 
         if isinstance(self.emotion, str):
-            self.emotion = self.emotion.strip() or None
+            emotion = self.emotion.strip()
+            self.emotion = emotion or None
         else:
             self.emotion = None
 
-        for attr in ("pre_break_time", "post_break_time"):
-            value = getattr(self, attr)
+        def _clean_break(value: Any) -> str | None:
+            if value is None:
+                return None
+            text = str(value).strip()
+            return text or None
+
+        self.pre_break_time = _clean_break(self.pre_break_time)
+        self.post_break_time = _clean_break(self.post_break_time)
+
+        cleaned: list[str] = []
+        for word in self.spell_words:
+            if not isinstance(word, str):
+                continue
+            candidate = word.strip()
+            if candidate and candidate not in cleaned:
+                cleaned.append(candidate)
+        self.spell_words = cleaned
+
+    def merge(self, override: "CartesiaSSMLConfig") -> "CartesiaSSMLConfig":
+        data = self.model_dump()
+        incoming = override.model_dump()
+        for key, value in incoming.items():
             if value is None:
                 continue
-            if isinstance(value, str):
-                stripped = value.strip()
-                setattr(self, attr, stripped or None)
+            if key == "spell_words":
+                base_words = data.get(key, []) or []
+                combined: list[str] = []
+                for word in [*base_words, *value]:
+                    if not isinstance(word, str):
+                        continue
+                    candidate = word.strip()
+                    if candidate and candidate not in combined:
+                        combined.append(candidate)
+                data[key] = combined
             else:
-                setattr(self, attr, str(value))
-
-        cleaned_spell_words: list[str] = []
-        for word in self.spell_words:
-            if isinstance(word, str):
-                trimmed = word.strip()
-                if trimmed and trimmed not in cleaned_spell_words:
-                    cleaned_spell_words.append(trimmed)
-        self.spell_words = cleaned_spell_words
+                data[key] = value
+        return CartesiaSSMLConfig(**data)
 
 
 class CartesiaTTSConfig(BaseModel):
@@ -65,24 +86,17 @@ class CartesiaTTSConfig(BaseModel):
     ssml: CartesiaSSMLConfig = Field(default_factory=CartesiaSSMLConfig)
 
     def update_params(self) -> None:
-        params: dict[str, Any] = dict(self.params or {})
+        params = self._ensure_dict(self.params)
         self.params = params
 
         # Remove params that are not used
-        if "transcript" in params:
-            del params["transcript"]
+        for key in ("transcript", "context_id", "stream"):
+            if key in params:
+                del params[key]
 
         if "api_key" in params:
             self.api_key = params["api_key"]
             del params["api_key"]
-
-        # Remove params that are not used
-        if "context_id" in params:
-            del params["context_id"]
-
-        # Remove params that are not used
-        if "stream" in params:
-            del params["stream"]
 
         # Use default sample rate value
         if "sample_rate" in params:
@@ -90,11 +104,8 @@ class CartesiaTTSConfig(BaseModel):
             # Remove sample_rate from params to avoid parameter error
             del params["sample_rate"]
 
-        output_format_candidate = params.get("output_format")
-        if not isinstance(output_format_candidate, dict):
-            output_format_candidate = {}
-            params["output_format"] = output_format_candidate
-        output_format = cast(dict[str, Any], output_format_candidate)
+        output_format = self._ensure_dict(params.setdefault("output_format", {}))
+        params["output_format"] = output_format
 
         # Use custom sample rate value
         if "sample_rate" in output_format:
@@ -106,22 +117,19 @@ class CartesiaTTSConfig(BaseModel):
         output_format["container"] = "raw"
         output_format["encoding"] = "pcm_s16le"
 
-        # Ensure generation_config defaults exist so speed/volume are always valid.
-        generation_candidate = params.get("generation_config")
-        if not isinstance(generation_candidate, dict):
-            generation_candidate = {}
-            params["generation_config"] = generation_candidate
-        generation_config = cast(dict[str, Any], generation_candidate)
-        if "speed" not in generation_config:
-            generation_config["speed"] = 1.0
-        if "volume" not in generation_config:
-            generation_config["volume"] = 1.0
+        generation_config = self._ensure_dict(
+            params.setdefault("generation_config", {})
+        )
+        params["generation_config"] = generation_config
+        generation_config.setdefault("speed", 1.0)
+        generation_config.setdefault("volume", 1.0)
 
-        # Extract accidental SSML configs from params and normalise.
         if "ssml" in params:
             ssml_config = params["ssml"]
             if isinstance(ssml_config, dict):
-                self.ssml = CartesiaSSMLConfig(**ssml_config)
+                self.ssml = self.ssml.merge(
+                    CartesiaSSMLConfig(**ssml_config)
+                )
             del params["ssml"]
 
         self.ssml.normalize()
@@ -142,3 +150,11 @@ class CartesiaTTSConfig(BaseModel):
             config.params["api_key"] = utils.encrypt(config.params["api_key"])
 
         return f"{config}"
+
+    @staticmethod
+    def _ensure_dict(value: Any) -> dict[str, Any]:
+        if isinstance(value, dict):
+            return value
+        if value is None:
+            return {}
+        return dict(value)
