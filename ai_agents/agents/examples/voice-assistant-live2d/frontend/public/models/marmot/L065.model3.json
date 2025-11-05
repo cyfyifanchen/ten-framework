@@ -14,19 +14,19 @@
       },
       {
         "Name": "greet",
-        "File": "打招呼.exp3.json"
+        "File": "greeting.exp3.json"
       },
       {
         "Name": "snack_thought",
-        "File": "瓜子.exp3.json"
+        "File": "melon_seeds.exp3.json"
       },
       {
         "Name": "happy_munch",
-        "File": "玉米.exp3.json"
+        "File": "corn.exp3.json"
       },
       {
         "Name": "cheeky",
-        "File": "揉脸.exp3.json"
+        "File": "face_rub.exp3.json"
       }
     ],
     "Motions": {

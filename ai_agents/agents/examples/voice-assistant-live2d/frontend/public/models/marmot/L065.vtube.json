@@ -939,7 +939,7 @@
             "HotkeyID": "47bfaa29761f44bd82965f86ffa3f2d0",
             "Name": "切换食物（整数可调）",
             "Action": "ToggleExpression",
-            "File": "切换食物（整数可调）.exp3.json",
+            "File": "switch_food_adjustable.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -1048,7 +1048,7 @@
             "HotkeyID": "f785867b34634f9886dc5dfebc18dc8f",
             "Name": "打招呼",
             "Action": "ToggleExpression",
-            "File": "打招呼.exp3.json",
+            "File": "greeting.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -1157,7 +1157,7 @@
             "HotkeyID": "4643c31169e1448da0ebfa96909a0fa0",
             "Name": "橘子",
             "Action": "ToggleExpression",
-            "File": "橘子.exp3.json",
+            "File": "orange.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -1266,7 +1266,7 @@
             "HotkeyID": "ffa1cd35ce9d43e5837a549479911c47",
             "Name": "水印",
             "Action": "ToggleExpression",
-            "File": "水印.exp3.json",
+            "File": "watermark.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -1375,7 +1375,7 @@
             "HotkeyID": "d2a721c6553a458c84373675204078e0",
             "Name": "盆",
             "Action": "ToggleExpression",
-            "File": "盆.exp3.json",
+            "File": "bowl.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -1484,7 +1484,7 @@
             "HotkeyID": "5d258742338d4f85a631ae8ceba91881",
             "Name": "领巾",
             "Action": "ToggleExpression",
-            "File": "领巾.exp3.json",
+            "File": "scarf.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -1920,7 +1920,7 @@
             "HotkeyID": "4360b42c08b84330adebc83f801f1b9d",
             "Name": "",
             "Action": "ToggleExpression",
-            "File": "揉脸.exp3.json",
+            "File": "face_rub.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -2029,7 +2029,7 @@
             "HotkeyID": "a25c8683296c4807ac686bbb2866fa9b",
             "Name": "瓜子",
             "Action": "ToggleExpression",
-            "File": "瓜子.exp3.json",
+            "File": "melon_seeds.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -2138,7 +2138,7 @@
             "HotkeyID": "ee39fb28dbac4a80b5dcd9c853bad5ce",
             "Name": "雪饼",
             "Action": "ToggleExpression",
-            "File": "雪饼.exp3.json",
+            "File": "snow_cookie.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
@@ -2247,7 +2247,7 @@
             "HotkeyID": "7bee4b908b72468da85c150b1ab9ac0c",
             "Name": "玉米",
             "Action": "ToggleExpression",
-            "File": "玉米.exp3.json",
+            "File": "corn.exp3.json",
             "Folder": "",
             "Position": {
                 "X": 0.0,
