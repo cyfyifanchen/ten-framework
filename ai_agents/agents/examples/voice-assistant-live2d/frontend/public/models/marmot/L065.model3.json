@@ -1,0 +1,68 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "L065.moc3",
+    "Textures": [
+      "L065.8192/texture_00.png"
+    ],
+    "Physics": "L065.physics3.json",
+    "DisplayInfo": "L065.cdi3.json",
+    "Expressions": [
+      {
+        "Name": "neutral",
+        "File": "1.exp3.json"
+      },
+      {
+        "Name": "greet",
+        "File": "打招呼.exp3.json"
+      },
+      {
+        "Name": "snack_thought",
+        "File": "瓜子.exp3.json"
+      },
+      {
+        "Name": "happy_munch",
+        "File": "玉米.exp3.json"
+      },
+      {
+        "Name": "cheeky",
+        "File": "揉脸.exp3.json"
+      }
+    ],
+    "Motions": {
+      "Idle": [
+        {
+          "Name": "idle",
+          "File": "motions/idle.motion3.json",
+          "Loop": true
+        }
+      ],
+      "Snack": [
+        {
+          "Name": "bite_one",
+          "File": "motions/bite 1.motion3.json"
+        },
+        {
+          "Name": "bite_two",
+          "File": "motions/bite 2.motion3.json"
+        },
+        {
+          "Name": "bite_three",
+          "File": "motions/bite 3.motion3.json"
+        }
+      ]
+    }
+  },
+  "Groups": [
+    {
+      "Target": "Parameter",
+      "Name": "EyeBlink",
+      "Ids": []
+    },
+    {
+      "Target": "Parameter",
+      "Name": "LipSync",
+      "Ids": []
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "mao_pro.moc3",
+		"Textures": [
+			"mao_pro.4096/texture_00.png"
+		],
+		"Physics": "mao_pro.physics3.json",
+		"Pose": "mao_pro.pose3.json",
+		"DisplayInfo": "mao_pro.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "neutral",
+				"File": "expressions/exp_01.exp3.json"
+			},
+			{
+				"Name": "calm",
+				"File": "expressions/exp_02.exp3.json"
+			},
+			{
+				"Name": "thoughtful",
+				"File": "expressions/exp_04.exp3.json"
+			},
+			{
+				"Name": "gentle_smile",
+				"File": "expressions/exp_05.exp3.json"
+			},
+			{
+				"Name": "bright",
+				"File": "expressions/exp_08.exp3.json"
+			}
+		],
+		"Motions": {
+			"Idle": [
+				{
+					"Name": "soft_swirl",
+					"File": "motions/mtn_01.motion3.json",
+					"Loop": true
+				}
+			],
+			"Gesture": [
+				{
+					"Name": "delight",
+					"File": "motions/mtn_02.motion3.json"
+				},
+				{
+					"Name": "nod",
+					"File": "motions/mtn_03.motion3.json"
+				},
+				{
+					"Name": "listen",
+					"File": "motions/mtn_04.motion3.json"
+				}
+			],
+			"Special": [
+				{
+					"Name": "sparkle",
+					"File": "motions/special_01.motion3.json"
+				},
+				{
+					"Name": "note",
+					"File": "motions/special_02.motion3.json"
+				},
+				{
+					"Name": "wave",
+					"File": "motions/special_03.motion3.json"
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"ParamA"
+			]
+		}
+	],
+	"HitAreas": [
+		{
+			"Id": "HitAreaHead",
+			"Name": ""
+		},
+		{
+			"Id": "HitAreaBody",
+			"Name": ""
+		}
+	]
+}

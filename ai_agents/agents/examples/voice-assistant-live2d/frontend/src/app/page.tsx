@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
 
 import dynamicImport from "next/dynamic";
 import { Baloo_2, Quicksand } from "next/font/google";
-import { HeartEmitter } from "@/components/HeartEmitter";
+import type {
+  ExpressionConfig,
+  Live2DHandle,
+  MouthConfig,
+  MotionConfig,
+} from "@/components/Live2DCharacter";
 
 // Dynamically import Live2D component to prevent SSR issues
 const ClientOnlyLive2D = dynamicImport(
@@ -28,13 +33,128 @@ const ClientOnlyLive2D = dynamicImport(
 import { apiPing, apiStartService, apiStopService } from "@/lib/request";
 import type { AgoraConfig, Live2DModel } from "@/types";
 
-// Use Kei model with MotionSync support
-const defaultModel: Live2DModel = {
-  id: "kei",
-  name: "Kei",
-  path: "/models/kei_vowels_pro/kei_vowels_pro.model3.json",
-  preview: "/models/kei_vowels_pro/preview.png",
+type CharacterProfile = Live2DModel & {
+  headline: string;
+  description: string;
+  quote: string;
+  voiceType: "male" | "female";
+  mouthConfig: MouthConfig;
+  expressions?: ExpressionConfig[];
+  motions?: MotionConfig[];
 };
+
+const characterOptions: CharacterProfile[] = [
+  {
+    id: "kei",
+    name: "Kei",
+    path: "/models/kei_vowels_pro/kei_vowels_pro.model3.json",
+    preview: "/models/kei_vowels_pro/preview.svg",
+    headline: "Your Charming Clever Companion",
+    description:
+      "Kei is a friendly guide who lights up every conversation. Connect with her for thoughtful answers, gentle encouragement, and a dash of anime sparkle whenever you need it.",
+    quote: "Hi! I’m Kei. Let me know how I can make your day easier.",
+    voiceType: "female",
+    mouthConfig: {
+      type: "open",
+      openId: "ParamMouthOpenY",
+      formId: "ParamMouthForm",
+    },
+  },
+  {
+    id: "mao",
+    name: "Mao",
+    path: "/models/mao_pro/mao_pro.model3.json",
+    preview: "/models/mao_pro/preview.svg",
+    headline: "Your Calm & Empathetic Storyteller",
+    description:
+      "Mao listens with patience and responds with lyrical warmth. Invite them for unhurried chats, reflective insights, and a gentle rhythm to balance out your day.",
+    quote: "Hello, I’m Mao. I’m all ears whenever you want to share.",
+    voiceType: "female",
+    mouthConfig: {
+      type: "corners",
+      upId: "ParamMouthUp",
+      downId: "ParamMouthDown",
+    },
+    expressions: [
+      { name: "neutral", label: "Neutral", default: true },
+      { name: "gentle_smile", label: "Gentle Smile", onSpeaking: true },
+      { name: "bright", label: "Bright Eyes" },
+    ],
+    motions: [
+      {
+        name: "soft_swirl",
+        label: "Soft Idle",
+        group: "Idle",
+        index: 0,
+        autoPlay: true,
+        loop: true,
+        priority: 1,
+      },
+      {
+        name: "delight",
+        label: "Delight Gesture",
+        group: "Gesture",
+        index: 0,
+        onSpeakingStart: true,
+        priority: 2,
+      },
+      {
+        name: "wave",
+        label: "Friendly Wave",
+        group: "Special",
+        index: 2,
+        priority: 2,
+      },
+    ],
+  },
+  {
+    id: "kevin",
+    name: "Kevin",
+    path: "/models/marmot/L065.model3.json",
+    preview: "/models/marmot/a0e01b1556549807c52770f1d517fb9.png",
+    headline: "Your Snack-Fueled Hype Marmot",
+    description:
+      "Kevin keeps spirits high with cozy chatter, snack recs, and solid productivity nudges. Drop in for grounded advice, quick laughs, and the warmest marmot energy on the planet.",
+    quote: "Yo! Kevin here. Ready to hustle, snack, or both?",
+    voiceType: "male",
+    mouthConfig: {
+      type: "open",
+      openId: "ParamMouthOpenY",
+      formId: "ParamMouthForm",
+    },
+    expressions: [
+      { name: "neutral", label: "Relaxed", default: true },
+      { name: "greet", label: "Big Smile", onSpeaking: true },
+      { name: "cheeky", label: "Cheeky" },
+    ],
+    motions: [
+      {
+        name: "idle",
+        label: "Cheerful Idle",
+        group: "Idle",
+        index: 0,
+        autoPlay: true,
+        loop: true,
+        priority: 1,
+      },
+      {
+        name: "bite_one",
+        label: "Snack Bite",
+        group: "Snack",
+        index: 0,
+        onSpeakingStart: true,
+        priority: 2,
+      },
+      {
+        name: "bite_two",
+        label: "Chomp Again",
+        group: "Snack",
+        index: 1,
+        priority: 2,
+      },
+    ],
+  },
+];
 
 const headlineFont = Baloo_2({
   subsets: ["latin"],
@@ -355,11 +475,20 @@ export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<Live2DModel>(defaultModel);
+  const [selectedModel, setSelectedModel] = useState<CharacterProfile>(
+    characterOptions[0]
+  );
   const [remoteAudioTrack, setRemoteAudioTrack] = useState<any>(null);
   const [agoraService, setAgoraService] = useState<any>(null);
   const [pingInterval, setPingInterval] = useState<NodeJS.Timeout | null>(null);
   const [isAssistantSpeaking, setIsAssistantSpeaking] = useState(false);
+  const live2dRef = useRef<Live2DHandle | null>(null);
+  const [modelLoadedTick, setModelLoadedTick] = useState(0);
+  const handleModelLoaded = useCallback(
+    () => setModelLoadedTick((tick) => tick + 1),
+    []
+  );
+  const prevSpeakingRef = useRef(false);
 
   useEffect(() => {
     // Dynamically import Agora service only on client side
@@ -386,6 +515,14 @@ export default function Home() {
 
   const handleAudioTrackChange = (track: any) => {
     setRemoteAudioTrack(track);
+  };
+
+  const handleModelSelect = (modelId: string) => {
+    const candidate = characterOptions.find((model) => model.id === modelId);
+    if (candidate && candidate.id !== selectedModel.id) {
+      prevSpeakingRef.current = false;
+      setSelectedModel(candidate);
+    }
   };
 
   useEffect(() => {
@@ -426,6 +563,53 @@ export default function Home() {
       }
     };
   }, [remoteAudioTrack]);
+
+  useEffect(() => {
+    prevSpeakingRef.current = false;
+  }, [selectedModel.id, modelLoadedTick]);
+
+  useEffect(() => {
+    const controller = live2dRef.current;
+    if (!controller) {
+      return;
+    }
+    const defaultExpression = selectedModel.expressions?.find((expression) => expression.default);
+    if (defaultExpression) {
+      void controller.setExpression(defaultExpression.name);
+    } else {
+      void controller.setExpression(undefined);
+    }
+    const idleMotion = selectedModel.motions?.find((motion) => motion.autoPlay);
+    if (idleMotion) {
+      void controller.playMotion(idleMotion.name, { priority: idleMotion.priority });
+    }
+  }, [selectedModel, modelLoadedTick]);
+
+  useEffect(() => {
+    const controller = live2dRef.current;
+    const wasSpeaking = prevSpeakingRef.current;
+    prevSpeakingRef.current = isAssistantSpeaking;
+    if (!controller) {
+      return;
+    }
+    if (isAssistantSpeaking && !wasSpeaking) {
+      const speakingExpression = selectedModel.expressions?.find((expression) => expression.onSpeaking);
+      if (speakingExpression) {
+        void controller.setExpression(speakingExpression.name);
+      }
+      const speakingMotion = selectedModel.motions?.find((motion) => motion.onSpeakingStart);
+      if (speakingMotion) {
+        void controller.playMotion(speakingMotion.name, { priority: speakingMotion.priority });
+      }
+    } else if (!isAssistantSpeaking && wasSpeaking) {
+      const defaultExpression = selectedModel.expressions?.find((expression) => expression.default);
+      if (defaultExpression) {
+        void controller.setExpression(defaultExpression.name);
+      } else {
+        void controller.setExpression(undefined);
+      }
+    }
+  }, [isAssistantSpeaking, selectedModel]);
 
   const startPing = () => {
     if (pingInterval) {
@@ -525,25 +709,48 @@ export default function Home() {
                 userId: agoraConfig.uid || 0,
                 graphName: "voice_assistant_live2d",
                 language: "en",
-                voiceType: "female",
+                voiceType: selectedModel.voiceType,
               });
 
               console.log("Agent started:", startResult);
-              startPing(); // Start ping when agent is started
             } catch (error) {
               console.error("Failed to start agent:", error);
             }
+
+            startPing();
           } else {
-            console.error("Failed to connect to Agora");
+            throw new Error("Failed to connect to Agora");
           }
           setIsConnecting(false);
         }
       } catch (error) {
-        console.error("Error toggling connection:", error);
+        console.error("Connection error:", error);
         setIsConnecting(false);
       }
     }
   };
+
+  const renderCharacterSwitch = () => (
+    <div className="flex w-full max-w-md flex-wrap items-center justify-center gap-3 rounded-full bg-white/60 p-2 shadow-sm backdrop-blur">
+      {characterOptions.map((model) => {
+        const isActive = model.id === selectedModel.id;
+        return (
+          <button
+            key={model.id}
+            type="button"
+            onClick={() => handleModelSelect(model.id)}
+            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
+              isActive
+                ? "bg-[#2f3dbd] text-white"
+                : "bg-white/85 text-[#586094] hover:bg-white"
+            }`}
+          >
+            {model.name}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div className="relative min-h-[100svh] overflow-hidden bg-[#fff9fd] text-[#2f2d4b]">
@@ -592,28 +799,28 @@ export default function Home() {
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center gap-6 px-4 py-6 md:px-6 lg:gap-10">
         <header className="max-w-xl space-y-3 text-center lg:max-w-2xl">
           <span className="inline-flex items-center rounded-full bg-white/70 px-3.5 py-0.5 font-semibold text-[#ff79a8] text-[0.65rem] uppercase tracking-[0.25em] shadow-sm">
-            Say hello to Kei
+            Say hello to {selectedModel.name}
           </span>
           <h1
             className={`${headlineFont.className} text-3xl text-[#2f2d4b] leading-snug tracking-tight md:text-[2.75rem] md:leading-tight`}
           >
-            Your Charming Clever Companion
+            {selectedModel.headline}
           </h1>
           <p
             className={`${subtitleFont.className} text-[#6f6a92] text-sm md:text-base`}
           >
-            Kei is a friendly guide who lights up every conversation. Connect
-            with her for thoughtful answers, gentle encouragement, and a dash of
-            anime sparkle whenever you need it.
+            {selectedModel.description}
           </p>
         </header>
 
         <main className="flex w-full max-w-5xl flex-col items-center gap-8">
+          {renderCharacterSwitch()}
+
           <div className="relative w-full max-w-3xl">
             <div className="-inset-5 absolute rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl" />
             <div className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8">
               <div className="flex w-full items-center justify-between font-semibold text-[#87a0ff] text-[0.6rem] uppercase tracking-[0.3em]">
-                <span>Kei</span>
+                <span>{selectedModel.name}</span>
                 <span className="flex items-center gap-2">
                   <span
                     className={`inline-flex h-2.5 w-2.5 rounded-full ${
@@ -626,14 +833,18 @@ export default function Home() {
               <div className="relative mt-4">
                 <ClientOnlyLive2D
                   key={selectedModel.id}
+                  ref={live2dRef}
                   modelPath={selectedModel.path}
                   audioTrack={remoteAudioTrack}
+                  mouthConfig={selectedModel.mouthConfig}
+                  expressions={selectedModel.expressions}
+                  motions={selectedModel.motions}
+                  onModelLoaded={handleModelLoaded}
                   className="h-[26rem] w-full rounded-[28px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[34rem]"
                 />
-                <HeartEmitter active={isAssistantSpeaking} />
               </div>
               <p className="mt-4 text-center text-[#6f6a92] text-xs md:text-sm">
-                “Hi! I’m Kei. Let me know how I can make your day easier.”
+                “{selectedModel.quote}”
               </p>
             </div>
           </div>
@@ -683,11 +894,7 @@ export default function Home() {
                 }`}
               >
                 {isMuted ? (
-                  <svg
-                    className="h-6 w-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
                     <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
                     <path
@@ -698,11 +905,7 @@ export default function Home() {
                     />
                   </svg>
                 ) : (
-                  <svg
-                    className="h-6 w-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
                     <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
                   </svg>
@@ -741,30 +944,24 @@ export default function Home() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    <span className="text-center text-sm">Calling Kei...</span>
+                    <span className="text-center text-sm">
+                      Calling {selectedModel.name}...
+                    </span>
                   </>
                 ) : isConnected ? (
                   <>
-                    <svg
-                      className="h-4 w-4"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                       <rect x="6" y="6" width="12" height="12" rx="2" />
                     </svg>
                     <span className="text-center text-sm">End session</span>
                   </>
                 ) : (
                   <>
-                    <svg
-                      className="h-4 w-4"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                     <span className="text-center text-sm">
-                      Connect with Kei
+                      Connect with {selectedModel.name}
                     </span>
                   </>
                 )}

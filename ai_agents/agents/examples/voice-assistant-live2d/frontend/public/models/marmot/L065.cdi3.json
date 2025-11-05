@@ -1,0 +1,378 @@
+{
+  "Version": 3,
+  "Parameters": [
+    {
+      "Id": "Param11",
+      "GroupId": "ParamGroup",
+      "Name": "1"
+    },
+    {
+      "Id": "Param12",
+      "GroupId": "ParamGroup",
+      "Name": "2"
+    },
+    {
+      "Id": "Param13",
+      "GroupId": "ParamGroup",
+      "Name": "4"
+    },
+    {
+      "Id": "Param14",
+      "GroupId": "ParamGroup",
+      "Name": "10"
+    },
+    {
+      "Id": "Param15",
+      "GroupId": "ParamGroup",
+      "Name": "12"
+    },
+    {
+      "Id": "Param10",
+      "GroupId": "",
+      "Name": "水印"
+    },
+    {
+      "Id": "Param",
+      "GroupId": "",
+      "Name": "打招呼"
+    },
+    {
+      "Id": "Param9",
+      "GroupId": "",
+      "Name": "领巾"
+    },
+    {
+      "Id": "Param6",
+      "GroupId": "",
+      "Name": "咬"
+    },
+    {
+      "Id": "Param8",
+      "GroupId": "",
+      "Name": "橘子"
+    },
+    {
+      "Id": "Param7",
+      "GroupId": "",
+      "Name": "切换食物"
+    },
+    {
+      "Id": "Param20",
+      "GroupId": "",
+      "Name": "防闪回"
+    },
+    {
+      "Id": "Param18",
+      "GroupId": "",
+      "Name": "鼓腮1"
+    },
+    {
+      "Id": "Param25",
+      "GroupId": "",
+      "Name": "手"
+    },
+    {
+      "Id": "Param26",
+      "GroupId": "",
+      "Name": "揉脸"
+    },
+    {
+      "Id": "Param27",
+      "GroupId": "",
+      "Name": "揉脸2"
+    },
+    {
+      "Id": "Param19",
+      "GroupId": "",
+      "Name": "鼓腮2"
+    },
+    {
+      "Id": "Param2",
+      "GroupId": "",
+      "Name": "打招呼手摆动"
+    },
+    {
+      "Id": "Param3",
+      "GroupId": "",
+      "Name": "盆"
+    },
+    {
+      "Id": "Param4",
+      "GroupId": "",
+      "Name": "盆物理X"
+    },
+    {
+      "Id": "Param5",
+      "GroupId": "",
+      "Name": "盆物理Y"
+    },
+    {
+      "Id": "ParamAngleX",
+      "GroupId": "",
+      "Name": "角度 X"
+    },
+    {
+      "Id": "ParamAngleY",
+      "GroupId": "",
+      "Name": "角度 Y"
+    },
+    {
+      "Id": "ParamAngleZ",
+      "GroupId": "",
+      "Name": "角度 Z"
+    },
+    {
+      "Id": "ParamEyeLOpen",
+      "GroupId": "",
+      "Name": "左眼　开闭"
+    },
+    {
+      "Id": "ParamEyeLSmile",
+      "GroupId": "",
+      "Name": "左眼　微笑"
+    },
+    {
+      "Id": "ParamEyeROpen",
+      "GroupId": "",
+      "Name": "右眼"
+    },
+    {
+      "Id": "ParamEyeRSmile",
+      "GroupId": "",
+      "Name": "右眼　微笑"
+    },
+    {
+      "Id": "ParamEyeBallX",
+      "GroupId": "",
+      "Name": "眼珠 X"
+    },
+    {
+      "Id": "ParamEyeBallY",
+      "GroupId": "",
+      "Name": "眼珠 Y"
+    },
+    {
+      "Id": "ParamBrowLY",
+      "GroupId": "",
+      "Name": "左眉上下"
+    },
+    {
+      "Id": "ParamBrowRY",
+      "GroupId": "",
+      "Name": "右眉　上下"
+    },
+    {
+      "Id": "ParamBrowLX",
+      "GroupId": "",
+      "Name": "左眉　左右"
+    },
+    {
+      "Id": "ParamBrowRX",
+      "GroupId": "",
+      "Name": "右眉　左右"
+    },
+    {
+      "Id": "ParamBrowLAngle",
+      "GroupId": "",
+      "Name": "左眉　角度"
+    },
+    {
+      "Id": "ParamBrowRAngle",
+      "GroupId": "",
+      "Name": "右眉　角度"
+    },
+    {
+      "Id": "ParamBrowLForm",
+      "GroupId": "",
+      "Name": "左眉　変形"
+    },
+    {
+      "Id": "ParamBrowRForm",
+      "GroupId": "",
+      "Name": "右眉　変形"
+    },
+    {
+      "Id": "ParamMouthForm",
+      "GroupId": "",
+      "Name": "嘴　变形",
+      "DefaultValue": 0.0,
+      "MinimumValue": -1.0,
+      "MaximumValue": 1.0
+    },
+    {
+      "Id": "ParamMouthOpenY",
+      "GroupId": "",
+      "Name": "嘴　张开和闭合",
+      "DefaultValue": 0.0,
+      "MinimumValue": 0.0,
+      "MaximumValue": 1.0
+    },
+    {
+      "Id": "ParamCheek",
+      "GroupId": "",
+      "Name": "脸颊泛红"
+    },
+    {
+      "Id": "ParamBodyAngleX",
+      "GroupId": "",
+      "Name": "身体旋转　X"
+    },
+    {
+      "Id": "ParamBodyAngleY",
+      "GroupId": "",
+      "Name": "身体旋转　Y"
+    },
+    {
+      "Id": "ParamBodyAngleZ",
+      "GroupId": "",
+      "Name": "身体旋转　Z"
+    },
+    {
+      "Id": "ParamBreath",
+      "GroupId": "",
+      "Name": "呼吸"
+    },
+    {
+      "Id": "ParamHairFront",
+      "GroupId": "",
+      "Name": "摇动 前发"
+    },
+    {
+      "Id": "ParamHairSide",
+      "GroupId": "",
+      "Name": "摇动 侧发"
+    },
+    {
+      "Id": "ParamHairBack",
+      "GroupId": "",
+      "Name": "摇动 后发"
+    },
+    {
+      "Id": "Param16",
+      "GroupId": "",
+      "Name": "星星x"
+    },
+    {
+      "Id": "Param17",
+      "GroupId": "",
+      "Name": "星星Y"
+    },
+    {
+      "Id": "Param21",
+      "GroupId": "",
+      "Name": "耳朵左1"
+    },
+    {
+      "Id": "Param22",
+      "GroupId": "",
+      "Name": "耳朵左2"
+    },
+    {
+      "Id": "Param23",
+      "GroupId": "",
+      "Name": "耳朵右1"
+    },
+    {
+      "Id": "Param24",
+      "GroupId": "",
+      "Name": "耳朵右2"
+    }
+  ],
+  "ParameterGroups": [
+    {
+      "Id": "ParamGroup",
+      "GroupId": "",
+      "Name": "表情"
+    }
+  ],
+  "Parts": [
+    {
+      "Id": "Part18",
+      "Name": "L065附加.psd"
+    },
+    {
+      "Id": "Part17",
+      "Name": "L065附加.psd"
+    },
+    {
+      "Id": "Part",
+      "Name": "附加——橘子"
+    },
+    {
+      "Id": "Part2",
+      "Name": "附加——端盆"
+    },
+    {
+      "Id": "Part3",
+      "Name": "双手"
+    },
+    {
+      "Id": "Part4",
+      "Name": "文件夹1"
+    },
+    {
+      "Id": "Part6",
+      "Name": "五官"
+    },
+    {
+      "Id": "Part12",
+      "Name": "胡子"
+    },
+    {
+      "Id": "Part13",
+      "Name": "大脸"
+    },
+    {
+      "Id": "Part14",
+      "Name": "附加——方巾"
+    },
+    {
+      "Id": "Part15",
+      "Name": "耳朵"
+    },
+    {
+      "Id": "Part16",
+      "Name": "双脚"
+    },
+    {
+      "Id": "xingxing2",
+      "Name": "xingxing"
+    },
+    {
+      "Id": "shengqi2",
+      "Name": "shengqi"
+    },
+    {
+      "Id": "xingxing",
+      "Name": "xingxing"
+    },
+    {
+      "Id": "shengqi",
+      "Name": "shengqi"
+    },
+    {
+      "Id": "Part5",
+      "Name": "附加——玉米"
+    },
+    {
+      "Id": "Part7",
+      "Name": "眼睛"
+    },
+    {
+      "Id": "Part10",
+      "Name": "闭嘴嘴唇"
+    },
+    {
+      "Id": "Part11",
+      "Name": "口腔"
+    },
+    {
+      "Id": "Part8",
+      "Name": "组 1"
+    },
+    {
+      "Id": "Part9",
+      "Name": "组 2"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f5f0ff" />
+      <stop offset="60%" stop-color="#edf6ff" />
+      <stop offset="100%" stop-color="#ffe9f5" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="320" rx="36" fill="url(#bg)" />
+  <g transform="translate(20, 10) scale(0.07)">
+    <image href="mao_pro.4096/texture_00.png" width="4096" height="4096" opacity="0.55" />
+  </g>
+  <rect width="320" height="320" rx="36" fill="none" stroke="#d7c9ff" stroke-width="6" />
+  <text x="160" y="260" text-anchor="middle" font-family="'Baloo 2', 'Quicksand', sans-serif" font-size="96" font-weight="700" fill="#3747a6">Mao</text>
+</svg>
