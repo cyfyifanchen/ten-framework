@@ -1240,17 +1240,32 @@ export default function Home() {
       }
       if (!message?.isUser) {
         return;
-      }
-      if (message.isFinal === false) {
-        return;
-      }
-      const normalized = message.text?.toLowerCase() ?? "";
-      if (!normalized) {
-        return;
-      }
-      const matchedRule = rules.find((rule) =>
-        rule.triggers.some((trigger) => normalized.includes(trigger))
-      );
+    }
+    if (message.isFinal === false) {
+      return;
+    }
+    const normalizedOriginal = message.text?.toLowerCase() ?? "";
+    if (!normalizedOriginal) {
+      return;
+    }
+    const normalized = normalizedOriginal
+      .replace(/\b(can you|could you|would you|will you|please)\b/g, " ")
+      .replace(/\byour\b/g, " ")
+      .replace(/\bthe\b/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const haystacks = new Set<string>([normalizedOriginal, normalized]);
+    const matchedRule = rules.find((rule) =>
+      rule.triggers.some((trigger) => {
+        const needle = trigger.toLowerCase();
+        for (const hay of haystacks) {
+          if (hay.includes(needle)) {
+            return true;
+          }
+        }
+        return false;
+      })
+    );
       if (!matchedRule) {
         return;
       }
@@ -1572,6 +1587,16 @@ export default function Home() {
                   onModelLoaded={handleModelLoaded}
                   className={live2dClassName}
                 />
+                {selectedModel.id === "kevin" && (
+                  <div className="pointer-events-none absolute inset-x-0 bottom-16 z-50 flex justify-center">
+                    <div
+                      className="h-24 w-64 rounded-[40px] shadow-[0_12px_28px_rgba(86,170,108,0.28)]"
+                      style={{
+                        backgroundColor: "rgba(238, 251, 240, 0.96)",
+                      }}
+                    />
+                  </div>
+                )}
               </div>
               <p className={quoteClass}>
                 “{selectedModel.quote}”
