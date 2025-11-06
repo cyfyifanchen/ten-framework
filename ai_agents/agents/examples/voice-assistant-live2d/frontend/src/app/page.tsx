@@ -1184,119 +1184,150 @@ export default function Home() {
       return;
     }
 
-    const rules: VoiceCommandRule[] = [
-      {
-        triggers: [
-          "change your outfit",
-          "change outfit",
-          "can you change your outfit",
-          "switch your outfit",
-        ],
-        expressions: ["toggle_black_dress_m_2"],
-        resetFirst: true,
-      },
-      {
-        triggers: [
-          "default outfit",
-          "back to normal outfit",
-          "regular outfit",
-          "original outfit",
-        ],
-        reset: true,
-      },
-      {
-        triggers: [
-          "remove your outfit",
-          "take off your outfit",
-          "outfit off",
-          "clothes off",
-        ],
-        reset: true,
-      },
-      {
-        triggers: ["wear the apron", "put on the apron", "apron on"],
-        expressions: ["toggle_apron_m_3"],
-        resetFirst: true,
-      },
-      {
-        triggers: ["take off the apron", "remove the apron", "apron off"],
-        reset: true,
-      },
-      {
-        triggers: ["wear your sunglasses", "put on sunglasses", "sunglasses on"],
-        expressions: ["toggle_sunglasses_g_2"],
-        resetFirst: true,
-      },
-      {
-        triggers: ["wear your glasses", "put on glasses", "glasses on", "reading glasses"],
-        expressions: ["toggle_glasses_g_1"],
-        resetFirst: true,
-      },
-    ];
+    const rules: VoiceCommandRule[] =
+      selectedModel.id === "chubbie"
+        ? [
+            {
+              triggers: [
+                "change your outfit",
+                "change outfit",
+                "can you change your outfit",
+                "switch your outfit",
+              ],
+              expressions: ["toggle_black_dress_m_2"],
+              resetFirst: true,
+            },
+            {
+              triggers: [
+                "default outfit",
+                "back to normal outfit",
+                "regular outfit",
+                "original outfit",
+              ],
+              reset: true,
+            },
+            {
+              triggers: [
+                "remove your outfit",
+                "take off your outfit",
+                "outfit off",
+                "clothes off",
+              ],
+              reset: true,
+            },
+            {
+              triggers: ["wear the apron", "put on the apron", "apron on"],
+              expressions: ["toggle_apron_m_3"],
+              resetFirst: true,
+            },
+            {
+              triggers: ["take off the apron", "remove the apron", "apron off"],
+              reset: true,
+            },
+            {
+              triggers: ["wear your sunglasses", "put on sunglasses", "sunglasses on"],
+              expressions: ["toggle_sunglasses_g_2"],
+              resetFirst: true,
+            },
+            {
+              triggers: ["wear your glasses", "put on glasses", "glasses on", "reading glasses"],
+              expressions: ["toggle_glasses_g_1"],
+              resetFirst: true,
+            },
+          ]
+        : selectedModel.id === "kevin"
+        ? [
+            {
+              triggers: [
+                "big smile",
+                "give me a smile",
+                "smile for me",
+                "smile kevin",
+              ],
+              expressions: ["greet"],
+              resetFirst: true,
+            },
+            {
+              triggers: ["cheeky face", "be cheeky", "give me a cheeky grin"],
+              expressions: ["cheeky"],
+              resetFirst: true,
+            },
+            {
+              triggers: ["relax face", "back to relaxed", "neutral face", "reset face"],
+              reset: true,
+            },
+          ]
+        : [];
+
+    if (rules.length === 0) {
+      return;
+    }
+
+    const targetModelId = selectedModel.id;
 
     const cleanup = agoraService.addTranscriptListener((message: TranscriptMessage) => {
-      if (selectedModel.id !== "chubbie") {
+      if (selectedModel.id !== targetModelId) {
         return;
       }
       if (message?.isUser === false) {
         return;
       }
-    if (message.isFinal === false) {
-      return;
-    }
-    const base = message.text?.toLowerCase() ?? "";
-    if (!base.trim()) {
-      return;
-    }
+      if (message.isFinal === false) {
+        return;
+      }
+      const base = message.text?.toLowerCase() ?? "";
+      if (!base.trim()) {
+        return;
+      }
 
-    const clean = (value: string) =>
-      value
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+      const clean = (value: string) =>
+        value
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
 
-    const removeStopWords = (value: string) =>
-      value
-        .replace(/\b(can|you|could|would|will|please|your|the|a|to)\b/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+      const removeStopWords = (value: string) =>
+        value
+          .replace(/\b(can|you|could|would|will|please|your|the|a|to)\b/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
 
-    const primary = clean(base);
-    const simplified = removeStopWords(primary);
+      const primary = clean(base);
+      const simplified = removeStopWords(primary);
 
-    const haystacks = new Set<string>();
-    if (primary) {
-      haystacks.add(primary);
-    }
-    if (simplified) {
-      haystacks.add(simplified);
-    }
-    if (haystacks.size === 0) {
-      return;
-    }
+      const haystacks = new Set<string>();
+      if (primary) {
+        haystacks.add(primary);
+      }
+      if (simplified) {
+        haystacks.add(simplified);
+      }
+      if (haystacks.size === 0) {
+        return;
+      }
 
-    const matchesTrigger = (trigger: string) => {
-      const normalizedTrigger = clean(trigger);
-      if (!normalizedTrigger) {
+      const matchesTrigger = (trigger: string) => {
+        const normalizedTrigger = clean(trigger);
+        if (!normalizedTrigger) {
+          return false;
+        }
+        const triggerWords = normalizedTrigger.split(" ");
+        for (const hay of haystacks) {
+          if (hay.includes(normalizedTrigger)) {
+            return true;
+          }
+          const hayWords = hay.split(" ");
+          if (triggerWords.every((word) => hayWords.includes(word))) {
+            return true;
+          }
+        }
         return false;
-      }
-      const triggerWords = normalizedTrigger.split(" ");
-      for (const hay of haystacks) {
-        if (hay.includes(normalizedTrigger)) {
-          return true;
-        }
-        const hayWords = hay.split(" ");
-        if (triggerWords.every((word) => hayWords.includes(word))) {
-          return true;
-        }
-      }
-      return false;
-    };
+      };
 
-    const matchedRule = rules.find((rule) =>
-      rule.triggers.some((trigger) => matchesTrigger(trigger))
-    );
+      const matchedRule = rules.find((rule) =>
+        rule.triggers.some((trigger) => matchesTrigger(trigger))
+      );
       if (!matchedRule) {
         return;
       }
