@@ -1238,33 +1238,64 @@ export default function Home() {
       if (selectedModel.id !== "chubbie") {
         return;
       }
-      if (!message?.isUser) {
+      if (message?.isUser === false) {
         return;
-    }
+      }
     if (message.isFinal === false) {
       return;
     }
-    const normalizedOriginal = message.text?.toLowerCase() ?? "";
-    if (!normalizedOriginal) {
+    const base = message.text?.toLowerCase() ?? "";
+    if (!base.trim()) {
       return;
     }
-    const normalized = normalizedOriginal
-      .replace(/\b(can you|could you|would you|will you|please)\b/g, " ")
-      .replace(/\byour\b/g, " ")
-      .replace(/\bthe\b/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    const haystacks = new Set<string>([normalizedOriginal, normalized]);
-    const matchedRule = rules.find((rule) =>
-      rule.triggers.some((trigger) => {
-        const needle = trigger.toLowerCase();
-        for (const hay of haystacks) {
-          if (hay.includes(needle)) {
-            return true;
-          }
-        }
+
+    const clean = (value: string) =>
+      value
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const removeStopWords = (value: string) =>
+      value
+        .replace(/\b(can|you|could|would|will|please|your|the|a|to)\b/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const primary = clean(base);
+    const simplified = removeStopWords(primary);
+
+    const haystacks = new Set<string>();
+    if (primary) {
+      haystacks.add(primary);
+    }
+    if (simplified) {
+      haystacks.add(simplified);
+    }
+    if (haystacks.size === 0) {
+      return;
+    }
+
+    const matchesTrigger = (trigger: string) => {
+      const normalizedTrigger = clean(trigger);
+      if (!normalizedTrigger) {
         return false;
-      })
+      }
+      const triggerWords = normalizedTrigger.split(" ");
+      for (const hay of haystacks) {
+        if (hay.includes(normalizedTrigger)) {
+          return true;
+        }
+        const hayWords = hay.split(" ");
+        if (triggerWords.every((word) => hayWords.includes(word))) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    const matchedRule = rules.find((rule) =>
+      rule.triggers.some((trigger) => matchesTrigger(trigger))
     );
       if (!matchedRule) {
         return;

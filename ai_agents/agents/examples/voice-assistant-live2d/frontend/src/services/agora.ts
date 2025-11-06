@@ -282,13 +282,48 @@ export class AgoraService {
 
             const timestampSource = payload?.text_ts ?? Date.now();
             const timestamp = new Date(timestampSource);
-            const role = (payload?.role ?? 'assistant').toString().toLowerCase();
+
+            const roleRaw = payload?.role;
+            const roleLower =
+                typeof roleRaw === 'string' ? roleRaw.toLowerCase() : '';
+            const speakerRaw = payload?.speaker;
+            const speaker =
+                typeof speakerRaw === 'string' ? speakerRaw.toLowerCase() : '';
+            let isUser = true;
+            if (roleLower) {
+                if (roleLower === 'assistant' || roleLower === 'agent' || roleLower === 'system') {
+                    isUser = false;
+                } else if (
+                    roleLower === 'user' ||
+                    roleLower === 'client' ||
+                    roleLower === 'participant' ||
+                    roleLower === 'speaker' ||
+                    roleLower === 'speaker0'
+                ) {
+                    isUser = true;
+                }
+            } else if (speaker) {
+                const lowered = speaker.toLowerCase();
+                if (
+                    lowered.includes('assistant') ||
+                    lowered.includes('speaker1') ||
+                    lowered.includes('agent')
+                ) {
+                    isUser = false;
+                } else if (
+                    lowered.includes('user') ||
+                    lowered.includes('speaker0') ||
+                    lowered.includes('participant')
+                ) {
+                    isUser = true;
+                }
+            }
 
             const message: TranscriptMessage = {
                 id: messageId,
                 text,
                 timestamp,
-                isUser: role === 'user',
+                isUser,
                 confidence: typeof payload?.confidence === 'number' ? payload.confidence : undefined,
                 isFinal: Boolean(payload?.is_final ?? payload?.isFinal ?? true),
             };
