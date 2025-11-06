@@ -31,7 +31,14 @@ const ClientOnlyLive2D = dynamicImport(
 );
 
 import { apiPing, apiStartService, apiStopService } from "@/lib/request";
-import type { AgoraConfig, Live2DModel } from "@/types";
+import type { AgoraConfig, Live2DModel, TranscriptMessage } from "@/types";
+
+type VoiceCommandRule = {
+  triggers: string[];
+  expressions?: string[];
+  reset?: boolean;
+  resetFirst?: boolean;
+};
 
 type BackgroundTheme = {
   baseColor: string;
@@ -1017,11 +1024,35 @@ export default function Home() {
   const [isAssistantSpeaking, setIsAssistantSpeaking] = useState(false);
   const live2dRef = useRef<Live2DHandle | null>(null);
   const [modelLoadedTick, setModelLoadedTick] = useState(0);
+  const processedVoiceCommandIdsRef = useRef<string[]>([]);
   const handleModelLoaded = useCallback(
     () => setModelLoadedTick((tick) => tick + 1),
     []
   );
   const prevSpeakingRef = useRef(false);
+  const applyVoiceRule = useCallback(async (rule: VoiceCommandRule) => {
+    const controller = live2dRef.current;
+    if (!controller) {
+      return;
+    }
+    try {
+      if (rule.reset) {
+        await controller.setExpression(undefined);
+        return;
+      }
+      const expressions = rule.expressions ?? [];
+      const shouldResetFirst =
+        rule.resetFirst !== undefined ? rule.resetFirst : expressions.length > 0;
+      if (shouldResetFirst) {
+        await controller.setExpression(undefined);
+      }
+      for (const expression of expressions) {
+        await controller.setExpression(expression);
+      }
+    } catch (error) {
+      console.warn("[VoiceCommand] Failed to apply voice-triggered expression", error);
+    }
+  }, []);
 
   useEffect(() => {
     // Dynamically import Agora service only on client side
@@ -1102,6 +1133,10 @@ export default function Home() {
   }, [selectedModel.id, modelLoadedTick]);
 
   useEffect(() => {
+    processedVoiceCommandIdsRef.current = [];
+  }, [selectedModel.id]);
+
+  useEffect(() => {
     const controller = live2dRef.current;
     if (!controller) {
       return;
@@ -1143,6 +1178,95 @@ export default function Home() {
       }
     }
   }, [isAssistantSpeaking, selectedModel]);
+
+  useEffect(() => {
+    if (!agoraService) {
+      return;
+    }
+
+    const rules: VoiceCommandRule[] = [
+      {
+        triggers: [
+          "change your outfit",
+          "change outfit",
+          "can you change your outfit",
+          "switch your outfit",
+        ],
+        expressions: ["toggle_black_dress_m_2"],
+        resetFirst: true,
+      },
+      {
+        triggers: [
+          "default outfit",
+          "back to normal outfit",
+          "regular outfit",
+          "original outfit",
+        ],
+        reset: true,
+      },
+      {
+        triggers: [
+          "remove your outfit",
+          "take off your outfit",
+          "outfit off",
+          "clothes off",
+        ],
+        reset: true,
+      },
+      {
+        triggers: ["wear the apron", "put on the apron", "apron on"],
+        expressions: ["toggle_apron_m_3"],
+        resetFirst: true,
+      },
+      {
+        triggers: ["take off the apron", "remove the apron", "apron off"],
+        reset: true,
+      },
+      {
+        triggers: ["wear your sunglasses", "put on sunglasses", "sunglasses on"],
+        expressions: ["toggle_sunglasses_g_2"],
+        resetFirst: true,
+      },
+      {
+        triggers: ["wear your glasses", "put on glasses", "glasses on", "reading glasses"],
+        expressions: ["toggle_glasses_g_1"],
+        resetFirst: true,
+      },
+    ];
+
+    const cleanup = agoraService.addTranscriptListener((message: TranscriptMessage) => {
+      if (selectedModel.id !== "chubbie") {
+        return;
+      }
+      if (!message?.isUser) {
+        return;
+      }
+      if (message.isFinal === false) {
+        return;
+      }
+      const normalized = message.text?.toLowerCase() ?? "";
+      if (!normalized) {
+        return;
+      }
+      const matchedRule = rules.find((rule) =>
+        rule.triggers.some((trigger) => normalized.includes(trigger))
+      );
+      if (!matchedRule) {
+        return;
+      }
+      const processed = processedVoiceCommandIdsRef.current;
+      if (processed.includes(message.id)) {
+        return;
+      }
+      processed.push(message.id);
+      if (processed.length > 200) {
+        processed.shift();
+      }
+      void applyVoiceRule(matchedRule);
+    });
+
+    return cleanup;
+  }, [agoraService, selectedModel.id, applyVoiceRule]);
 
   const startPing = () => {
     if (pingInterval) {
@@ -1307,8 +1431,8 @@ export default function Home() {
     ? "relative w-full max-w-5xl"
     : "relative w-full max-w-3xl";
   const stageGlowClass = isImmersiveStage
-    ? "-inset-20 absolute rounded-[140px] blur-3xl"
-    : "-inset-5 absolute rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl";
+    ? "-inset-20 absolute -z-10 rounded-[140px] blur-3xl pointer-events-none"
+    : "-inset-5 absolute -z-10 rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl pointer-events-none";
   const stageGlowStyle: React.CSSProperties | undefined = isImmersiveStage
     ? selectedModel.id === "kevin"
       ? {
@@ -1323,8 +1447,8 @@ export default function Home() {
         }
     : undefined;
   const stageInnerClass = isImmersiveStage
-    ? "relative flex flex-col items-center gap-6 px-2 pt-4 pb-8 md:px-6 md:pt-6 md:pb-12"
-    : "relative overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8";
+    ? "relative z-10 flex flex-col items-center gap-6 px-2 pt-4 pb-8 md:px-6 md:pt-6 md:pb-12"
+    : "relative z-10 overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8";
   const stageHeaderClass = isImmersiveStage
     ? selectedModel.id === "kevin"
       ? "flex w-full items-center justify-between font-semibold text-[#2a5b37] text-[0.62rem] uppercase tracking-[0.32em]"
