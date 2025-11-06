@@ -56,16 +56,35 @@
             {
               "type": "extension",
               "name": "tts",
-              "addon": "elevenlabs_tts2_python",
+              "addon": "cartesia_tts",
               "extension_group": "tts",
               "property": {
                 "params": {
-                  "key": "${env:ELEVENLABS_TTS_KEY|}",
-                  "voice_id": "pNInz6obpgDQGcFmaJgB",
-                  "model_id": "eleven_multilingual_v2"
+                  "language": "en",
+                  "generation_config": {
+                    "speed": 1,
+                    "volume": 1
+                  },
+                  "model_id": "sonic-3",
+                  "api_key": "${env:CARTESIA_API_KEY}",
+                  "voice": {
+                    "mode": "id",
+                    "id": "a0e99841-438c-4a64-b679-ae501e7d6091"
+                  },
+                  "output_format": {
+                    "container": "raw",
+                    "sample_rate": 44100
+                  }
                 },
-                "dump": false,
-                "dump_path": "./"
+                "ssml": {
+                  "enabled": true,
+                  "speed_ratio": 1,
+                  "volume_ratio": 1,
+                  "emotion": "angry",
+                  "pre_break_time": "",
+                  "post_break_time": "",
+                  "spell_words": []
+                }
               }
             },
             {

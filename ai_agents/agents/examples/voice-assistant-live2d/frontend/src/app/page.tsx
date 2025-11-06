@@ -1031,24 +1031,31 @@ export default function Home() {
   );
   const prevSpeakingRef = useRef(false);
   const applyVoiceRule = useCallback(async (rule: VoiceCommandRule) => {
+    console.log("[VoiceCommand] Applying rule:", rule);
     const controller = live2dRef.current;
     if (!controller) {
+      console.warn("[VoiceCommand] No controller available");
       return;
     }
     try {
       if (rule.reset) {
+        console.log("[VoiceCommand] Resetting expression");
         await controller.setExpression(undefined);
         return;
       }
       const expressions = rule.expressions ?? [];
+      console.log("[VoiceCommand] Expressions to apply:", expressions);
       const shouldResetFirst =
         rule.resetFirst !== undefined ? rule.resetFirst : expressions.length > 0;
       if (shouldResetFirst) {
+        console.log("[VoiceCommand] Resetting before applying");
         await controller.setExpression(undefined);
       }
       for (const expression of expressions) {
+        console.log("[VoiceCommand] Setting expression:", expression);
         await controller.setExpression(expression);
       }
+      console.log("[VoiceCommand] Successfully applied expressions");
     } catch (error) {
       console.warn("[VoiceCommand] Failed to apply voice-triggered expression", error);
     }
@@ -1328,6 +1335,10 @@ export default function Home() {
       const matchedRule = rules.find((rule) =>
         rule.triggers.some((trigger) => matchesTrigger(trigger))
       );
+      console.log("[VoiceCommand] Checking text:", base);
+      console.log("[VoiceCommand] Primary:", primary);
+      console.log("[VoiceCommand] Simplified:", simplified);
+      console.log("[VoiceCommand] Matched rule:", matchedRule);
       if (!matchedRule) {
         return;
       }
