@@ -1,0 +1,25 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "ParamMaid",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "ParamMaid2",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "ParamGlass4",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "Paramjuziyujin",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}

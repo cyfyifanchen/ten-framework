@@ -1,0 +1,380 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamKumagi4",
+			"GroupId": "",
+			"Name": "模型制作者-B站@熊木兔Kumagi"
+		},
+		{
+			"Id": "ParamKumagi5",
+			"GroupId": "",
+			"Name": "此模型为免费商用模型"
+		},
+		{
+			"Id": "ParamKumagi6",
+			"GroupId": "",
+			"Name": "虚拟物品不支持退款"
+		},
+		{
+			"Id": "ParamKumagi7",
+			"GroupId": "",
+			"Name": "请勿转卖私自修改该模型"
+		},
+		{
+			"Id": "ParamKumagi8",
+			"GroupId": "",
+			"Name": "该模型只在B站iD:熊木兔Kumagi处可获得，其他渠道皆盗版"
+		},
+		{
+			"Id": "ParamKumagi9",
+			"GroupId": "",
+			"Name": "祝大家使用愉快！"
+		},
+		{
+			"Id": "Paramxiongmutu",
+			"GroupId": "ParamGroup",
+			"Name": "熊木兔开关"
+		},
+		{
+			"Id": "ParamGloom",
+			"GroupId": "ParamGroup",
+			"Name": "阴影表情开关"
+		},
+		{
+			"Id": "ParamCheek2",
+			"GroupId": "ParamGroup",
+			"Name": "脸颊泛红"
+		},
+		{
+			"Id": "ParamMaid",
+			"GroupId": "ParamGroup",
+			"Name": "女仆发卡开关"
+		},
+		{
+			"Id": "ParamMaid2",
+			"GroupId": "ParamGroup",
+			"Name": "围裙开关"
+		},
+		{
+			"Id": "ParamMaid3",
+			"GroupId": "ParamGroup",
+			"Name": "黑裙开关"
+		},
+		{
+			"Id": "ParamBow",
+			"GroupId": "ParamGroup",
+			"Name": "蝴蝶结开关"
+		},
+		{
+			"Id": "ParamGlass1",
+			"GroupId": "ParamGroup",
+			"Name": "单片眼镜开关"
+		},
+		{
+			"Id": "Paramhuzi",
+			"GroupId": "ParamGroup",
+			"Name": "胡子开关"
+		},
+		{
+			"Id": "ParamGlass2",
+			"GroupId": "ParamGroup",
+			"Name": "眼镜开关"
+		},
+		{
+			"Id": "ParamGlass3",
+			"GroupId": "ParamGroup",
+			"Name": "墨镜开关"
+		},
+		{
+			"Id": "ParamGlass4",
+			"GroupId": "ParamGroup",
+			"Name": "浴盆开关"
+		},
+		{
+			"Id": "Paramjuziyujin",
+			"GroupId": "ParamGroup",
+			"Name": "橘子开关"
+		},
+		{
+			"Id": "ParamAngleX",
+			"GroupId": "",
+			"Name": "角度 X"
+		},
+		{
+			"Id": "ParamAngleY",
+			"GroupId": "",
+			"Name": "角度 Y"
+		},
+		{
+			"Id": "ParamAngleZ",
+			"GroupId": "",
+			"Name": "角度 Z"
+		},
+		{
+			"Id": "ParamEyeLOpen",
+			"GroupId": "",
+			"Name": "左眼　开闭"
+		},
+		{
+			"Id": "ParamEyeLSmile",
+			"GroupId": "",
+			"Name": "左眼　微笑"
+		},
+		{
+			"Id": "ParamEyeRAngry",
+			"GroupId": "",
+			"Name": "左眼 愤怒-惊讶"
+		},
+		{
+			"Id": "ParamEyeROpen",
+			"GroupId": "",
+			"Name": "右眼"
+		},
+		{
+			"Id": "ParamColorW",
+			"GroupId": "",
+			"Name": "色块变色逻辑开关"
+		},
+		{
+			"Id": "ParamWhiteW",
+			"GroupId": "",
+			"Name": "色块最亮-最鲜艳"
+		},
+		{
+			"Id": "ParamHueW",
+			"GroupId": "",
+			"Name": "色块色相"
+		},
+		{
+			"Id": "ParamBlackW",
+			"GroupId": "",
+			"Name": "色块最鲜艳-最暗"
+		},
+		{
+			"Id": "ParamEyeRSmile",
+			"GroupId": "",
+			"Name": "右眼　微笑"
+		},
+		{
+			"Id": "ParamEyeBallX",
+			"GroupId": "",
+			"Name": "眼珠 X"
+		},
+		{
+			"Id": "ParamEyeBallY",
+			"GroupId": "",
+			"Name": "眼珠 Y"
+		},
+		{
+			"Id": "ParamBrowLY",
+			"GroupId": "",
+			"Name": "左眉上下"
+		},
+		{
+			"Id": "ParamBrowRY",
+			"GroupId": "",
+			"Name": "右眉　上下"
+		},
+		{
+			"Id": "ParamBrowLX",
+			"GroupId": "",
+			"Name": "左眉　左右"
+		},
+		{
+			"Id": "ParamBrowRX",
+			"GroupId": "",
+			"Name": "右眉　左右"
+		},
+		{
+			"Id": "ParamBrowLAngle",
+			"GroupId": "",
+			"Name": "左眉　角度"
+		},
+		{
+			"Id": "ParamBrowRAngle",
+			"GroupId": "",
+			"Name": "右眉　角度"
+		},
+		{
+			"Id": "ParamBrowLForm",
+			"GroupId": "",
+			"Name": "左眉　変形"
+		},
+		{
+			"Id": "ParamBrowRForm",
+			"GroupId": "",
+			"Name": "右眉　変形"
+		},
+		{
+			"Id": "ParamMouthForm",
+			"GroupId": "",
+			"Name": "嘴　变形"
+		},
+		{
+			"Id": "ParamMouthOpenY",
+			"GroupId": "",
+			"Name": "嘴　张开和闭合"
+		},
+		{
+			"Id": "ParamCheek",
+			"GroupId": "",
+			"Name": "脸颊泛红"
+		},
+		{
+			"Id": "ParamBodyAngleY",
+			"GroupId": "",
+			"Name": "身体旋转　Y"
+		},
+		{
+			"Id": "ParamBodyAngleZ",
+			"GroupId": "",
+			"Name": "身体旋转　Z"
+		},
+		{
+			"Id": "ParamBreath",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "ParamBreath2",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "ParamBreath3",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "ParamBreath4",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "ParamBreath5",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "ParamBodyAngleX",
+			"GroupId": "",
+			"Name": "身体旋转　X"
+		},
+		{
+			"Id": "ParamXlothx",
+			"GroupId": "",
+			"Name": "衣物物理x"
+		},
+		{
+			"Id": "ParamYlothy",
+			"GroupId": "",
+			"Name": "衣物物理y"
+		},
+		{
+			"Id": "ParamBodyX",
+			"GroupId": "",
+			"Name": "X轴身体物理"
+		},
+		{
+			"Id": "ParamBodyY",
+			"GroupId": "",
+			"Name": "Y轴身体物理"
+		},
+		{
+			"Id": "ParamBodyZ",
+			"GroupId": "",
+			"Name": "Z轴身体物理"
+		},
+		{
+			"Id": "ParamBodyWaterX",
+			"GroupId": "",
+			"Name": "X轴水物理"
+		},
+		{
+			"Id": "ParamBodyWaterY",
+			"GroupId": "",
+			"Name": "Y轴水物理"
+		},
+		{
+			"Id": "ParamBodyWaterZ",
+			"GroupId": "",
+			"Name": "Z轴水物理"
+		},
+		{
+			"Id": "ParamEarX",
+			"GroupId": "",
+			"Name": "耳朵物理x"
+		},
+		{
+			"Id": "ParamEarY",
+			"GroupId": "",
+			"Name": "耳朵物理y"
+		},
+		{
+			"Id": "ParamOrangeX",
+			"GroupId": "",
+			"Name": "橘子物理x"
+		},
+		{
+			"Id": "ParamOrangeY",
+			"GroupId": "",
+			"Name": "橘子物理y"
+		},
+		{
+			"Id": "ParamHairSide",
+			"GroupId": "",
+			"Name": "摇动 侧发"
+		},
+		{
+			"Id": "ParamHairBack",
+			"GroupId": "",
+			"Name": "摇动 后发"
+		}
+	],
+	"ParameterGroups": [
+		{
+			"Id": "ParamGroup",
+			"GroupId": "",
+			"Name": "按键表情"
+		}
+	],
+	"Parts": [
+		{
+			"Id": "Part4",
+			"Name": "水豚模型使用须知2.png"
+		},
+		{
+			"Id": "Part12",
+			"Name": "呼吸雾气动画"
+		},
+		{
+			"Id": "Part",
+			"Name": "表情 面部装饰"
+		},
+		{
+			"Id": "Part3",
+			"Name": "浴盆前片"
+		},
+		{
+			"Id": "kumagi",
+			"Name": "kumagi"
+		},
+		{
+			"Id": "Folder1",
+			"Name": "Folder1"
+		},
+		{
+			"Id": "Part5",
+			"Name": "女仆装"
+		},
+		{
+			"Id": "Part6",
+			"Name": "脸"
+		},
+		{
+			"Id": "Part2",
+			"Name": "橘子"
+		}
+	]
+}

@@ -1356,7 +1356,7 @@
                 "ScreenButton": -1
             },
             "IsGlobal": true,
-            "IsActive": true,
+            "IsActive": false,
             "Minimized": false,
             "StopsOnLastFrame": false,
             "DeactivateAfterKeyUp": false,

@@ -33,6 +33,23 @@ const ClientOnlyLive2D = dynamicImport(
 import { apiPing, apiStartService, apiStopService } from "@/lib/request";
 import type { AgoraConfig, Live2DModel } from "@/types";
 
+type BackgroundTheme = {
+  baseColor: string;
+  primaryGradient: string;
+  radialOverlay: {
+    gradient: string;
+    opacity: number;
+  };
+  patternOverlay: {
+    image: string;
+    opacity: number;
+  };
+  accentOverlay: {
+    image: string;
+    opacity: number;
+  };
+};
+
 type CharacterProfile = Live2DModel & {
   headline: string;
   description: string;
@@ -41,6 +58,9 @@ type CharacterProfile = Live2DModel & {
   mouthConfig: MouthConfig;
   expressions?: ExpressionConfig[];
   motions?: MotionConfig[];
+  backgroundTheme: BackgroundTheme;
+  connectionGreeting?: string;
+  agentGreeting: string;
 };
 
 const characterOptions: CharacterProfile[] = [
@@ -59,6 +79,29 @@ const characterOptions: CharacterProfile[] = [
       openId: "ParamMouthOpenY",
       formId: "ParamMouthForm",
     },
+    backgroundTheme: {
+      baseColor: "#fff9fd",
+      primaryGradient:
+        "linear-gradient(160deg,#ffeaf3 0%,#fffaf2 40%,#e3f1ff 100%)",
+      radialOverlay: {
+        gradient:
+          "radial-gradient(circle at top,#ffdff2 0%,transparent 60%),radial-gradient(circle at bottom,#d2e8ff 0%,transparent 65%)",
+        opacity: 0.75,
+      },
+      patternOverlay: {
+        image:
+          "repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0px, rgba(255, 255, 255, 0.32) 2px, transparent 2px, transparent 18px)",
+        opacity: 0.2,
+      },
+      accentOverlay: {
+        image:
+          "repeating-radial-gradient(circle at 20% 20%, rgba(255, 204, 224, 0.25) 0px, rgba(255, 204, 224, 0.25) 12px, transparent 12px, transparent 48px)",
+        opacity: 0.22,
+      },
+    },
+    connectionGreeting: "My name is Kei.",
+    agentGreeting:
+      "My name is Kei, nice to meet you! I’m your anime assistant. What’s your name?",
   },
   {
     id: "mao",
@@ -75,6 +118,29 @@ const characterOptions: CharacterProfile[] = [
       upId: "ParamMouthUp",
       downId: "ParamMouthDown",
     },
+    backgroundTheme: {
+      baseColor: "#f8fbff",
+      primaryGradient:
+        "linear-gradient(160deg,#f0f7ff 0%,#fef1ff 45%,#e6fff7 100%)",
+      radialOverlay: {
+        gradient:
+          "radial-gradient(circle at top,#dcedff 0%,transparent 58%),radial-gradient(circle at bottom,#f7e0ff 0%,transparent 64%)",
+        opacity: 0.78,
+      },
+      patternOverlay: {
+        image:
+          "repeating-linear-gradient(140deg, rgba(255, 255, 255, 0.28) 0px, rgba(255, 255, 255, 0.28) 3px, transparent 3px, transparent 20px)",
+        opacity: 0.18,
+      },
+      accentOverlay: {
+        image:
+          "repeating-radial-gradient(circle at 75% 25%, rgba(211, 227, 255, 0.26) 0px, rgba(211, 227, 255, 0.26) 14px, transparent 14px, transparent 52px)",
+        opacity: 0.24,
+      },
+    },
+    connectionGreeting: "My name is Mao.",
+    agentGreeting:
+      "My name is Mao, and I’m here to listen with you. What should we talk about?",
     expressions: [
       { name: "neutral", label: "Neutral", default: true },
       { name: "gentle_smile", label: "Gentle Smile", onSpeaking: true },
@@ -109,19 +175,42 @@ const characterOptions: CharacterProfile[] = [
   },
   {
     id: "kevin",
-    name: "Kevin",
+    name: "Kevin the Marmot",
     path: "/models/marmot/L065.model3.json",
     preview: "/models/marmot/a0e01b1556549807c52770f1d517fb9.png",
     headline: "Your Snack-Fueled Hype Marmot",
     description:
-      "Kevin keeps spirits high with cozy chatter, snack recs, and solid productivity nudges. Drop in for grounded advice, quick laughs, and the warmest marmot energy on the planet.",
-    quote: "Yo! Kevin here. Ready to hustle, snack, or both?",
+      "Kevin the Marmot keeps spirits high with cozy chatter, snack recs, and solid productivity nudges. Drop in for grounded advice, quick laughs, and the warmest marmot energy on the planet.",
+    quote: "Yo! Kevin the Marmot here. Ready to hustle, snack, or both?",
     voiceType: "male",
     mouthConfig: {
       type: "open",
       openId: "ParamMouthOpenY",
       formId: "ParamMouthForm",
     },
+    backgroundTheme: {
+      baseColor: "#fff7ee",
+      primaryGradient:
+        "linear-gradient(160deg,#fff4d8 0%,#ffe6f0 38%,#fff9ed 100%)",
+      radialOverlay: {
+        gradient:
+          "radial-gradient(circle at top,#ffe8c0 0%,transparent 60%),radial-gradient(circle at bottom,#ffd6ec 0%,transparent 66%)",
+        opacity: 0.76,
+      },
+      patternOverlay: {
+        image:
+          "repeating-linear-gradient(135deg, rgba(255, 249, 234, 0.28) 0px, rgba(255, 249, 234, 0.28) 3px, transparent 3px, transparent 18px)",
+        opacity: 0.22,
+      },
+      accentOverlay: {
+        image:
+          "repeating-radial-gradient(circle at 18% 22%, rgba(255, 210, 170, 0.3) 0px, rgba(255, 210, 170, 0.3) 12px, transparent 12px, transparent 46px)",
+        opacity: 0.26,
+      },
+    },
+    connectionGreeting: "My name is Kevin the Marmot.",
+    agentGreeting:
+      "My name is Kevin the Marmot! Ready to hustle, snack, or plan something fun together?",
     expressions: [
       { name: "neutral", label: "Relaxed", default: true },
       { name: "greet", label: "Big Smile", onSpeaking: true },
@@ -150,6 +239,80 @@ const characterOptions: CharacterProfile[] = [
         label: "Chomp Again",
         group: "Snack",
         index: 1,
+        priority: 2,
+      },
+    ],
+  },
+  {
+    id: "chubbie",
+    name: "Chubbie",
+    path: "/models/capybara/capybara_v001_bear_rabbit.model3.json",
+    preview: "/models/capybara/icon.jpg",
+    headline: "Your Laid-Back Capybara Confidant",
+    description:
+      "Chubbie the Capybara brings spa-day calm, steady encouragement, and snack-time strategy. Settle in for mellow vibes, gentle guidance, and the coziest companion energy around.",
+    quote: "Hey there, I’m Chubbie. Fancy a soak, a snack, or some easy wins?",
+    voiceType: "male",
+    mouthConfig: {
+      type: "open",
+      openId: "ParamMouthOpenY",
+      formId: "ParamMouthForm",
+    },
+    backgroundTheme: {
+      baseColor: "#f3fffa",
+      primaryGradient:
+        "linear-gradient(160deg,#e6fbff 0%,#fff2f9 38%,#ecffe6 100%)",
+      radialOverlay: {
+        gradient:
+          "radial-gradient(circle at top,#c4f2ff 0%,transparent 58%),radial-gradient(circle at bottom,#d7ffe3 0%,transparent 64%)",
+        opacity: 0.8,
+      },
+      patternOverlay: {
+        image:
+          "repeating-linear-gradient(132deg, rgba(255, 255, 255, 0.32) 0px, rgba(255, 255, 255, 0.32) 3px, transparent 3px, transparent 18px)",
+        opacity: 0.18,
+      },
+      accentOverlay: {
+        image:
+          "repeating-radial-gradient(circle at 28% 72%, rgba(173, 239, 255, 0.3) 0px, rgba(173, 239, 255, 0.3) 14px, transparent 14px, transparent 50px)",
+        opacity: 0.24,
+      },
+    },
+    connectionGreeting: "My name is Chubbie.",
+    agentGreeting:
+      "I’m Chubbie the Capybara. Let’s take it easy—what can I help you relax or focus on today?",
+    expressions: [
+      { name: "toggle_blush_tab_r", label: "Blush Glow" },
+      { name: "toggle_bow_tab_b", label: "Bow Accessory" },
+      { name: "toggle_apron_m_3", label: "Apron Ready" },
+      { name: "toggle_maid_hairclip_m_1", label: "Hair Clip" },
+      { name: "toggle_monocle_g_3", label: "Monocle" },
+      { name: "toggle_glasses_g_1", label: "Reading Glasses" },
+      { name: "toggle_sunglasses_g_2", label: "Sun Shades" },
+      { name: "toggle_black_dress_m_2", label: "Black Outfit" },
+      { name: "toggle_bathtub_tab_q", label: "Hot Tub Mode" },
+      { name: "toggle_orange_m_4", label: "Orange Snack" },
+      { name: "toggle_mustache_tab_h", label: "Whisker Stache" },
+      { name: "toggle_dark_face_tab_d", label: "Shadow Mood" },
+      { name: "toggle_bear_rabbit_tab_9", label: "Creator Cameo" },
+    ],
+    motions: [
+      {
+        name: "breathing_idle",
+        label: "Gentle Float",
+        group: "Idle",
+        index: 0,
+        autoPlay: true,
+        loop: true,
+        priority: 1,
+      },
+      {
+        name: "neon_glow",
+        label: "Neon Highlight",
+        group: "Special",
+        index: 0,
+        onSpeakingStart: true,
+        loop: true,
         priority: 2,
       },
     ],
@@ -710,6 +873,14 @@ export default function Home() {
                 graphName: "voice_assistant_live2d",
                 language: "en",
                 voiceType: selectedModel.voiceType,
+                properties: {
+                  llm: {
+                    greeting: selectedModel.agentGreeting,
+                  },
+                  main_control: {
+                    greeting: selectedModel.agentGreeting,
+                  },
+                },
               });
 
               console.log("Agent started:", startResult);
@@ -752,24 +923,37 @@ export default function Home() {
     </div>
   );
 
+  const backgroundTheme = selectedModel.backgroundTheme;
+
   return (
-    <div className="relative min-h-[100svh] overflow-hidden bg-[#fff9fd] text-[#2f2d4b]">
+    <div
+      className="relative min-h-[100svh] overflow-hidden text-[#2f2d4b]"
+      style={{ backgroundColor: backgroundTheme.baseColor }}
+    >
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(160deg,#ffeaf3_0%,#fffaf2_40%,#e3f1ff_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#ffdff2_0%,transparent_60%),radial-gradient(circle_at_bottom,#d2e8ff_0%,transparent_65%)] opacity-75 mix-blend-screen" />
         <div
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0"
+          style={{ backgroundImage: backgroundTheme.primaryGradient }}
+        />
+        <div
+          className="absolute inset-0 mix-blend-screen"
           style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0px, rgba(255, 255, 255, 0.32) 2px, transparent 2px, transparent 18px)",
+            backgroundImage: backgroundTheme.radialOverlay.gradient,
+            opacity: backgroundTheme.radialOverlay.opacity,
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: backgroundTheme.patternOverlay.image,
+            opacity: backgroundTheme.patternOverlay.opacity,
           }}
         />
         <div
           className="absolute inset-0 mix-blend-multiply"
           style={{
-            opacity: 0.22,
-            backgroundImage:
-              "repeating-radial-gradient(circle at 20% 20%, rgba(255, 204, 224, 0.25) 0px, rgba(255, 204, 224, 0.25) 12px, transparent 12px, transparent 48px)",
+            backgroundImage: backgroundTheme.accentOverlay.image,
+            opacity: backgroundTheme.accentOverlay.opacity,
           }}
         />
       </div>
@@ -863,7 +1047,10 @@ export default function Home() {
                     isConnected ? "bg-[#38a8d8]" : "bg-[#f0708f]"
                   }`}
                 />
-                {isConnected ? "Connected to channel" : "Not connected"}
+                {isConnected
+                  ? selectedModel.connectionGreeting ??
+                    `My name is ${selectedModel.name}.`
+                  : "Not connected"}
               </span>
               <span
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${

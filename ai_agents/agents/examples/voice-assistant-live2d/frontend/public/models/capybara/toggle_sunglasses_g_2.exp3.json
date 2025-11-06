@@ -1,0 +1,20 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "ParamGlass1",
+            "Value": 0.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "ParamGlass2",
+            "Value": 0.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "ParamGlass3",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}

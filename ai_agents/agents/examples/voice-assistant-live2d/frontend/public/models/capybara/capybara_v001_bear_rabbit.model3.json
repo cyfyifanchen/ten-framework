@@ -1,0 +1,94 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "capybara_v001_bear_rabbit.moc3",
+		"Textures": [
+			"capybara_v001_bear_rabbit.4096/texture_00.png",
+			"capybara_v001_bear_rabbit.4096/texture_01.png"
+		],
+		"Physics": "capybara_v001_bear_rabbit.physics3.json",
+		"DisplayInfo": "capybara_v001_bear_rabbit.cdi3.json"
+	},
+	"Expressions": [
+		{
+			"Name": "toggle_monocle_g_3",
+			"File": "toggle_monocle_g_3.exp3.json"
+		},
+		{
+			"Name": "toggle_apron_m_3",
+			"File": "toggle_apron_m_3.exp3.json"
+		},
+		{
+			"Name": "toggle_sunglasses_g_2",
+			"File": "toggle_sunglasses_g_2.exp3.json"
+		},
+		{
+			"Name": "toggle_maid_hairclip_m_1",
+			"File": "toggle_maid_hairclip_m_1.exp3.json"
+		},
+		{
+			"Name": "toggle_bathtub_tab_q",
+			"File": "toggle_bathtub_tab_q.exp3.json"
+		},
+		{
+			"Name": "toggle_glasses_g_1",
+			"File": "toggle_glasses_g_1.exp3.json"
+		},
+		{
+			"Name": "toggle_blush_tab_r",
+			"File": "toggle_blush_tab_r.exp3.json"
+		},
+		{
+			"Name": "toggle_bow_tab_b",
+			"File": "toggle_bow_tab_b.exp3.json"
+		},
+		{
+			"Name": "toggle_dark_face_tab_d",
+			"File": "toggle_dark_face_tab_d.exp3.json"
+		},
+		{
+			"Name": "toggle_black_dress_m_2",
+			"File": "toggle_black_dress_m_2.exp3.json"
+		},
+		{
+			"Name": "toggle_mustache_tab_h",
+			"File": "toggle_mustache_tab_h.exp3.json"
+		},
+		{
+			"Name": "toggle_bear_rabbit_tab_9",
+			"File": "toggle_bear_rabbit_tab_9.exp3.json"
+		},
+		{
+			"Name": "toggle_orange_m_4",
+			"File": "toggle_orange_m_4.exp3.json"
+		}
+	],
+	"Motions": {
+		"Idle": [
+			{
+				"Name": "breathing_idle",
+				"File": "breathing.motion3.json",
+				"Loop": true
+			}
+		],
+		"Special": [
+			{
+				"Name": "neon_glow",
+				"File": "neon.motion3.json",
+				"Loop": true
+			}
+		]
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	]
+}

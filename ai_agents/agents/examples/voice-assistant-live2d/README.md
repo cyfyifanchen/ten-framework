@@ -146,7 +146,7 @@ The TEN runtime graph is defined in `tenapp/property.json`:
                 "max_tokens": 512,
                 "prompt": "",
                 "proxy_url": "${env:OPENAI_PROXY_URL|}",
-                "greeting": "My name is Kei, nice to meet you I am your anime assistant, and what's your name?",
+                "greeting": "Hello there, nice to meet you! I’m your anime assistant—what’s your name?",
                 "max_memory_length": 10
               }
             },
@@ -171,7 +171,7 @@ The TEN runtime graph is defined in `tenapp/property.json`:
               "addon": "main_python",
               "extension_group": "control",
               "property": {
-                "greeting": "My name is Kei, nice to meet you I am your anime assistant, and what's your name?"
+                "greeting": "Hello there, nice to meet you! I’m your anime assistant—what’s your name?"
               }
             },
             {
