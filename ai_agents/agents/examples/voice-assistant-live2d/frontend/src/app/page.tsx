@@ -1587,16 +1587,6 @@ export default function Home() {
                   onModelLoaded={handleModelLoaded}
                   className={live2dClassName}
                 />
-                {selectedModel.id === "kevin" && (
-                  <div className="pointer-events-none absolute inset-x-0 bottom-16 z-50 flex justify-center">
-                    <div
-                      className="h-24 w-64 rounded-[40px] shadow-[0_12px_28px_rgba(86,170,108,0.28)]"
-                      style={{
-                        backgroundColor: "rgba(238, 251, 240, 0.96)",
-                      }}
-                    />
-                  </div>
-                )}
               </div>
               <p className={quoteClass}>
                 “{selectedModel.quote}”
