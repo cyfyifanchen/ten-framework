@@ -558,8 +558,8 @@
     {
       "type": "extension",
       "name": "humeai_tts_python",
-      "version": "0.3.1",
-      "hash": "b5bb163414c26f2c0d5cdaf47355793cee7d9f32846a2070f67f37d46430d169",
+      "version": "0.3.2",
+      "hash": "28d8d75b373e92e2e2cdc0adb9fba7ae482421db3ae3c85a487d2f9350796c88",
       "dependencies": [
         {
           "type": "system",
