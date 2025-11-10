@@ -41,6 +41,8 @@
 <details open>
   <summary><kbd>Table of Contents</kbd></summary>
 
+  <br>
+
 - [Welcome to TEN](#welcome-to-ten)
 - [Agent Examples](#agent-examples)
 - [Quick Start with Agent Examples](#quick-start-with-agent-examples)
@@ -265,7 +267,7 @@ Once the agent example is running, you can access the following interfaces:
 1. Open [localhost:49483](http://localhost:49483).
 2. Right-click the STT, LLM, and TTS extensions.
 3. Open their properties and enter the corresponding API keys.
-4. Submit your changes, now you can see the updated Agent Example in [localhost:3000](http://loclhost:3000).
+4. Submit your changes, now you can see the updated Agent Example in [localhost:3000](http://localhost:3000).
 
 <br>
 
@@ -365,7 +367,7 @@ Get instant notifications for new releases and updates. Your support helps us gr
 | [**️TEN Framework**][ten-framework-link]<br>Open-source framework for conversational AI Agents.<br><br>![][ten-framework-shield] | ![][ten-framework-banner] |
 | [**TEN VAD**][ten-vad-link]<br>Low-latency, lightweight and high-performance streaming voice activity detector (VAD).<br><br>![][ten-vad-shield] | ![][ten-vad-banner] |
 | [**️ TEN Turn Detection**][ten-turn-detection-link]<br>TEN Turn Detection enables full-duplex dialogue communication.<br><br>![][ten-turn-detection-shield] | ![][ten-turn-detection-banner] |
-| [**TEN Agent Examplels**][ten-agent-link]<br>Usecases powered by TEN.<br><br> | ![][ten-agent-banner] |
+| [**TEN Agent Examples**][ten-agent-link]<br>Usecases powered by TEN.<br><br> | ![][ten-agent-banner] |
 | [**TEN Portal**][ten-portal-link]<br>The official site of the TEN Framework with documentation and a blog.<br><br>![][ten-portal-shield] | ![][ten-portal-banner] |
 
 <br>
