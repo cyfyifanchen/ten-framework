@@ -254,20 +254,18 @@ Once the agent example is running, you can access the following interfaces:
 </table>
 
 - TMAN Designer: <http://localhost:49483>
-- Example UI: <http://localhost:3000>
+- Agent Examples UI: <http://localhost:3000>
 
 <br>
 
 ![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
 
-#### Step ⓷ - Customize your agent
+#### Step ⓷ - Customize your agent example
 
 1. Open [localhost:49483](http://localhost:49483).
 2. Right-click the STT, LLM, and TTS extensions.
 3. Open their properties and enter the corresponding API keys.
-4. Right-click the canvas and select **Manage Apps** to open the Apps Manager.
-5. Under **Actions**, click ▶ to run the app.
-6. Select **Run with TEN Agent**, then click **Run**.
+4. Submit your changes, now you can see the updated Agent Example in [localhost:3000](http://loclhost:3000).
 
 <br>
 
