@@ -107,7 +107,7 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <br>
 
-![Image](https://github.com/user-attachments/assets/ad82b6e6-03af-401a-8650-ca8c3dc049f4)
+![Image](https://github.com/user-attachments/assets/a208c17e-0b54-4f1e-9495-7d94ca1f9523)
 
 <strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers, the Who Likes What game shows an interactive use case.
 
@@ -119,7 +119,7 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <br>
 
-![Image](https://github.com/user-attachments/assets/3dcf5f5f-9969-40fb-a444-9010a2bb2690)
+![Image](https://github.com/user-attachments/assets/a208c17e-0b54-4f1e-9495-7d94ca1f9523)
 
 <strong>SIP Call</strong> — SIP extension that enables phone calls powered by TEN.
 
