@@ -107,7 +107,7 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <br>
 
-![Image](https://github.com/user-attachments/assets/a208c17e-0b54-4f1e-9495-7d94ca1f9523)
+![Image](https://github.com/user-attachments/assets/f94b21b8-9dda-4efc-9274-b028cc01296a)
 
 <strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers, the Who Likes What game shows an interactive use case.
 
