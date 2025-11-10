@@ -436,12 +436,11 @@ Get instant notifications for new releases and updates. Your support helps us gr
 
 | Project | Preview |
 | ------- | ------- |
-| [**️TEN Framework**][ten-framework-link]<br>TEN is an open-source framework for real-time, multimodal conversational AI.<br><br>![][ten-framework-shield] | ![][ten-framework-banner] |
-| [**TEN VAD**][ten-vad-link]<br>TEN VAD is a low-latency, lightweight and high-performance streaming voice activity detector (VAD).<br><br>![][ten-vad-shield] | ![][ten-vad-banner] |
+| [**️TEN Framework**][ten-framework-link]<br>Open-source framework for conversational AI Agents.<br><br>![][ten-framework-shield] | ![][ten-framework-banner] |
+| [**TEN VAD**][ten-vad-link]<br>Low-latency, lightweight and high-performance streaming voice activity detector (VAD).<br><br>![][ten-vad-shield] | ![][ten-vad-banner] |
 | [**️ TEN Turn Detection**][ten-turn-detection-link]<br>TEN Turn Detection enables full-duplex dialogue communication.<br><br>![][ten-turn-detection-shield] | ![][ten-turn-detection-banner] |
+| [**TEN Agent Examplels**][ten-agent-link]<br>Usecases powered by TEN.<br><br> | ![][ten-agent-banner] |
 | [**TEN Portal**][ten-portal-link]<br>The official site of the TEN Framework with documentation and a blog.<br><br>![][ten-portal-shield] | ![][ten-portal-banner] |
-| [**TEN Agent**][ten-agent-link]<br>TEN Agent is a showcase of the TEN Framework.<br><br> | ![][ten-agent-banner] |
-| [**TMAN Designer**][tman-designer-link]<br>TMAN Designer is a low/no-code option for building a voice agent with an easy-to-use workflow UI.<br><br> | ![][tman-designer-banner] |
 
 <br>
 <div align="right">
@@ -515,22 +514,22 @@ Contributions are welcome! Please read the [contribution guidelines](./docs/code
 [back-to-top]: https://img.shields.io/badge/-Back_to_top-gray?style=flat-square
 
 [ten-framework-shield]: https://img.shields.io/github/stars/ten-framework/ten_framework?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-framework-banner]: https://github.com/user-attachments/assets/7c8f72d7-3993-4d01-8504-b71578a22944
+[ten-framework-banner]: https://github.com/user-attachments/assets/f4a147c2-d8c5-4242-83ce-5360f03539e7
 [ten-framework-link]: https://github.com/ten-framework/ten_framework
 
 [ten-vad-link]: https://github.com/ten-framework/ten-vad
 [ten-vad-shield]: https://img.shields.io/github/stars/ten-framework/ten-vad?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-vad-banner]: https://github.com/user-attachments/assets/d45870e4-9453-4047-8163-08737f82863f
+[ten-vad-banner]: https://github.com/user-attachments/assets/55002f66-77a3-4147-8d76-699eb73fd260
 
 [ten-turn-detection-link]: https://github.com/ten-framework/ten-turn-detection
 [ten-turn-detection-shield]: https://img.shields.io/github/stars/ten-framework/ten-turn-detection?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-turn-detection-banner]: https://github.com/user-attachments/assets/8d0ec716-5d0e-43e4-ad9a-d97b17305658
+[ten-turn-detection-banner]: https://github.com/user-attachments/assets/2af81ec1-2e57-45fa-a73f-b3a911ca414a
 
 [ten-agent-link]: https://github.com/TEN-framework/ten-framework/tree/main/ai_agents
-[ten-agent-banner]: https://github.com/user-attachments/assets/38de2207-939b-4702-a0aa-04491f5b5275
+[ten-agent-banner]:https://github.com/user-attachments/assets/a68ba734-3292-456b-9056-54dc126aeec9
 [tman-designer-banner]: https://github.com/user-attachments/assets/804c3543-0a47-42b7-b40b-ef32b742fb8f
 [tman-designer-link]: https://github.com/TEN-framework/ten-framework/tree/main/core/src/ten_manager/designer_frontend
 
 [ten-portal-link]: https://github.com/ten-framework/portal
 [ten-portal-shield]: https://img.shields.io/github/stars/ten-framework/portal?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-portal-banner]: https://github.com/user-attachments/assets/e17d8aaa-5928-45dd-ac71-814928e26a89
+[ten-portal-banner]: https://github.com/user-attachments/assets/2f8e4459-ba16-4806-87f9-229ad96aa2cb
