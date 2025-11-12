@@ -377,9 +377,9 @@ class CartesiaTTSExtension(AsyncTTS2BaseExtension):
                 )
                 self.current_request_finished = True
 
-            prepared_text = self._apply_ssml_tags_safe(t.text, t.metadata)
-
-            if prepared_text.strip() != "":
+            raw_text = t.text or ""
+            if raw_text.strip() != "":
+                prepared_text = self._apply_ssml_tags_safe(raw_text, t.metadata)
                 # Get audio stream from Cartesia TTS
                 self.ten_env.log_debug(
                     f"send_text_to_tts_server:  {prepared_text} of request_id: {t.request_id}",
@@ -511,18 +511,23 @@ class CartesiaTTSExtension(AsyncTTS2BaseExtension):
                 self.ten_env.log_debug(
                     f"TTS processing completed, total chunks: {chunk_count}"
                 )
-            elif t.text_input_end:
-                duration_ms = self._calculate_audio_duration_ms()
-                request_event_interval = self._current_request_interval_ms()
-                await self.send_tts_audio_end(
-                    request_id=self.current_request_id,
-                    request_event_interval_ms=request_event_interval,
-                    request_total_audio_duration_ms=duration_ms,
-                )
-                self.sent_ts = None
+            else:
                 self.ten_env.log_debug(
-                    f"Sent TTS audio end event, interval: {request_event_interval}ms, duration: {duration_ms}ms"
+                    f"Empty text chunk received for request_id {t.request_id}; skipping Cartesia synthesis.",
+                    category=LOG_CATEGORY_VENDOR,
                 )
+                if t.text_input_end:
+                    duration_ms = self._calculate_audio_duration_ms()
+                    request_event_interval = self._current_request_interval_ms()
+                    await self.send_tts_audio_end(
+                        request_id=self.current_request_id,
+                        request_event_interval_ms=request_event_interval,
+                        request_total_audio_duration_ms=duration_ms,
+                    )
+                    self.sent_ts = None
+                    self.ten_env.log_debug(
+                        f"Sent TTS audio end event, interval: {request_event_interval}ms, duration: {duration_ms}ms"
+                    )
 
         except CartesiaTTSConnectionException as e:
             self.ten_env.log_error(

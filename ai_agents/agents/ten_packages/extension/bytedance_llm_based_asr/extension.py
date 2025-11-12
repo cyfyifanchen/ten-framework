@@ -14,7 +14,7 @@ from typing_extensions import override
 from ten_ai_base.asr import (
     AsyncASRBaseExtension,
     ASRBufferConfig,
-    ASRBufferConfigModeDiscard,
+    ASRBufferConfigModeKeep,
     ASRResult,
 )
 
@@ -274,7 +274,9 @@ class BytedanceASRLLMExtension(AsyncASRBaseExtension):
     @override
     def buffer_strategy(self) -> ASRBufferConfig:
         """Get buffer strategy for audio processing."""
-        return ASRBufferConfigModeDiscard()
+        return ASRBufferConfigModeKeep(
+            byte_limit=1024 * 1024 * 10
+        )  # 10MB limit
 
     @override
     def input_audio_sample_rate(self) -> int:

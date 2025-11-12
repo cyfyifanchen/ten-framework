@@ -163,7 +163,6 @@ class OpenAIChatGPT:
         messages = request_input.messages
         tools = None
         parsed_messages = []
-        system_prompt = request_input.prompt or self.config.prompt
 
         self.ten_env.log_info(
             f"get_chat_completions: {len(messages)} messages, streaming: {request_input.streaming}"
@@ -234,7 +233,11 @@ class OpenAIChatGPT:
         req = {
             "model": self.config.model,
             "messages": [
-                {"role": "system", "content": system_prompt},
+                {
+                    "role": "system",
+                    "content": self.config.prompt
+                    or "you are a helpful assistant",
+                },
                 *parsed_messages,
             ],
             "tools": tools,
@@ -279,14 +282,14 @@ class OpenAIChatGPT:
             last_chat_completion: ChatCompletionChunk | None = None
 
             async for chat_completion in response:
-                self.ten_env.log_debug(f"Chat completion: {chat_completion}")
+                self.ten_env.log_info(f"Chat completion: {chat_completion}")
                 if chat_completion is None or len(chat_completion.choices) == 0:
                     continue
                 last_chat_completion = chat_completion
                 choice = chat_completion.choices[0]
                 delta = choice.delta
 
-                self.ten_env.log_debug(f"Processing choice: {choice}")
+                self.ten_env.log_info(f"Processing choice: {choice}")
 
                 content = delta.content if delta and delta.content else ""
                 reasoning_content = (
@@ -305,7 +308,7 @@ class OpenAIChatGPT:
                     prev_state = parser.state
 
                     if reasoning_mode == ReasoningMode.ModeV1:
-                        self.ten_env.log_debug("process_by_reasoning_content")
+                        self.ten_env.log_info("process_by_reasoning_content")
                         think_state_changed = (
                             parser.process_by_reasoning_content(
                                 reasoning_content
@@ -315,7 +318,7 @@ class OpenAIChatGPT:
                         think_state_changed = parser.process(content)
 
                     if not think_state_changed:
-                        self.ten_env.log_debug(
+                        self.ten_env.log_info(
                             f"state: {parser.state}, content: {content}, think: {parser.think_content}"
                         )
                         if parser.state == "THINK":

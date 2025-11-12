@@ -6,7 +6,7 @@ from typing_extensions import override
 from .const import DUMP_FILE_NAME
 from ten_ai_base.asr import (
     ASRBufferConfig,
-    ASRBufferConfigModeDiscard,
+    ASRBufferConfigModeKeep,
     ASRResult,
     AsyncASRBaseExtension,
 )
@@ -393,7 +393,7 @@ class AssemblyAIASRExtension(
     @override
     def buffer_strategy(self) -> ASRBufferConfig:
         """Buffer strategy configuration"""
-        return ASRBufferConfigModeDiscard()
+        return ASRBufferConfigModeKeep(byte_limit=1024 * 1024 * 10)
 
     @override
     def input_audio_sample_rate(self) -> int:

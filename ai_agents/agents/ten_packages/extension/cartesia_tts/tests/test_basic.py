@@ -472,3 +472,51 @@ def test_ssml_metadata_overrides(MockCartesiaTTSClient):
     assert '<volume ratio="0.5"/>' in captured_text
     assert '<emotion value="sad"/>' in captured_text
     assert "<spell>1234</spell>" in captured_text
+
+
+class ExtensionTesterEmptySSML(ExtensionTester):
+    def __init__(self):
+        super().__init__()
+        self.audio_end_received = False
+
+    def on_start(self, ten_env_tester: TenEnvTester) -> None:
+        tts_input = TTSTextInput(
+            request_id="empty_ssml_request",
+            text="   ",
+            text_input_end=True,
+        )
+        data = Data.create("tts_text_input")
+        data.set_property_from_json(None, tts_input.model_dump_json())
+        ten_env_tester.send_data(data)
+        ten_env_tester.on_start_done()
+
+    def on_data(self, ten_env: TenEnvTester, data) -> None:
+        if data.get_name() == "tts_audio_end":
+            self.audio_end_received = True
+            ten_env.stop_test()
+
+
+@patch("cartesia_tts.extension.CartesiaTTSClient")
+def test_empty_text_with_ssml_tags_skips_vendor(MockCartesiaTTSClient):
+    """Ensure SSML-only payloads (no user text) do not trigger Cartesia."""
+
+    mock_instance = MockCartesiaTTSClient.return_value
+    mock_instance.start = AsyncMock()
+    mock_instance.stop = AsyncMock()
+
+    tester = ExtensionTesterEmptySSML()
+    config = {
+        "params": {
+            "api_key": "test_key",
+        },
+        "ssml": {
+            "enabled": True,
+            "emotion": "angry",
+        },
+    }
+
+    tester.set_test_mode_single("cartesia_tts", json.dumps(config))
+    tester.run()
+
+    assert tester.audio_end_received, "Expected to receive tts_audio_end"
+    mock_instance.get.assert_not_called()

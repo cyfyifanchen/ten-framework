@@ -19,15 +19,12 @@ pub fn create_designer_state() -> Arc<DesignerState> {
 
     let tman_config_file = read_config(&tman_config_file_path).unwrap();
 
-    let default_tman_config = TmanConfig::default();
-
     let tman_config = TmanConfig {
         config_file: tman_config_file_path,
         registry: if let Some(tman_config_file) = &tman_config_file {
             tman_config_file.registry.clone()
         } else {
-            // Use default registry instead of empty HashMap
-            default_tman_config.registry
+            HashMap::new()
         },
         ..Default::default()
     };

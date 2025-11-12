@@ -6,7 +6,7 @@ from typing_extensions import override
 from ten_ai_base.asr import (
     AsyncASRBaseExtension,
     ASRBufferConfig,
-    ASRBufferConfigModeDiscard,
+    ASRBufferConfigModeKeep,
     ASRResult,
 )
 from ten_ai_base.dumper import Dumper
@@ -558,4 +558,4 @@ class BytedanceASRExtension(AsyncASRBaseExtension):
 
     @override
     def buffer_strategy(self) -> ASRBufferConfig:
-        return ASRBufferConfigModeDiscard()
+        return ASRBufferConfigModeKeep(byte_limit=1024 * 1024 * 10)
