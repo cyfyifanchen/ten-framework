@@ -1,11 +1,10 @@
-<div align="center"> <a name="readme-top"></a>
+<div align="center" id="readme-top">
 
 ![Image](https://github.com/user-attachments/assets/2a560a74-68f3-4f4a-9ec8-89464c42a9c7)
 
 [![TEN Releases]( https://img.shields.io/github/v/release/ten-framework/ten-framework?color=369eff&labelColor=gray&logo=github&style=flat-square )](https://github.com/TEN-framework/ten-framework/releases)
-[![Coverage Status](https://coveralls.io/repos/github/TEN-framework/ten-framework/badge.svg)](https://coveralls.io/github/TEN-framework/ten-framework)
+[![Coverage Status](https://coveralls.io/repos/github/TEN-framework/ten-framework/badge.svg?branch=main)](https://coveralls.io/github/TEN-framework/ten-framework?branch=main)
 [![](https://img.shields.io/github/release-date/ten-framework/ten-framework?labelColor=gray&style=flat-square)](https://github.com/TEN-framework/ten-framework/releases)
-[![Discussion posts](https://img.shields.io/github/discussions/TEN-framework/ten_framework?labelColor=gray&color=%20%23f79009)](https://github.com/TEN-framework/ten-framework/discussions/)
 [![Commits](https://img.shields.io/github/commit-activity/m/TEN-framework/ten_framework?labelColor=gray&color=pink)](https://github.com/TEN-framework/ten-framework/graphs/commit-activity)
 [![Issues closed](https://img.shields.io/github/issues-search?query=repo%3ATEN-framework%2Ften-framework%20is%3Aclosed&label=issues%20closed&labelColor=gray&color=green)](https://github.com/TEN-framework/ten-framework/issues)
 [![](https://img.shields.io/github/contributors/ten-framework/ten-framework?color=c4f042&labelColor=gray&style=flat-square)](https://github.com/TEN-framework/ten-framework/graphs/contributors)
@@ -13,21 +12,21 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TEN-framework/TEN-framework)
 [![ReadmeX](https://raw.githubusercontent.com/CodePhiliaX/resource-trusteeship/main/readmex.svg)](https://readmex.com/TEN-framework/ten-framework)
 
+[![README in English](https://img.shields.io/badge/English-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/README.md)
+[![简体中文操作指南](https://img.shields.io/badge/简体中文-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/docs/README-CN.md)
+[![日本語のREADME](https://img.shields.io/badge/日本語-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/docs/README-JP.md)
+[![README in 한국어](https://img.shields.io/badge/한국어-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/docs/README-KR.md)
+[![README en Español](https://img.shields.io/badge/Español-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/docs/README-ES.md)
+[![README en Français](https://img.shields.io/badge/Français-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/docs/README-FR.md)
+[![README in Italiano](https://img.shields.io/badge/Italiano-lightgrey)](https://github.com/TEN-framework/ten-framework/blob/main/docs/README-IT.md)
+
+[![TEN-framework%2Ften_framework | Trendshift](https://trendshift.io/api/badge/repositories/11978)](https://trendshift.io/repositories/11978)
+
 [Official Site](https://theten.ai)
 •
 [Documentation](https://theten.ai/docs/ten_agent/overview)
 •
 [Blog](https://theten.ai/blog)
-
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/README.md"><img alt="README in English" src="https://img.shields.io/badge/English-lightgrey"></a>
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/docs/README-CN.md"><img alt="简体中文操作指南" src="https://img.shields.io/badge/简体中文-lightgrey"></a>
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/docs/README-JP.md"><img alt="日本語のREADME" src="https://img.shields.io/badge/日本語-lightgrey"></a>
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/docs/README-KR.md"><img alt="README in 한국어" src="https://img.shields.io/badge/한국어-lightgrey"></a>
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/docs/README-ES.md"><img alt="README en Español" src="https://img.shields.io/badge/Español-lightgrey"></a>
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/docs/README-FR.md"><img alt="README en Français" src="https://img.shields.io/badge/Français-lightgrey"></a>
-<a href="https://github.com/TEN-framework/ten-framework/blob/main/docs/README-IT.md"><img alt="README in Italiano" src="https://img.shields.io/badge/Italiano-lightgrey"></a>
-
-<a href="https://trendshift.io/repositories/11978" target="_blank"><img src="https://trendshift.io/api/badge/repositories/11978" alt="TEN-framework%2Ften_framework | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 </div>
 
@@ -78,27 +77,29 @@ TEN is an open-source framework for conversational voice AI agents.
 
 ## Agent Examples
 
-![Image](https://github.com/user-attachments/assets/6f35737d-6697-4860-8915-762553605cc9)
+<br>
 
-<strong>Multi-Purpose Voice Assistant</strong> — Low-latency, high-quality, real-time assistant that you can extend with  <a href="ai_agents/agents/examples/voice-assistant-with-memU">memory</a>, <a href="ai_agents/agents/examples/voice-assistant-with-ten-vad">VAD</a>, <a href="ai_agents/agents/examples/voice-assistant-with-turn-detection">TEN Turn Detection</a> and other extensions.
+![Image](https://github.com/user-attachments/assets/6e75e457-0a01-44cf-b203-025ce433460d)
 
-See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant">Example code</a> for more details.
+<strong>Multi-Purpose Voice Assistant</strong> — This low-latency, high-quality real-time assistant supports both RTC and [WebSocket](ai_agents/agents/examples/websocket-example) connections, and you can extend it with [Memory](ai_agents/agents/examples/voice-assistant-with-memU), [VAD](ai_agents/agents/examples/voice-assistant-with-ten-vad), [Turn Detection](ai_agents/agents/examples/voice-assistant-with-turn-detection), and other extensions.
+
+See the [Example code](ai_agents/agents/examples/voice-assistant) for more details.
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <br>
 
-![Image](https://github.com/user-attachments/assets/aa3f2c9c-c82e-412f-8400-06378ba75794)
+![Image](https://github.com/user-attachments/assets/51ab1504-b67c-49d4-8a7a-5582d9b254da)
 
-<strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors, the demo features Kei, an anime character with Live2D-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon).
+<strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors, the main character features Kei, an anime character with Live2D-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon).
 
-See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-live2d">Example code</a> for Live2D avatars.
+See the [Example code](ai_agents/agents/examples/voice-assistant-live2d) for different Live2D characters.
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <br>
 
@@ -106,11 +107,11 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers, the Who Likes What game shows an interactive use case.
 
-<a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/speechmatics-diarization">Example code</a>
+[Example code](ai_agents/agents/examples/speechmatics-diarization)
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <br>
 
@@ -118,31 +119,31 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <strong>SIP Call</strong> — SIP extension that enables phone calls powered by TEN.
 
-<a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/voice-assistant-sip-twilio">Example code</a>
+[Example code](ai_agents/agents/examples/voice-assistant-sip-twilio)
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <br>
 
-![Image](https://github.com/user-attachments/assets/3fdc9b2e-b20d-4af9-b496-8c6867a6cae9)
+![Image](https://github.com/user-attachments/assets/d793bc6c-c8de-4996-bd85-9ce88c69dd8d)
 
 <strong>Transcription</strong> — A transcription tool that transcribes audio to text.
 
-<a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples/transcription">Example code</a>
+[Example code](ai_agents/agents/examples/transcription)
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <br>
 
-![Image](https://github.com/user-attachments/assets/d0330665-84cb-40f3-ab70-2d805d6465fc)
+![Image](https://github.com/user-attachments/assets/3d60f1ff-0f82-4fe7-b5c2-ac03d284f60c)
 
-<strong>ESP32-S3 Korvo V3</strong> — Runs TEN Agent example on the Espressif ESP32-S3 Korvo V3 development board to integrate LLM-powered communication with hardware.
+<strong>ESP32-S3 Korvo V3</strong> — Runs TEN agent example on the Espressif ESP32-S3 Korvo V3 development board to integrate LLM-powered communication with hardware.
 
-See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/esp32-client">integration guide</a> for more details.
+See the [integration guide](ai_agents/esp32-client) for more details.
 
 <br>
 <div align="right">
@@ -165,7 +166,7 @@ See the <a href="https://github.com/TEN-framework/ten-framework/tree/main/ai_age
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <!-- > [!NOTE]
 > **macOS: Docker setting on Apple Silicon**
@@ -255,7 +256,7 @@ Once the agent example is running, you can access the following interfaces:
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 #### Step ⓷ - Customize your agent example
 
@@ -266,7 +267,7 @@ Once the agent example is running, you can access the following interfaces:
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 <br>
 
@@ -312,7 +313,7 @@ docker run --rm -it --env-file .env -p 3000:3000 example-app
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 ### Deploying with other cloud services
 
@@ -362,7 +363,7 @@ Get instant notifications for new releases and updates. Your support helps us gr
 | [**️TEN Framework**][ten-framework-link]<br>Open-source framework for conversational AI Agents.<br><br>![][ten-framework-shield] | ![][ten-framework-banner] |
 | [**TEN VAD**][ten-vad-link]<br>Low-latency, lightweight and high-performance streaming voice activity detector (VAD).<br><br>![][ten-vad-shield] | ![][ten-vad-banner] |
 | [**️ TEN Turn Detection**][ten-turn-detection-link]<br>TEN Turn Detection enables full-duplex dialogue communication.<br><br>![][ten-turn-detection-shield] | ![][ten-turn-detection-banner] |
-| [**TEN Agent Examples**][ten-agent-link]<br>Usecases powered by TEN.<br><br> | ![][ten-agent-banner] |
+| [**TEN Agent Examples**][ten-agent-example-link]<br>Usecases powered by TEN.<br><br> | ![][ten-agent-example-banner] |
 | [**TEN Portal**][ten-portal-link]<br>The official site of the TEN Framework with documentation and a blog.<br><br>![][ten-portal-shield] | ![][ten-portal-banner] |
 
 <br>
@@ -406,7 +407,7 @@ We welcome all forms of open-source collaboration! Whether you're fixing bugs, a
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 ### Code Contributors
 
@@ -418,7 +419,7 @@ Contributions are welcome! Please read the [contribution guidelines](./docs/code
 
 <br>
 
-![divider](https://github.com/user-attachments/assets/c763ffa6-0b9f-4599-9e50-8ea97021e412)
+![divider](https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd)
 
 ### License
 
@@ -437,20 +438,20 @@ Contributions are welcome! Please read the [contribution guidelines](./docs/code
 [back-to-top]: https://img.shields.io/badge/-Back_to_top-gray?style=flat-square
 
 [ten-framework-shield]: https://img.shields.io/github/stars/ten-framework/ten_framework?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-framework-banner]: https://github.com/user-attachments/assets/f4a147c2-d8c5-4242-83ce-5360f03539e7
+[ten-framework-banner]: https://github.com/user-attachments/assets/2a560a74-68f3-4f4a-9ec8-89464c42a9c7
 [ten-framework-link]: https://github.com/ten-framework/ten_framework
 
 [ten-vad-link]: https://github.com/ten-framework/ten-vad
 [ten-vad-shield]: https://img.shields.io/github/stars/ten-framework/ten-vad?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-vad-banner]: https://github.com/user-attachments/assets/55002f66-77a3-4147-8d76-699eb73fd260
+[ten-vad-banner]: https://github.com/user-attachments/assets/e504135e-67fd-4fa1-b0e4-d495358d8aa5
 
 [ten-turn-detection-link]: https://github.com/ten-framework/ten-turn-detection
 [ten-turn-detection-shield]: https://img.shields.io/github/stars/ten-framework/ten-turn-detection?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-turn-detection-banner]: https://github.com/user-attachments/assets/2af81ec1-2e57-45fa-a73f-b3a911ca414a
+[ten-turn-detection-banner]: https://github.com/user-attachments/assets/c72d82cc-3667-496c-8bd6-3d194a91c452
 
-[ten-agent-link]: https://github.com/TEN-framework/ten-framework/tree/main/ai_agents
-[ten-agent-banner]:https://github.com/user-attachments/assets/a68ba734-3292-456b-9056-54dc126aeec9
+[ten-agent-example-link]: https://github.com/TEN-framework/ten-framework/tree/main/ai_agents/agents/examples
+[ten-agent-example-banner]:https://github.com/user-attachments/assets/7f735633-c7f6-4432-b6b4-d2a2977ca588
 
 [ten-portal-link]: https://github.com/ten-framework/portal
 [ten-portal-shield]: https://img.shields.io/github/stars/ten-framework/portal?color=ffcb47&labelColor=gray&style=flat-square&logo=github
-[ten-portal-banner]: https://github.com/user-attachments/assets/2f8e4459-ba16-4806-87f9-229ad96aa2cb
+[ten-portal-banner]: https://github.com/user-attachments/assets/f56c75b9-722c-4156-902d-ae98ce2b3b5e
