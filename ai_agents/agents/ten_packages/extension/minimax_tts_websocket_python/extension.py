@@ -276,6 +276,7 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                 "Starting async for loop to process audio chunks"
             )
             chunk_count = 0
+            end_sent = False
             async for data_chunk, event_status in data:
                 # self.ten_env.log_info(f"Received event_status: {event_status}")
                 if event_status == EVENT_TTS_TTFB_METRIC:
@@ -347,6 +348,7 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                             self.ten_env.log_info(
                                 f"KEYPOINT Sent TTS audio end event, interval: {request_event_interval}ms, duration: {duration_ms}ms"
                             )
+                            end_sent = True
                             self.sent_ts = None
 
                 elif event_status == EVENT_TTSSentenceEnd:
@@ -369,8 +371,32 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                         self.ten_env.log_info(
                             f"KEYPOINT Sent TTS audio end event, interval: {request_event_interval}ms, duration: {duration_ms}ms"
                         )
+                        end_sent = True
                         self.sent_ts = None
                     break
+
+            # Fallback: if we saw data for a final request but never emitted audio_end
+            if (
+                t.text_input_end
+                and self.sent_ts
+                and not end_sent
+                and self.current_request_id
+            ):
+                request_event_interval = int(
+                    (datetime.now() - self.sent_ts).total_seconds() * 1000
+                )
+                duration_ms = self._calculate_audio_duration_ms()
+                await self.send_tts_audio_end(
+                    self.current_request_id,
+                    request_event_interval,
+                    duration_ms,
+                    self.current_turn_id,
+                )
+                self.ten_env.log_info(
+                    "KEYPOINT Fallback Sent TTS audio end event, "
+                    f"interval: {request_event_interval}ms, duration: {duration_ms}ms"
+                )
+                self.sent_ts = None
 
             self.ten_env.log_info(
                 f"TTS processing completed, total chunks: {chunk_count}"
