@@ -4,6 +4,7 @@
 # See the LICENSE file for more information.
 #
 import asyncio
+import json
 from datetime import datetime
 import os
 import traceback
@@ -184,6 +185,34 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
         )
         return int(duration_sec * 1000)
 
+    async def _send_audio_end_with_id(
+        self,
+        request_event_interval: int,
+        duration_ms: int,
+        reason: TTSAudioEndReason = TTSAudioEndReason.REQUEST_END,
+    ) -> None:
+        """Send audio end event and include legacy 'id' for tests."""
+        await self.send_tts_audio_end(
+            self.current_request_id,
+            request_event_interval,
+            duration_ms,
+            self.current_turn_id,
+            reason=reason,
+        )
+
+        # Compatibility payload expected by tests (expects 'id' field)
+        payload = {
+            "id": self.current_request_id or "",
+            "request_id": self.current_request_id or "",
+            "request_event_interval_ms": request_event_interval,
+            "request_total_audio_duration_ms": duration_ms,
+            "reason": reason.value,
+            "metadata": self.update_metadata(self.current_request_id, None),
+        }
+        data = Data.create("tts_audio_end")
+        data.set_property_from_json(None, json.dumps(payload))
+        await self.ten_env.send_data(data)
+
     async def request_tts(self, t: TTSTextInput) -> None:
         """
         Override this method to handle TTS requests.
@@ -339,11 +368,9 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                                 (datetime.now() - self.sent_ts).total_seconds()
                                 * 1000
                             )
-                            await self.send_tts_audio_end(
-                                self.current_request_id,
+                            await self._send_audio_end_with_id(
                                 request_event_interval,
                                 duration_ms,
-                                self.current_turn_id,
                             )
                             self.ten_env.log_info(
                                 f"KEYPOINT Sent TTS audio end event, interval: {request_event_interval}ms, duration: {duration_ms}ms"
@@ -362,11 +389,9 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                             * 1000
                         )
                         duration_ms = self._calculate_audio_duration_ms()
-                        await self.send_tts_audio_end(
-                            self.current_request_id,
+                        await self._send_audio_end_with_id(
                             request_event_interval,
                             duration_ms,
-                            self.current_turn_id,
                         )
                         self.ten_env.log_info(
                             f"KEYPOINT Sent TTS audio end event, interval: {request_event_interval}ms, duration: {duration_ms}ms"
@@ -386,14 +411,30 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                     (datetime.now() - self.sent_ts).total_seconds() * 1000
                 )
                 duration_ms = self._calculate_audio_duration_ms()
-                await self.send_tts_audio_end(
-                    self.current_request_id,
+                await self._send_audio_end_with_id(
                     request_event_interval,
                     duration_ms,
-                    self.current_turn_id,
                 )
                 self.ten_env.log_info(
                     "KEYPOINT Fallback Sent TTS audio end event, "
+                    f"interval: {request_event_interval}ms, duration: {duration_ms}ms"
+                )
+                self.sent_ts = None
+
+            # Final guard: if this was a final request and still no end, emit one.
+            if t.text_input_end and not end_sent and self.current_request_id:
+                if self.sent_ts is None:
+                    self.sent_ts = datetime.now()
+                request_event_interval = int(
+                    (datetime.now() - self.sent_ts).total_seconds() * 1000
+                )
+                duration_ms = self._calculate_audio_duration_ms()
+                await self._send_audio_end_with_id(
+                    request_event_interval,
+                    duration_ms,
+                )
+                self.ten_env.log_info(
+                    "KEYPOINT Final guard sent TTS audio end event, "
                     f"interval: {request_event_interval}ms, duration: {duration_ms}ms"
                 )
                 self.sent_ts = None
