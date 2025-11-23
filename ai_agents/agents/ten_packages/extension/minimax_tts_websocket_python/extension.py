@@ -296,6 +296,14 @@ class MinimaxTTSWebsocketExtension(AsyncTTS2BaseExtension):
                 elif event_status == EVENT_TTSResponse:
                     audio_chunk = data_chunk
                     if audio_chunk is not None and len(audio_chunk) > 0:
+                        # If TTFB event was not emitted, initialize timing on first chunk
+                        if self.sent_ts is None:
+                            self.sent_ts = datetime.now()
+                            if self.current_request_id:
+                                await self.send_tts_audio_start(
+                                    self.current_request_id
+                                )
+
                         chunk_count += 1
                         self.total_audio_bytes += len(audio_chunk)
                         # self.ten_env.log_info(
