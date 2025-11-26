@@ -592,7 +592,7 @@ Les contributions sont les bienvenues ! Lisez d’abord le [guide de contributi
 <!-- Codespaces -->
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [codespaces-new]: https://codespaces.new/ten-framework/ten-agent
-[codespaces-guide]: https://theten.ai/docs/ten_agent/setup_development_env/setting_up_development_inside_codespace
+[codespaces-guide]: https://theten.ai/docs/ten_agent_examples/setup_development_env/setting_up_development_inside_codespace
 
 <!-- Deployment -->
 [vercel]: https://vercel.com
