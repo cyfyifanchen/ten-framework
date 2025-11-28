@@ -164,7 +164,7 @@ See the [integration guide][esp32-guide] for more details.
 
 | Category | Requirements |
 | --- | --- |
-| **Keys** | • Agora [App ID][agora-app-id] and [App Certificate][agora-app-certificate] (free minutes every month) <br>• [OpenAI][openai-api] API key (any LLM that is compatible with OpenAI)<br>• [Deepgram][deepgram] ASR (free credits available with signup)<br>• [ElevenLabs][elevenlabs] TTS (free credits available with signup) |
+| **Keys** | • Agora [App ID][agora-app-id] and [App Certificate][agora-app-certificate]<br>• [OpenAI][openai-api] API key<br>• [Deepgram][deepgram] ASR <br>• [ElevenLabs][elevenlabs] TTS  |
 | **Installation** | • [Docker][docker] / [Docker Compose][docker-compose]<br>• [Node.js (LTS) v18][nodejs] |
 | **Minimum System Requirements** | • CPU >= 2 cores<br>• RAM >= 4 GB |
 
@@ -259,6 +259,19 @@ Once the agent example is running, you can access the following interfaces:
 2. Right-click the STT, LLM, and TTS extensions.
 3. Open their properties and enter the corresponding API keys.
 4. Submit your changes, now you can see the updated Agent Example in [localhost:3000][localhost-3000].
+
+<br>
+
+![divider][divider-light]
+![divider][divider-dark]
+
+<br>
+
+#### Run a transcriber app from TEN Manager without Docker (Beta)
+
+TEN also provides a transcriber app that you can run from TEN Manager without using Docker.
+
+Check the [quick start guide][quick-start-guide-ten-manager] for more details.
 
 <br>
 
@@ -543,6 +556,7 @@ Contributions are welcome! Please read the [contribution guidelines][contributio
 [docker]: https://www.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
 [nodejs]: https://nodejs.org/en
+[quick-start-guide-ten-manager]: https://theten.ai/docs/ten_framework/getting-started/quick-start
 [localhost-49483-image]: https://github.com/user-attachments/assets/191a7c0a-d8e6-48f9-866f-6a70c58f0118
 [localhost-3000-image]: https://github.com/user-attachments/assets/13e482b6-d907-4449-a779-9454bb24c0b1
 [localhost-49483]: http://localhost:49483
