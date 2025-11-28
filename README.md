@@ -93,7 +93,7 @@ See the [Example code][voice-assistant-example] for more details.
 ![Image][lip-sync-image]
 
 
-<strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors, the main character features Kei, an anime character with MotionSync-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus (coming soon).
+<strong>Lip Sync Avatars</strong> — Works with multiple avatar vendors, the main character features Kei, an anime character with MotionSync-powered lip sync, and also supports realistic avatars from Trulience, HeyGen, and Tavus.
 
 See the [Example code][voice-assistant-live2d-example] for different Live2D characters.
 
@@ -193,16 +193,14 @@ cp ./.env.example ./.env
 AGORA_APP_ID=
 AGORA_APP_CERTIFICATE=
 
-# In case you are running the default voice-assistant example
 # Deepgram (required for speech-to-text)
-DEEPGRAM_API_KEY=your_deepgram_api_key_here
+DEEPGRAM_API_KEY=
 
 # OpenAI (required for language model)
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4o
+OPENAI_API_KEY=
 
 # ElevenLabs (required for text-to-speech)
-ELEVENLABS_TTS_KEY=your_elevenlabs_api_key_here
+ELEVENLABS_TTS_KEY=
 ```
 
 ##### 3. Start agent development containers
