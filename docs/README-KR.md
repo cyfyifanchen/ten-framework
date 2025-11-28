@@ -92,7 +92,8 @@ TEN은 음성 대화형 AI 에이전트를 위한 오픈소스 프레임워크�
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -104,7 +105,8 @@ TEN은 음성 대화형 AI 에이전트를 위한 오픈소스 프레임워크�
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -116,7 +118,8 @@ TEN은 음성 대화형 AI 에이전트를 위한 오픈소스 프레임워크�
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -128,7 +131,8 @@ TEN은 음성 대화형 AI 에이전트를 위한 오픈소스 프레임워크�
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -140,7 +144,8 @@ TEN은 음성 대화형 AI 에이전트를 위한 오픈소스 프레임워크�
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -175,7 +180,8 @@ TEN은 음성 대화형 AI 에이전트를 위한 오픈소스 프레임워크�
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <!-- > [!NOTE]
 > **macOS: Apple Silicon 용 Docker 설정**
@@ -265,7 +271,8 @@ task run
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 #### 단계 ⓷ - 예시 커스터마이징
 
@@ -276,7 +283,8 @@ task run
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -328,7 +336,8 @@ docker run --rm -it --env-file .env -p 3000:3000 example-app
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <a name="deploying-with-other-cloud-services"></a>
 
@@ -429,7 +438,8 @@ TEN Framework는 AI 기반 Q&A 플랫폼에서도 만나볼 수 있습니다. �
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <a name="code-contributors"></a>
 
@@ -445,7 +455,8 @@ TEN Framework는 AI 기반 Q&A 플랫폼에서도 만나볼 수 있습니다. �
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <a name="license"></a>
 
@@ -551,7 +562,8 @@ TEN Framework는 AI 기반 Q&A 플랫폼에서도 만나볼 수 있습니다. �
 [voice-assistant-vad-example]: ../ai_agents/agents/examples/voice-assistant-with-ten-vad
 [voice-assistant-turn-detection-example]: ../ai_agents/agents/examples/voice-assistant-with-turn-detection
 [voice-assistant-example]: ../ai_agents/agents/examples/voice-assistant
-[divider]: https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd
+[divider-light]: https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd#gh-light-mode-only
+[divider-dark]: https://github.com/user-attachments/assets/d57fad08-4f49-4a1c-bdfc-f659a5d86150#gh-dark-mode-only
 [lip-sync-image]: https://github.com/user-attachments/assets/51ab1504-b67c-49d4-8a7a-5582d9b254da
 [voice-assistant-live2d-example]: ../ai_agents/agents/examples/voice-assistant-live2d
 [speech-diarization-image]: https://github.com/user-attachments/assets/f94b21b8-9dda-4efc-9274-b028cc01296a
@@ -580,7 +592,7 @@ TEN Framework는 AI 기반 Q&A 플랫폼에서도 만나볼 수 있습니다. �
 <!-- Codespaces -->
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [codespaces-new]: https://codespaces.new/ten-framework/ten-agent
-[codespaces-guide]: https://theten.ai/docs/ten_agent/setup_development_env/setting_up_development_inside_codespace
+[codespaces-guide]: https://theten.ai/docs/ten_agent_examples/setup_development_env/setting_up_development_inside_codespace
 
 <!-- Deployment -->
 [vercel]: https://vercel.com

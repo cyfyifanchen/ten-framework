@@ -85,7 +85,8 @@ See the [Example code][voice-assistant-example] for more details.
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -98,7 +99,8 @@ See the [Example code][voice-assistant-live2d-example] for different Live2D char
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -110,7 +112,8 @@ See the [Example code][voice-assistant-live2d-example] for different Live2D char
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -122,7 +125,8 @@ See the [Example code][voice-assistant-live2d-example] for different Live2D char
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -134,7 +138,8 @@ See the [Example code][voice-assistant-live2d-example] for different Live2D char
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -165,7 +170,8 @@ See the [integration guide][esp32-guide] for more details.
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <!-- > [!NOTE]
 > **macOS: Docker setting on Apple Silicon**
@@ -246,7 +252,8 @@ Once the agent example is running, you can access the following interfaces:
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 #### Step ⓷ - Customize your agent example
 
@@ -257,7 +264,8 @@ Once the agent example is running, you can access the following interfaces:
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 <br>
 
@@ -302,7 +310,8 @@ docker run --rm -it --env-file .env -p 3000:3000 example-app
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 ### Deploying with other cloud services
 
@@ -396,7 +405,8 @@ We welcome all forms of open-source collaboration! Whether you're fixing bugs, a
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 ### Code Contributors
 
@@ -408,7 +418,8 @@ Contributions are welcome! Please read the [contribution guidelines][contributio
 
 <br>
 
-![divider][divider]
+![divider][divider-light]
+![divider][divider-dark]
 
 ### License
 
@@ -512,7 +523,8 @@ Contributions are welcome! Please read the [contribution guidelines][contributio
 [voice-assistant-vad-example]: ai_agents/agents/examples/voice-assistant-with-ten-vad
 [voice-assistant-turn-detection-example]: ai_agents/agents/examples/voice-assistant-with-turn-detection
 [voice-assistant-example]: ai_agents/agents/examples/voice-assistant
-[divider]: https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd
+[divider-light]: https://github.com/user-attachments/assets/aec54c94-ced9-4683-ae58-0a5a7ed803bd#gh-light-mode-only
+[divider-dark]: https://github.com/user-attachments/assets/d57fad08-4f49-4a1c-bdfc-f659a5d86150#gh-dark-mode-only
 [lip-sync-image]: https://github.com/user-attachments/assets/51ab1504-b67c-49d4-8a7a-5582d9b254da
 [voice-assistant-live2d-example]: ai_agents/agents/examples/voice-assistant-live2d
 [speech-diarization-image]: https://github.com/user-attachments/assets/f94b21b8-9dda-4efc-9274-b028cc01296a
@@ -541,7 +553,7 @@ Contributions are welcome! Please read the [contribution guidelines][contributio
 <!-- Codespaces -->
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [codespaces-new]: https://codespaces.new/ten-framework/ten-agent
-[codespaces-guide]: https://theten.ai/docs/ten_agent/setup_development_env/setting_up_development_inside_codespace
+[codespaces-guide]: https://theten.ai/docs/ten_agent_examples/setup_development_env/setting_up_development_inside_codespace
 
 <!-- Deployment -->
 [vercel]: https://vercel.com
