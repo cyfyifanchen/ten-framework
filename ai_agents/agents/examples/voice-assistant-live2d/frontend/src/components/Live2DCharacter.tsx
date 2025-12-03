@@ -593,18 +593,16 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
                     return;
                 }
 
+                const start = Date.now();
                 const checkInterval = setInterval(() => {
                     if (typeof window !== "undefined" && (window as any).Live2DCubismCore) {
                         clearInterval(checkInterval);
                         resolve();
+                    } else if (Date.now() - start > 30000) {
+                        clearInterval(checkInterval);
+                        console.error("Live2D Cubism Core failed to load within timeout");
                     }
                 }, 100);
-
-                // Timeout handling
-                setTimeout(() => {
-                    clearInterval(checkInterval);
-                    console.error("Live2D Cubism Core failed to load within timeout");
-                }, 10000);
             });
         };
 
