@@ -17,7 +17,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <script src="/lib/live2dcubismcore.min.js" async></script>
+                <script src="/live2d/lib/live2dcubismcore.min.js"></script>
             </head>
             <body className={inter.className}>
                 {children}
