@@ -100,8 +100,7 @@ type FloatingElement = {
   opacity: number;
 };
 
-const DEFAULT_REMOTE_MODELS_BASE_URL =
-  "https://ten-framework-assets.s3.amazonaws.com/live2d-models";
+const DEFAULT_REMOTE_MODELS_BASE_URL = "/live2d/models";
 
 const remoteModelsBaseUrl = (
   process.env.NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL ||
