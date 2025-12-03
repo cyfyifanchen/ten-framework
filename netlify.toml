@@ -1,5 +1,5 @@
 [build]
-  base = "ai_agents/playground"
+  base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
   command = "npm run build"
   publish = ".next"
 
@@ -8,3 +8,8 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/"
+  to = "/live2d"
+  status = 302

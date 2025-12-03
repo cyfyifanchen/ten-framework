@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  basePath: '/live2d',
   reactStrictMode: false, // Disable strict mode to prevent double mounting issues with PIXI
   webpack: (config, { webpack }) => {
     // Provide PIXI as a global variable for pixi-live2d-display
