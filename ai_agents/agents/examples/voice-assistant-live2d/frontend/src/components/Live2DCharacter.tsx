@@ -657,17 +657,16 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
                     }
                 }
 
-                // Create new PIXI application with Canvas renderer to avoid WebGL shader issues
-                console.log('[Live2DCharacter] Creating PIXI Application with Canvas renderer...');
+                // Create new PIXI application using WebGL (required by Live2D)
+                console.log('[Live2DCharacter] Creating PIXI Application with WebGL renderer...');
                 const app = new PIXI.Application({
                     view: canvasRef.current!,
                     autoStart: true,
                     resizeTo: canvasRef.current?.parentElement || window,
                     backgroundColor: 0x000000,
                     backgroundAlpha: 0,
-                    forceCanvas: true, // Force Canvas renderer to avoid WebGL shader issues
-                    antialias: false, // Disable antialiasing to reduce GPU usage
-                    powerPreference: 'low-power', // Use integrated GPU to avoid crashes
+                    antialias: true,
+                    powerPreference: 'high-performance',
                 });
                 console.log('[Live2DCharacter] PIXI Application created successfully:', app);
 
