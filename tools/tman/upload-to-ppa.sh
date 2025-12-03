@@ -74,6 +74,10 @@ for dist in $DISTRIBUTIONS; do
     log_info "Processing distribution: $dist"
     log_info "=========================================="
 
+    # Use architecture-specific revision to avoid version conflicts
+    # This allows uploading different architectures of the same version
+    ARCH_REVISION="${REVISION}${ARCH}"
+
     WORK_DIR="/tmp/ppa-build-${PACKAGE_NAME}-${dist}"
     PACKAGE_DIR="${WORK_DIR}/${PACKAGE_NAME}-${VERSION}"
 
@@ -108,9 +112,9 @@ EOF
     # Create debian/changelog
     log_info "Creating debian/changelog..."
     cat > "$PACKAGE_DIR/debian/changelog" << EOF
-${PACKAGE_NAME} (${VERSION}ubuntu${REVISION}~${dist}) ${dist}; urgency=medium
+${PACKAGE_NAME} (${VERSION}ubuntu${ARCH_REVISION}~${dist}) ${dist}; urgency=medium
 
-  * Release version ${VERSION}
+  * Release version ${VERSION} for ${ARCH}
   * TEN Framework Package Manager
 
  -- ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>  $(date -R)
@@ -227,7 +231,7 @@ EOF
         cd "$WORK_DIR"
         log_info "Signing packages..."
 
-        changes_file="${PACKAGE_NAME}_${VERSION}ubuntu${REVISION}~${dist}_source.changes"
+        changes_file="${PACKAGE_NAME}_${VERSION}ubuntu${ARCH_REVISION}~${dist}_source.changes"
         debsign --no-re-sign -k"$GPG_KEY_ID" \
                 -p"gpg --batch --passphrase-file $PASSPHRASE_FILE --pinentry-mode loopback" \
                 "$changes_file" 2>&1 | tee -a "$WORK_DIR/debuild.log"
@@ -260,7 +264,7 @@ EOF
     log_info "Uploading to PPA: ppa:${LAUNCHPAD_ID}/${PPA_NAME} for $dist..."
     cd "$WORK_DIR"
 
-    changes_file="${PACKAGE_NAME}_${VERSION}ubuntu${REVISION}~${dist}_source.changes"
+    changes_file="${PACKAGE_NAME}_${VERSION}ubuntu${ARCH_REVISION}~${dist}_source.changes"
 
     if [ ! -f "$changes_file" ]; then
         log_error "Changes file not found: $changes_file"
