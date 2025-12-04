@@ -54,8 +54,8 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
         graph_name: graphName,
         language,
         voice_type: voiceType,
-        greeting,
-        prompt
+        greeting: greeting || '',
+        prompt: prompt || ''
     };
     if (properties) {
         data.properties = properties;
