@@ -22,12 +22,21 @@
   [headers.values]
     Cache-Control = "no-store"
 
-# Redirect site root to the Next.js basePath
 [[redirects]]
   from = "/"
   to = "/live2d"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/_next/*"
+  to = "/_next/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/live2d/_next/*"
+  to = "/live2d/_next/:splat"
+  status = 200
 
 # Catch-all fallback to the app entry (after API rules)
 [[redirects]]

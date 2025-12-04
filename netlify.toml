@@ -25,10 +25,14 @@
   force = true
 
 [[redirects]]
-  from = "/*"
-  to = "/live2d"
+  from = "/_next/*"
+  to = "/_next/:splat"
   status = 200
-  force = true
+
+[[redirects]]
+  from = "/live2d/_next/*"
+  to = "/live2d/_next/:splat"
+  status = 200
 
 [[headers]]
   for = "/api/*"
