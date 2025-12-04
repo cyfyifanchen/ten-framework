@@ -14,7 +14,7 @@
 
 [[redirects]]
   from = "/api/agents/*"
-  to = "https://agent.theten.ai/api/:splat"
+  to = "https://agent.theten.ai/api/agents/:splat"
   status = 200
   force = true
 
