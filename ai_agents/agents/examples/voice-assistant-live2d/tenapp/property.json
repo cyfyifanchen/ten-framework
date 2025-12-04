@@ -2,7 +2,7 @@
   "ten": {
     "predefined_graphs": [
       {
-        "name": "voice_assistant_live2d",
+        "name": "va_openai_azure",
         "auto_start": true,
         "graph": {
           "nodes": [
