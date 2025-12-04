@@ -100,7 +100,7 @@ type FloatingElement = {
   opacity: number;
 };
 
-const DEFAULT_REMOTE_MODELS_BASE_URL = "https://ten-framework-assets.s3.amazonaws.com/live2d-models";
+const DEFAULT_REMOTE_MODELS_BASE_URL = "/live2d/models";
 
 const remoteModelsBaseUrl = (
   process.env.NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL ||
@@ -1323,8 +1323,8 @@ export default function Home() {
             type="button"
             onClick={() => handleModelSelect(model.id)}
             className={`rounded-full px-5 py-2 text-sm font-semibold transition ${isActive
-                ? "bg-[#2f3dbd] text-white"
-                : "bg-white/85 text-[#586094] hover:bg-white"
+              ? "bg-[#2f3dbd] text-white"
+              : "bg-white/85 text-[#586094] hover:bg-white"
               }`}
           >
             {model.name}
@@ -1486,8 +1486,8 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[0.7rem] md:text-xs">
               <span
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isConnected
-                    ? "bg-[#e6f8ff] text-[#236d94]"
-                    : "bg-[#ffe8ef] text-[#b34f6a]"
+                  ? "bg-[#e6f8ff] text-[#236d94]"
+                  : "bg-[#ffe8ef] text-[#b34f6a]"
                   }`}
               >
                 <span
@@ -1501,8 +1501,8 @@ export default function Home() {
               </span>
               <span
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isMuted
-                    ? "bg-[#ffe8ef] text-[#b34f6a]"
-                    : "bg-[#ecfce1] text-[#2f7d3e]"
+                  ? "bg-[#ffe8ef] text-[#b34f6a]"
+                  : "bg-[#ecfce1] text-[#2f7d3e]"
                   }`}
               >
                 <span
@@ -1518,10 +1518,10 @@ export default function Home() {
                 onClick={handleMicToggle}
                 disabled={!isConnected}
                 className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border text-lg shadow-lg transition-all duration-200 ${!isConnected
-                    ? "cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60"
-                    : isMuted
-                      ? "border-[#ffcfe0] bg-[#ffe7f0] text-[#b44f6c] hover:bg-[#ffd9e8]"
-                      : "border-[#cde5ff] bg-[#e7f3ff] text-[#2f63a1] hover:bg-[#d8ecff]"
+                  ? "cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60"
+                  : isMuted
+                    ? "border-[#ffcfe0] bg-[#ffe7f0] text-[#b44f6c] hover:bg-[#ffd9e8]"
+                    : "border-[#cde5ff] bg-[#e7f3ff] text-[#2f63a1] hover:bg-[#d8ecff]"
                   }`}
               >
                 {isMuted ? (
@@ -1547,10 +1547,10 @@ export default function Home() {
                 onClick={handleConnectToggle}
                 disabled={isConnecting}
                 className={`relative flex h-14 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-sm leading-tight shadow-lg transition-all duration-200 ${isConnecting
-                    ? "cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]"
-                    : isConnected
-                      ? "border-[#ffcfe0] bg-[#ffe6f3] text-[#b44f6c] hover:bg-[#ffd9eb]"
-                      : "border-[#cbeec4] bg-[#e7f8df] text-[#2f7036] hover:bg-[#def6d2]"
+                  ? "cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]"
+                  : isConnected
+                    ? "border-[#ffcfe0] bg-[#ffe6f3] text-[#b44f6c] hover:bg-[#ffd9eb]"
+                    : "border-[#cbeec4] bg-[#e7f8df] text-[#2f7036] hover:bg-[#def6d2]"
                   }`}
               >
                 {isConnecting ? (

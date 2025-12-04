@@ -52,11 +52,13 @@
   from = "/lib/*"
   to = "/lib/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/live2d/lib/*"
   to = "/lib/:splat"
   status = 200
+  force = true
 
 # Catch-all fallback to the app entry (after API rules)
 [[redirects]]
