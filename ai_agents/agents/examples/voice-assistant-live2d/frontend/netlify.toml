@@ -17,6 +17,11 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/live2d/models/*"
+  to = "https://ten-framework-assets.s3.amazonaws.com/live2d-models/:splat"
+  status = 200
+
 [[headers]]
   for = "/api/*"
   [headers.values]

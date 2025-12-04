@@ -15,7 +15,8 @@ interface StartRequestConfig {
 }
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
-    const url = `/api/agents/start`;
+    const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
+    const url = base ? `${base}/start` : `/api/agents/start`;
     const { channel, userId, graphName, language, voiceType, properties } = config;
     const data: Record<string, unknown> = {
         request_id: genUUID(),
@@ -35,7 +36,8 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
 };
 
 export const apiStopService = async (channel: string) => {
-    const url = `/api/agents/stop`;
+    const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
+    const url = base ? `${base}/stop` : `/api/agents/stop`;
     const data = {
         request_id: genUUID(),
         channel_name: channel
@@ -48,8 +50,8 @@ export const apiStopService = async (channel: string) => {
 
 // ping/pong
 export const apiPing = async (channel: string) => {
-    // the request will be rewrite at middleware.tsx to send to $AGENT_SERVER_URL
-    const url = `/api/agents/ping`;
+    const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
+    const url = base ? `${base}/ping` : `/api/agents/ping`;
     const data = {
         request_id: genUUID(),
         channel_name: channel

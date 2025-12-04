@@ -1216,7 +1216,8 @@ export default function Home() {
         } else {
           setIsConnecting(true);
           // Fetch Agora credentials from API server using the correct endpoint
-          const response = await fetch("/api/token/generate", {
+          const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
+          const response = await fetch(apiBase ? `${apiBase}/token/generate` : "/api/token/generate", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
