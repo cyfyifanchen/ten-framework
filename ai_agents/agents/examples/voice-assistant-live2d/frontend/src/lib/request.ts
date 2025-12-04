@@ -38,20 +38,24 @@ interface StartRequestConfig {
     graphName: string;
     language: string;
     voiceType: "male" | "female";
+    greeting?: string;
+    prompt?: string;
     properties?: Record<string, unknown>;
 }
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
     const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
     const primary = base ? `${base}/start` : `/api/agents/start`;
-    const { channel, userId, graphName, language, voiceType, properties } = config;
+    const { channel, userId, graphName, language, voiceType, greeting, prompt, properties } = config;
     const data: Record<string, unknown> = {
         request_id: genUUID(),
         channel_name: channel,
         user_uid: userId,
         graph_name: graphName,
         language,
-        voice_type: voiceType
+        voice_type: voiceType,
+        greeting,
+        prompt
     };
     if (properties) {
         data.properties = properties;
