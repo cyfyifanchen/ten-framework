@@ -80,6 +80,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
     onModelError
 }, ref) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const motionSyncRef = useRef<MotionSync | null>(null);
     const appRef = useRef<any>(null);
     const [isModelLoaded, setIsModelLoaded] = useState(false);
@@ -657,10 +658,14 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
 
                 // Create new PIXI application using WebGL (required by Live2D)
                 console.log('[Live2DCharacter] Creating PIXI Application with WebGL renderer...');
+                const resizeTarget = containerRef.current ?? canvasRef.current?.parentElement;
+                if (!resizeTarget) {
+                    throw new Error('Resize target not ready');
+                }
                 const app = new PIXI.Application({
                     view: canvasRef.current!,
                     autoStart: true,
-                    resizeTo: canvasRef.current?.parentElement || window,
+                    resizeTo: resizeTarget as HTMLElement,
                     backgroundColor: 0x000000,
                     backgroundAlpha: 0,
                     antialias: true,
@@ -701,7 +706,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
                 await ensureIdleMotion(model);
 
                 // Adjust model size and position
-                const parent = canvasRef.current?.parentElement;
+                const parent = containerRef.current ?? canvasRef.current?.parentElement;
                 if (parent) {
                     model.scale.set(parent.clientHeight / model.height);
                     model.x = (parent.clientWidth - model.width) / 2;
@@ -997,7 +1002,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
     }
 
     return (
-        <div className={cn("relative h-full w-full", className)}>
+        <div ref={containerRef} className={cn("relative h-full w-full", className)}>
             <canvas
                 ref={canvasRef}
                 key={`live2d-canvas-${modelPath}`} // Force canvas recreation when model changes

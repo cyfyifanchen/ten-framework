@@ -30,7 +30,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://api.theten.ai https://ten-framework-assets.s3.amazonaws.com; img-src 'self' data: https://ten-framework-assets.s3.amazonaws.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://api.theten.ai https://ten-framework-assets.s3.amazonaws.com https://*.agora.io wss://*.agora.io; img-src 'self' data: blob: https://ten-framework-assets.s3.amazonaws.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
 
 [[redirects]]
   from = "/"
@@ -54,3 +54,12 @@
   to = "/live2d"
   status = 200
   force = true
+
+[context.production.environment]
+  NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
+
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
+
+[context.branch-deploy.environment]
+  NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
