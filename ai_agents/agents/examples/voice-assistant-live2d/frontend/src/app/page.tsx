@@ -100,7 +100,7 @@ type FloatingElement = {
   opacity: number;
 };
 
-const DEFAULT_REMOTE_MODELS_BASE_URL = "/live2d/models";
+const DEFAULT_REMOTE_MODELS_BASE_URL = "https://ten-framework-assets.s3.amazonaws.com/live2d-models";
 
 const remoteModelsBaseUrl = (
   process.env.NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL ||
@@ -960,63 +960,63 @@ export default function Home() {
     const rules: VoiceCommandRule[] =
       selectedModel.id === "chubbie"
         ? [
-            {
-              triggers: [
-                "change your outfit",
-                "change outfit",
-                "can you change your outfit",
-                "switch your outfit",
-              ],
-              expressions: ["toggle_black_dress_m_2"],
-              resetFirst: true,
-            },
-            {
-              triggers: [
-                "default outfit",
-                "back to normal outfit",
-                "regular outfit",
-                "original outfit",
-              ],
-              reset: true,
-            },
-            {
-              triggers: [
-                "remove your outfit",
-                "take off your outfit",
-                "outfit off",
-                "clothes off",
-              ],
-              reset: true,
-            },
-            {
-              triggers: ["wear the apron", "put on the apron", "apron on"],
-              expressions: ["toggle_apron_m_3"],
-              resetFirst: true,
-            },
-            {
-              triggers: ["take off the apron", "remove the apron", "apron off"],
-              reset: true,
-            },
-            {
-              triggers: ["wear your sunglasses", "put on sunglasses", "sunglasses on"],
-              expressions: ["toggle_sunglasses_g_2"],
-              resetFirst: true,
-            },
-            {
-              triggers: [
-                "wear your glasses",
-                "wear glasses",
-                "put on glasses",
-                "put glasses on",
-                "put your glasses",
-                "put your glasses on",
-                "glasses on",
-                "reading glasses"
-              ],
-              expressions: ["toggle_glasses_g_1"],
-              resetFirst: true,
-            },
-      ]
+          {
+            triggers: [
+              "change your outfit",
+              "change outfit",
+              "can you change your outfit",
+              "switch your outfit",
+            ],
+            expressions: ["toggle_black_dress_m_2"],
+            resetFirst: true,
+          },
+          {
+            triggers: [
+              "default outfit",
+              "back to normal outfit",
+              "regular outfit",
+              "original outfit",
+            ],
+            reset: true,
+          },
+          {
+            triggers: [
+              "remove your outfit",
+              "take off your outfit",
+              "outfit off",
+              "clothes off",
+            ],
+            reset: true,
+          },
+          {
+            triggers: ["wear the apron", "put on the apron", "apron on"],
+            expressions: ["toggle_apron_m_3"],
+            resetFirst: true,
+          },
+          {
+            triggers: ["take off the apron", "remove the apron", "apron off"],
+            reset: true,
+          },
+          {
+            triggers: ["wear your sunglasses", "put on sunglasses", "sunglasses on"],
+            expressions: ["toggle_sunglasses_g_2"],
+            resetFirst: true,
+          },
+          {
+            triggers: [
+              "wear your glasses",
+              "wear glasses",
+              "put on glasses",
+              "put glasses on",
+              "put your glasses",
+              "put your glasses on",
+              "glasses on",
+              "reading glasses"
+            ],
+            expressions: ["toggle_glasses_g_1"],
+            resetFirst: true,
+          },
+        ]
         : [];
 
     if (rules.length === 0) {
@@ -1215,30 +1215,28 @@ export default function Home() {
           setIsConnecting(false);
         } else {
           setIsConnecting(true);
-          // Fetch Agora credentials from API server using the correct endpoint
           const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
-          let response: Response;
-          try {
-            response = await fetch(apiBase ? `${apiBase}/token/generate` : "/api/token/generate", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                request_id: Math.random().toString(36).substring(2, 15),
-                uid: Math.floor(Math.random() * 100000),
-                channel_name: "test-channel",
-              }),
-            });
-          } catch {
-            response = await fetch("/api/token/generate", {
+          const body = JSON.stringify({
+            request_id: Math.random().toString(36).substring(2, 15),
+            uid: Math.floor(Math.random() * 100000),
+            channel_name: "test-channel",
+          });
+          const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
+          const fallbackUrl = "/api/token/generate";
+          let response = await fetch(primaryUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+            mode: "cors",
+            cache: "no-store",
+          }).catch(() => Promise.resolve(undefined as any));
+          if (!response || !response.ok) {
+            response = await fetch(fallbackUrl, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                request_id: Math.random().toString(36).substring(2, 15),
-                uid: Math.floor(Math.random() * 100000),
-                channel_name: "test-channel",
-              })
+              body,
+              mode: "cors",
+              cache: "no-store",
             });
           }
 
@@ -1285,14 +1283,14 @@ export default function Home() {
                   },
                   ...(selectedModel.id === "kei"
                     ? {
-                        tts: {
-                          params: {
-                            voice_setting: {
-                              voice_id: ""
-                            }
+                      tts: {
+                        params: {
+                          voice_setting: {
+                            voice_id: ""
                           }
                         }
                       }
+                    }
                     : {}),
                 },
               });
@@ -1324,11 +1322,10 @@ export default function Home() {
             key={model.id}
             type="button"
             onClick={() => handleModelSelect(model.id)}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-              isActive
+            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${isActive
                 ? "bg-[#2f3dbd] text-white"
                 : "bg-white/85 text-[#586094] hover:bg-white"
-            }`}
+              }`}
           >
             {model.name}
           </button>
@@ -1353,10 +1350,10 @@ export default function Home() {
     : "-inset-5 absolute -z-10 rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl pointer-events-none";
   const stageGlowStyle: React.CSSProperties | undefined = isImmersiveStage
     ? {
-        background:
-          "radial-gradient(circle at 50% 30%, rgba(255,206,164,0.48) 0%, rgba(170,126,88,0.26) 50%, transparent 78%)",
-        opacity: 0.7,
-      }
+      background:
+        "radial-gradient(circle at 50% 30%, rgba(255,206,164,0.48) 0%, rgba(170,126,88,0.26) 50%, transparent 78%)",
+      opacity: 0.7,
+    }
     : undefined;
   const stageInnerClass = isImmersiveStage
     ? "relative z-10 flex flex-col items-center gap-6 px-2 pt-4 pb-8 md:px-6 md:pt-6 md:pb-12"
@@ -1488,33 +1485,29 @@ export default function Home() {
           <div className="flex w-full max-w-3xl flex-col items-center gap-4">
             <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[0.7rem] md:text-xs">
               <span
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${
-                  isConnected
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isConnected
                     ? "bg-[#e6f8ff] text-[#236d94]"
                     : "bg-[#ffe8ef] text-[#b34f6a]"
-                }`}
+                  }`}
               >
                 <span
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    isConnected ? "bg-[#38a8d8]" : "bg-[#f0708f]"
-                  }`}
+                  className={`h-2.5 w-2.5 rounded-full ${isConnected ? "bg-[#38a8d8]" : "bg-[#f0708f]"
+                    }`}
                 />
                 {isConnected
                   ? selectedModel.connectionGreeting ??
-                    `My name is ${selectedModel.name}.`
+                  `My name is ${selectedModel.name}.`
                   : "Not connected"}
               </span>
               <span
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${
-                  isMuted
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isMuted
                     ? "bg-[#ffe8ef] text-[#b34f6a]"
                     : "bg-[#ecfce1] text-[#2f7d3e]"
-                }`}
+                  }`}
               >
                 <span
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    isMuted ? "bg-[#f0708f]" : "bg-[#4cc073]"
-                  }`}
+                  className={`h-2.5 w-2.5 rounded-full ${isMuted ? "bg-[#f0708f]" : "bg-[#4cc073]"
+                    }`}
                 />
                 {isMuted ? "Mic muted" : "Mic open"}
               </span>
@@ -1524,13 +1517,12 @@ export default function Home() {
               <button
                 onClick={handleMicToggle}
                 disabled={!isConnected}
-                className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border text-lg shadow-lg transition-all duration-200 ${
-                  !isConnected
+                className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border text-lg shadow-lg transition-all duration-200 ${!isConnected
                     ? "cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60"
                     : isMuted
                       ? "border-[#ffcfe0] bg-[#ffe7f0] text-[#b44f6c] hover:bg-[#ffd9e8]"
                       : "border-[#cde5ff] bg-[#e7f3ff] text-[#2f63a1] hover:bg-[#d8ecff]"
-                }`}
+                  }`}
               >
                 {isMuted ? (
                   <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -1554,13 +1546,12 @@ export default function Home() {
               <button
                 onClick={handleConnectToggle}
                 disabled={isConnecting}
-                className={`relative flex h-14 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-sm leading-tight shadow-lg transition-all duration-200 ${
-                  isConnecting
+                className={`relative flex h-14 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-sm leading-tight shadow-lg transition-all duration-200 ${isConnecting
                     ? "cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]"
                     : isConnected
                       ? "border-[#ffcfe0] bg-[#ffe6f3] text-[#b44f6c] hover:bg-[#ffd9eb]"
                       : "border-[#cbeec4] bg-[#e7f8df] text-[#2f7036] hover:bg-[#def6d2]"
-                }`}
+                  }`}
               >
                 {isConnecting ? (
                   <>
