@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[redirects]]
+  from = "/api/token/*"
+  to = "https://api.theten.ai/token/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/agents/*"
+  to = "https://api.theten.ai/:splat"
+  status = 200
+  force = true
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"
