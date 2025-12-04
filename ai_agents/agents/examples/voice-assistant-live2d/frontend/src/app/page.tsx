@@ -1217,17 +1217,30 @@ export default function Home() {
           setIsConnecting(true);
           // Fetch Agora credentials from API server using the correct endpoint
           const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
-          const response = await fetch(apiBase ? `${apiBase}/token/generate` : "/api/token/generate", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              request_id: Math.random().toString(36).substring(2, 15),
-              uid: Math.floor(Math.random() * 100000),
-              channel_name: "test-channel",
-            }),
-          });
+          let response: Response;
+          try {
+            response = await fetch(apiBase ? `${apiBase}/token/generate` : "/api/token/generate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                request_id: Math.random().toString(36).substring(2, 15),
+                uid: Math.floor(Math.random() * 100000),
+                channel_name: "test-channel",
+              }),
+            });
+          } catch {
+            response = await fetch("/api/token/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                request_id: Math.random().toString(36).substring(2, 15),
+                uid: Math.floor(Math.random() * 100000),
+                channel_name: "test-channel",
+              })
+            });
+          }
 
           if (!response.ok) {
             throw new Error(

@@ -16,7 +16,7 @@ interface StartRequestConfig {
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
     const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
-    const url = base ? `${base}/start` : `/api/agents/start`;
+    const primary = base ? `${base}/start` : `/api/agents/start`;
     const { channel, userId, graphName, language, voiceType, properties } = config;
     const data: Record<string, unknown> = {
         request_id: genUUID(),
@@ -29,21 +29,31 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
     if (properties) {
         data.properties = properties;
     }
-
-    let resp: any = await axios.post(url, data);
+    let resp: any;
+    try {
+        resp = await axios.post(primary, data);
+    } catch {
+        const fallback = `/api/agents/start`;
+        resp = await axios.post(fallback, data);
+    }
     resp = (resp.data) || {};
     return resp;
 };
 
 export const apiStopService = async (channel: string) => {
     const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
-    const url = base ? `${base}/stop` : `/api/agents/stop`;
+    const primary = base ? `${base}/stop` : `/api/agents/stop`;
     const data = {
         request_id: genUUID(),
         channel_name: channel
     };
-
-    let resp: any = await axios.post(url, data);
+    let resp: any;
+    try {
+        resp = await axios.post(primary, data);
+    } catch {
+        const fallback = `/api/agents/stop`;
+        resp = await axios.post(fallback, data);
+    }
     resp = (resp.data) || {};
     return resp;
 };
@@ -51,12 +61,18 @@ export const apiStopService = async (channel: string) => {
 // ping/pong
 export const apiPing = async (channel: string) => {
     const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
-    const url = base ? `${base}/ping` : `/api/agents/ping`;
+    const primary = base ? `${base}/ping` : `/api/agents/ping`;
     const data = {
         request_id: genUUID(),
         channel_name: channel
     };
-    let resp: any = await axios.post(url, data);
+    let resp: any;
+    try {
+        resp = await axios.post(primary, data);
+    } catch {
+        const fallback = `/api/agents/ping`;
+        resp = await axios.post(fallback, data);
+    }
     resp = (resp.data) || {};
     return resp;
 };
