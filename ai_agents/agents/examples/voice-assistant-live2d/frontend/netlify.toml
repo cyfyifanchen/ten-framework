@@ -48,6 +48,16 @@
   to = "/live2d/_next/:splat"
   status = 200
 
+[[redirects]]
+  from = "/lib/*"
+  to = "/lib/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/live2d/lib/*"
+  to = "/lib/:splat"
+  status = 200
+
 # Catch-all fallback to the app entry (after API rules)
 [[redirects]]
   from = "/*"

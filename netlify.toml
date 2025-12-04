@@ -39,6 +39,16 @@
   to = "/live2d/_next/:splat"
   status = 200
 
+[[redirects]]
+  from = "/lib/*"
+  to = "/lib/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/live2d/lib/*"
+  to = "/lib/:splat"
+  status = 200
+
 [[headers]]
   for = "/api/*"
   [headers.values]
