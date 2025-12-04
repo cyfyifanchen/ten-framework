@@ -293,104 +293,6 @@ const defaultFloatingElements: FloatingElement[] = [
   },
 ];
 
-const kevinFloatingElements: FloatingElement[] = [
-  {
-    type: "corn_cob",
-    top: 12,
-    left: 14,
-    size: 170,
-    rotate: -12,
-    scale: 1,
-    animation: "float1",
-    duration: 22,
-    delay: "0s",
-    opacity: 0.85,
-  },
-  {
-    type: "melon_seed",
-    top: 34,
-    left: 68,
-    size: 100,
-    rotate: 22,
-    scale: 0.95,
-    animation: "float0",
-    duration: 18,
-    delay: "1.4s",
-    opacity: 0.9,
-  },
-  {
-    type: "snow_cookie",
-    top: 56,
-    left: 18,
-    size: 140,
-    rotate: -10,
-    scale: 1,
-    animation: "float2",
-    duration: 20,
-    delay: "0.8s",
-    opacity: 0.82,
-  },
-  {
-    type: "melon_seed",
-    top: 72,
-    left: 84,
-    size: 110,
-    rotate: -26,
-    scale: 1,
-    animation: "float1",
-    duration: 17,
-    delay: "2.6s",
-    opacity: 0.88,
-  },
-  {
-    type: "corn_cob",
-    top: 68,
-    left: 52,
-    size: 160,
-    rotate: 18,
-    scale: 0.88,
-    animation: "float0",
-    duration: 21,
-    delay: "1.8s",
-    opacity: 0.8,
-  },
-  {
-    type: "snow_cookie",
-    top: 18,
-    left: 82,
-    size: 120,
-    rotate: -18,
-    scale: 0.9,
-    animation: "float2",
-    duration: 19,
-    delay: "1.1s",
-    opacity: 0.8,
-  },
-  {
-    type: "melon_seed",
-    top: 42,
-    left: 32,
-    size: 118,
-    rotate: -4,
-    scale: 0.92,
-    animation: "float1",
-    duration: 16,
-    delay: "0.5s",
-    opacity: 0.84,
-  },
-  {
-    type: "corn_cob",
-    top: 82,
-    left: 8,
-    size: 150,
-    rotate: 12,
-    scale: 0.95,
-    animation: "float2",
-    duration: 23,
-    delay: "3s",
-    opacity: 0.78,
-  },
-];
 
 const chubbieFloatingElements: FloatingElement[] = [
   {
@@ -529,151 +431,6 @@ const characterOptions: CharacterProfile[] = [
     connectionGreeting: "My name is Kei.",
     agentGreeting:
       "My name is Kei, nice to meet you! I’m your anime assistant. What’s your name?",
-  },
-  {
-    id: "mao",
-    name: "Mao",
-    path: buildRemoteModelAssetPath("mao_pro", "mao_pro.model3.json"),
-    preview: buildRemoteModelAssetPath("mao_pro", "preview.svg"),
-    headline: "Your Calm & Empathetic Storyteller",
-    description:
-      "Mao listens with patience and responds with lyrical warmth. Invite them for unhurried chats, reflective insights, and a gentle rhythm to balance out your day.",
-    quote: "Hello, I’m Mao. I’m all ears whenever you want to share.",
-    voiceType: "female",
-    mouthConfig: {
-      type: "corners",
-      upId: "ParamMouthUp",
-      downId: "ParamMouthDown",
-    },
-    backgroundTheme: {
-      baseColor: "#f8fbff",
-      primaryGradient:
-        "linear-gradient(160deg,#f0f7ff 0%,#fef1ff 45%,#e6fff7 100%)",
-      radialOverlay: {
-        gradient:
-          "radial-gradient(circle at top,#dcedff 0%,transparent 58%),radial-gradient(circle at bottom,#f7e0ff 0%,transparent 64%)",
-        opacity: 0.78,
-      },
-      patternOverlay: {
-        image:
-          "repeating-linear-gradient(140deg, rgba(255, 255, 255, 0.28) 0px, rgba(255, 255, 255, 0.28) 3px, transparent 3px, transparent 20px)",
-        opacity: 0.18,
-      },
-      accentOverlay: {
-        image:
-          "repeating-radial-gradient(circle at 75% 25%, rgba(211, 227, 255, 0.26) 0px, rgba(211, 227, 255, 0.26) 14px, transparent 14px, transparent 52px)",
-        opacity: 0.24,
-      },
-    },
-    connectionGreeting: "My name is Mao.",
-    agentGreeting:
-      "My name is Mao, and I’m here to listen with you. What should we talk about?",
-    expressions: [
-      { name: "neutral", label: "Neutral", default: true },
-      { name: "gentle_smile", label: "Gentle Smile", onSpeaking: true },
-      { name: "bright", label: "Bright Eyes" },
-    ],
-    motions: [
-      {
-        name: "soft_swirl",
-        label: "Soft Idle",
-        group: "Idle",
-        index: 0,
-        autoPlay: true,
-        loop: true,
-        priority: 1,
-      },
-      {
-        name: "delight",
-        label: "Delight Gesture",
-        group: "Gesture",
-        index: 0,
-        onSpeakingStart: true,
-        priority: 2,
-      },
-      {
-        name: "wave",
-        label: "Friendly Wave",
-        group: "Special",
-        index: 2,
-        priority: 2,
-      },
-    ],
-  },
-  {
-    id: "kevin",
-    name: "Kevin the Marmot",
-    path: buildRemoteModelAssetPath("marmot", "L065.model3.json"),
-    preview: buildRemoteModelAssetPath(
-      "marmot",
-      "a0e01b1556549807c52770f1d517fb9.png"
-    ),
-    headline: "Your Snack-Fueled Hype Marmot",
-    description:
-      "Kevin the Marmot keeps spirits high with cozy chatter, snack recs, and solid productivity nudges. Drop in for grounded advice, quick laughs, and the warmest marmot energy on the planet.",
-    quote: "Yo! Kevin the Marmot here. Ready to hustle, snack, or both?",
-    voiceType: "male",
-    mouthConfig: {
-      type: "open",
-      openId: "ParamMouthOpenY",
-      formId: "ParamMouthForm",
-    },
-    backgroundTheme: {
-      baseColor: "#eefbf0",
-      primaryGradient:
-        "linear-gradient(150deg,#ecffe7 0%,#dcf7e4 40%,#c6f0d5 100%)",
-      radialOverlay: {
-        gradient:
-          "radial-gradient(circle at top,#bdf3c8 0%,transparent 64%),radial-gradient(circle at bottom,#d9ffe9 0%,transparent 70%)",
-        opacity: 0.62,
-      },
-      patternOverlay: {
-        image:
-          "repeating-linear-gradient(130deg, rgba(255, 255, 255, 0.32) 0px, rgba(255, 255, 255, 0.32) 3px, transparent 3px, transparent 18px)",
-        opacity: 0.2,
-      },
-      accentOverlay: {
-        image:
-          "repeating-radial-gradient(circle at 18% 22%, rgba(122, 200, 135, 0.32) 0px, rgba(122, 200, 135, 0.32) 12px, transparent 12px, transparent 46px)",
-        opacity: 0.28,
-      },
-    },
-    connectionGreeting: "My name is Kevin the Marmot.",
-    agentGreeting:
-      "My name is Kevin the Marmot! Ready to hustle, snack, or plan something fun together?",
-    floatingElements: kevinFloatingElements,
-    immersiveStage: true,
-    expressions: [
-      { name: "neutral", label: "Relaxed", default: true },
-      { name: "greet", label: "Big Smile", onSpeaking: true },
-      { name: "cheeky", label: "Cheeky" },
-    ],
-    motions: [
-      {
-        name: "idle",
-        label: "Cheerful Idle",
-        group: "Idle",
-        index: 0,
-        autoPlay: true,
-        loop: true,
-        priority: 1,
-      },
-      {
-        name: "bite_one",
-        label: "Snack Bite",
-        group: "Snack",
-        index: 0,
-        onSpeakingStart: true,
-        priority: 2,
-      },
-      {
-        name: "bite_two",
-        label: "Chomp Again",
-        group: "Snack",
-        index: 1,
-        priority: 2,
-      },
-    ],
   },
   {
     id: "chubbie",
@@ -1259,29 +1016,7 @@ export default function Home() {
               expressions: ["toggle_glasses_g_1"],
               resetFirst: true,
             },
-          ]
-        : selectedModel.id === "kevin"
-        ? [
-            {
-              triggers: [
-                "big smile",
-                "give me a smile",
-                "smile for me",
-                "smile kevin",
-              ],
-              expressions: ["greet"],
-              resetFirst: true,
-            },
-            {
-              triggers: ["cheeky face", "be cheeky", "give me a cheeky grin"],
-              expressions: ["cheeky"],
-              resetFirst: true,
-            },
-            {
-              triggers: ["relax face", "back to relaxed", "neutral face", "reset face"],
-              reset: true,
-            },
-          ]
+      ]
         : [];
 
     if (rules.length === 0) {
@@ -1534,6 +1269,17 @@ export default function Home() {
                   main_control: {
                     greeting: selectedModel.agentGreeting,
                   },
+                  ...(selectedModel.id === "kei"
+                    ? {
+                        tts: {
+                          params: {
+                            voice_setting: {
+                              voice_id: ""
+                            }
+                          }
+                        }
+                      }
+                    : {}),
                 },
               });
 
@@ -1581,11 +1327,9 @@ export default function Home() {
   const floatingElements =
     selectedModel.floatingElements ?? defaultFloatingElements;
   const floatingShadowColor =
-    selectedModel.id === "kevin"
-      ? "rgba(118, 205, 135, 0.38)"
-      : selectedModel.id === "chubbie"
-        ? "rgba(186, 140, 104, 0.38)"
-        : "rgba(210, 180, 255, 0.35)";
+    selectedModel.id === "chubbie"
+      ? "rgba(186, 140, 104, 0.38)"
+      : "rgba(210, 180, 255, 0.35)";
   const isImmersiveStage = Boolean(selectedModel.immersiveStage);
   const stageWrapperClass = isImmersiveStage
     ? "relative w-full max-w-5xl"
@@ -1594,25 +1338,17 @@ export default function Home() {
     ? "-inset-20 absolute -z-10 rounded-[140px] blur-3xl pointer-events-none"
     : "-inset-5 absolute -z-10 rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl pointer-events-none";
   const stageGlowStyle: React.CSSProperties | undefined = isImmersiveStage
-    ? selectedModel.id === "kevin"
-      ? {
-          background:
-            "radial-gradient(circle at 50% 24%, rgba(138,214,155,0.55) 0%, rgba(54,138,88,0.24) 46%, transparent 74%)",
-          opacity: 0.6,
-        }
-      : {
-          background:
-            "radial-gradient(circle at 50% 30%, rgba(255,206,164,0.48) 0%, rgba(170,126,88,0.26) 50%, transparent 78%)",
-          opacity: 0.7,
-        }
+    ? {
+        background:
+          "radial-gradient(circle at 50% 30%, rgba(255,206,164,0.48) 0%, rgba(170,126,88,0.26) 50%, transparent 78%)",
+        opacity: 0.7,
+      }
     : undefined;
   const stageInnerClass = isImmersiveStage
     ? "relative z-10 flex flex-col items-center gap-6 px-2 pt-4 pb-8 md:px-6 md:pt-6 md:pb-12"
     : "relative z-10 overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8";
   const stageHeaderClass = isImmersiveStage
-    ? selectedModel.id === "kevin"
-      ? "flex w-full items-center justify-between font-semibold text-[#2a5b37] text-[0.62rem] uppercase tracking-[0.32em]"
-      : "flex w-full items-center justify-between font-semibold text-[#594434] text-[0.62rem] uppercase tracking-[0.32em]"
+    ? "flex w-full items-center justify-between font-semibold text-[#594434] text-[0.62rem] uppercase tracking-[0.32em]"
     : "flex w-full items-center justify-between font-semibold text-[#87a0ff] text-[0.6rem] uppercase tracking-[0.3em]";
   const headerIndicatorClass = isImmersiveStage
     ? isConnected
@@ -1625,14 +1361,10 @@ export default function Home() {
     ? "relative mt-2 w-full"
     : "relative mt-4";
   const live2dClassName = isImmersiveStage
-    ? selectedModel.id === "kevin"
-      ? "h-[34rem] w-full md:h-[48rem] drop-shadow-[0_30px_90px_rgba(86,170,108,0.5)]"
-      : "h-[34rem] w-full md:h-[48rem] drop-shadow-[0_30px_90px_rgba(174,130,90,0.48)]"
+    ? "h-[34rem] w-full md:h-[48rem] drop-shadow-[0_30px_90px_rgba(174,130,90,0.48)]"
     : "h-[26rem] w-full rounded-[28px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[34rem]";
   const quoteClass = isImmersiveStage
-    ? selectedModel.id === "kevin"
-      ? "mt-6 text-center text-[#2f5538] text-sm md:text-base font-medium"
-      : "mt-6 text-center text-[#5b4635] text-sm md:text-base font-medium"
+    ? "mt-6 text-center text-[#5b4635] text-sm md:text-base font-medium"
     : "mt-4 text-center text-[#6f6a92] text-xs md:text-sm";
 
   return (

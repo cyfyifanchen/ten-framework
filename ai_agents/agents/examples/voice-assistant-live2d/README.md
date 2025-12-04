@@ -1,6 +1,6 @@
 # Live2D Voice Assistant
 
-A voice assistant with **Live2D character integration** and real-time conversation capabilities powered by Agora RTC, Deepgram STT, OpenAI LLM, and ElevenLabs TTS. The example extends the standard voice assistant backend with a Live2D-ready frontend, so animated characters can react to the audio pipeline with synchronized motion.
+A voice assistant with **Live2D character integration** and real-time conversation capabilities powered by Agora RTC, Deepgram STT, OpenAI LLM, and Minimax TTS. The example extends the standard voice assistant backend with a Live2D-ready frontend, so animated characters can react to the audio pipeline with synchronized motion.
 
 > **Note**: This example reuses the backend configuration from [voice-assistant](../voice-assistant/) and adds a Live2D-aware frontend.
 
@@ -34,7 +34,8 @@ A voice assistant with **Live2D character integration** and real-time conversati
 | `DEEPGRAM_API_KEY` | Deepgram API key for speech-to-text. |
 | `OPENAI_API_KEY` | OpenAI API key for the LLM. |
 | `OPENAI_MODEL` | OpenAI realtime model name (for example `gpt-4o` or `gpt-4o-mini`). |
-| `ELEVENLABS_TTS_KEY` | ElevenLabs API key for text-to-speech synthesis. |
+| `MINIMAX_TTS_API_KEY` | Minimax API key for text-to-speech synthesis. |
+| `MINIMAX_TTS_GROUP_ID` | Minimax group ID for API authorization. |
 
 ### Optional Environment Variables (`ai_agents/.env`)
 
@@ -89,7 +90,7 @@ task run-gd-server
 
 ## Live2D Models
 
-All bundled Live2D characters (Kei, Mao, Kevin the Marmot, and Chubbie the Capybara) are now loaded from the URL defined in `NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL` (defaults to `https://ten-framework-assets.s3.amazonaws.com/live2d-models`). Kei's assets live at `https://ten-framework-assets.s3.amazonaws.com/live2d-models/kei_vowels_pro`.
+Available characters are Kei and Chubbie the Capybara. Models are loaded from the URL defined in `NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL` (defaults to `https://ten-framework-assets.s3.amazonaws.com/live2d-models`). Kei's assets live at `https://ten-framework-assets.s3.amazonaws.com/live2d-models/kei_vowels_pro`.
 
 To add or replace models:
 
@@ -161,19 +162,22 @@ The TEN runtime graph is defined in `tenapp/property.json`:
             },
             {
               "type": "extension",
-              "name": "tts",
-              "addon": "elevenlabs_tts2_python",
-              "extension_group": "tts",
-              "property": {
-                "params": {
-                  "key": "${env:ELEVENLABS_TTS_KEY|}",
-                  "voice_id": "lhTvHflPVOqgSWyuWQry",
-                  "model_id": "eleven_multilingual_v2"
-                },
-                "dump": false,
-                "dump_path": "./"
-              }
+          "name": "tts",
+          "addon": "minimax_tts_websocket_python",
+          "extension_group": "tts",
+          "property": {
+            "params": {
+              "api_key": "${env:MINIMAX_TTS_API_KEY|}",
+              "group_id": "${env:MINIMAX_TTS_GROUP_ID|}",
+              "model": "speech-02-turbo",
+              "audio_setting": { "sample_rate": 16000 },
+              "voice_setting": { "voice_id": "English_Jovialman" },
+              "url": "wss://api.minimaxi.com/ws/v1/t2a_v2"
             },
+            "dump": false,
+            "dump_path": "./"
+          }
+        },
             {
               "type": "extension",
               "name": "main_control",
@@ -326,12 +330,17 @@ The TEN runtime graph is defined in `tenapp/property.json`:
 | `OPENAI_API_KEY` | string | ✔︎ | OpenAI API key. |
 | `OPENAI_MODEL` | string | ✔︎ | OpenAI realtime model identifier. |
 | `OPENAI_PROXY_URL` | string | ✖︎ | Proxy URL for OpenAI traffic. |
-| `ELEVENLABS_TTS_KEY` | string | ✔︎ | ElevenLabs API key. |
+| `MINIMAX_TTS_API_KEY` | string | ✔︎ | Minimax API key. |
+| `MINIMAX_TTS_GROUP_ID` | string | ✔︎ | Minimax group ID. |
 | `WEATHERAPI_API_KEY` | string | ✖︎ | Enables the weather tool node. |
 
 ## Customization
 
 Use TMAN Designer (http://localhost:49483) to modify the graph: swap STT/LLM/TTS providers, add tools, or adjust greetings. See the [TMAN Designer documentation](https://theten.ai/docs/ten_agent/customize_agent/tman-designer) for detailed instructions.
+
+### Character Voice Defaults
+- Kei: Minimax TTS `voice_id` is set to empty (default voice). This is applied when starting a session with Kei and persists for the session.
+- Chubbie: Uses the backend default Minimax TTS voice `English_Jovialman`.
 
 ## Release as Docker Image
 
