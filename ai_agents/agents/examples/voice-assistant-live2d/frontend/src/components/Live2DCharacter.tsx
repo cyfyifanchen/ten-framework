@@ -595,19 +595,17 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
                     return;
                 }
 
-                // Attempt to inject the script dynamically if missing
-                const injectScript = (src: string) => {
-                    const existing = document.querySelector(`script[src="${src}"]`);
-                    if (existing) return;
+                const origin = typeof window !== "undefined" ? window.location.origin : "";
+                const src = `${origin}/lib/live2dcubismcore.min.js`;
+                const existing = document.querySelector(`script[src="${src}"]`);
+                if (!existing) {
                     const s = document.createElement("script");
                     s.src = src;
+                    s.type = "text/javascript";
                     s.async = false;
+                    s.crossOrigin = "anonymous";
                     document.head.appendChild(s);
-                };
-
-                // Try root path first, then /live2d-prefixed fallback
-                injectScript("/lib/live2dcubismcore.min.js");
-                setTimeout(() => injectScript("/live2d/lib/live2dcubismcore.min.js"), 500);
+                }
 
                 const start = Date.now();
                 const checkInterval = setInterval(() => {
