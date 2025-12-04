@@ -1,9 +1,36 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 // Generate a simple UUID-like string
 function genUUID(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
+
+// Retry with exponential backoff
+async function retryWithBackoff<T>(
+    fn: () => Promise<T>,
+    maxRetries: number = 3,
+    initialDelay: number = 1000
+): Promise<T> {
+    let lastError: Error | undefined;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error as Error;
+            if (attempt < maxRetries - 1) {
+                const delay = initialDelay * Math.pow(2, attempt);
+                console.log(`Request failed (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`, error);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+
+    throw lastError;
+}
+
+// Configure axios with timeout
+const API_TIMEOUT = 10000; // 10 seconds
 
 interface StartRequestConfig {
     channel: string;
@@ -29,15 +56,31 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
     if (properties) {
         data.properties = properties;
     }
-    let resp: any;
-    try {
-        resp = await axios.post(primary, data);
-    } catch {
-        const fallback = `/api/agents/start`;
-        resp = await axios.post(fallback, data);
-    }
-    resp = (resp.data) || {};
-    return resp;
+
+    return retryWithBackoff(async () => {
+        try {
+            console.log(`[API] Starting service with graph: ${graphName}, channel: ${channel}`);
+            const resp = await axios.post(primary, data, { timeout: API_TIMEOUT });
+            console.log('[API] Start service success:', resp.data);
+            return resp.data || {};
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.error('[API] Primary endpoint failed:', primary, axiosError.message);
+
+            const fallback = `/api/agents/start`;
+            console.log('[API] Trying fallback endpoint:', fallback);
+
+            try {
+                const resp = await axios.post(fallback, data, { timeout: API_TIMEOUT });
+                console.log('[API] Fallback success:', resp.data);
+                return resp.data || {};
+            } catch (fallbackError) {
+                const fallbackAxiosError = fallbackError as AxiosError;
+                console.error('[API] Fallback endpoint failed:', fallback, fallbackAxiosError.message);
+                throw new Error(`Failed to start service: ${fallbackAxiosError.message}`);
+            }
+        }
+    }, 2, 1000); // 2 retries with 1 second initial delay
 };
 
 export const apiStopService = async (channel: string) => {
@@ -47,15 +90,31 @@ export const apiStopService = async (channel: string) => {
         request_id: genUUID(),
         channel_name: channel
     };
-    let resp: any;
-    try {
-        resp = await axios.post(primary, data);
-    } catch {
-        const fallback = `/api/agents/stop`;
-        resp = await axios.post(fallback, data);
-    }
-    resp = (resp.data) || {};
-    return resp;
+
+    return retryWithBackoff(async () => {
+        try {
+            console.log(`[API] Stopping service for channel: ${channel}`);
+            const resp = await axios.post(primary, data, { timeout: API_TIMEOUT });
+            console.log('[API] Stop service success:', resp.data);
+            return resp.data || {};
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.error('[API] Primary endpoint failed:', primary, axiosError.message);
+
+            const fallback = `/api/agents/stop`;
+            console.log('[API] Trying fallback endpoint:', fallback);
+
+            try {
+                const resp = await axios.post(fallback, data, { timeout: API_TIMEOUT });
+                console.log('[API] Fallback success:', resp.data);
+                return resp.data || {};
+            } catch (fallbackError) {
+                const fallbackAxiosError = fallbackError as AxiosError;
+                console.error('[API] Fallback endpoint failed:', fallback, fallbackAxiosError.message);
+                throw new Error(`Failed to stop service: ${fallbackAxiosError.message}`);
+            }
+        }
+    }, 2, 1000);
 };
 
 // ping/pong
@@ -66,13 +125,23 @@ export const apiPing = async (channel: string) => {
         request_id: genUUID(),
         channel_name: channel
     };
-    let resp: any;
+
+    // Note: Ping doesn't use retry logic to avoid blocking during connection issues
     try {
-        resp = await axios.post(primary, data);
-    } catch {
+        const resp = await axios.post(primary, data, { timeout: API_TIMEOUT });
+        return resp.data || {};
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        console.warn('[API] Ping primary endpoint failed:', primary, axiosError.message);
+
         const fallback = `/api/agents/ping`;
-        resp = await axios.post(fallback, data);
+        try {
+            const resp = await axios.post(fallback, data, { timeout: API_TIMEOUT });
+            return resp.data || {};
+        } catch (fallbackError) {
+            const fallbackAxiosError = fallbackError as AxiosError;
+            console.warn('[API] Ping fallback endpoint failed:', fallback, fallbackAxiosError.message);
+            throw new Error(`Failed to ping service: ${fallbackAxiosError.message}`);
+        }
     }
-    resp = (resp.data) || {};
-    return resp;
 };

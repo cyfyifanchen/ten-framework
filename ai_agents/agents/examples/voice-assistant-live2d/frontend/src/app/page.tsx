@@ -1215,38 +1215,84 @@ export default function Home() {
           setIsConnecting(false);
         } else {
           setIsConnecting(true);
-          const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
-          const body = JSON.stringify({
-            request_id: Math.random().toString(36).substring(2, 15),
-            uid: Math.floor(Math.random() * 100000),
-            channel_name: "test-channel",
-          });
-          const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
-          const fallbackUrl = "/api/token/generate";
-          let response = await fetch(primaryUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body,
-            mode: "cors",
-            cache: "no-store",
-          }).catch(() => Promise.resolve(undefined as any));
-          if (!response || !response.ok) {
-            response = await fetch(fallbackUrl, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body,
-              mode: "cors",
-              cache: "no-store",
+
+          // Token generation with retry logic
+          const generateToken = async (retryCount = 0, maxRetries = 3): Promise<any> => {
+            const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
+            const body = JSON.stringify({
+              request_id: Math.random().toString(36).substring(2, 15),
+              uid: Math.floor(Math.random() * 100000),
+              channel_name: "test-channel",
             });
-          }
 
-          if (!response.ok) {
-            throw new Error(
-              `Failed to get Agora credentials: ${response.statusText}`
-            );
-          }
+            const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
+            const fallbackUrl = "/api/token/generate";
 
-          const responseData = await response.json();
+            console.log(`[Token] Attempting to generate token (attempt ${retryCount + 1}/${maxRetries + 1})`);
+
+            try {
+              // Try primary endpoint with timeout
+              const controller = new AbortController();
+              const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+              let response = await fetch(primaryUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body,
+                mode: "cors",
+                cache: "no-store",
+                signal: controller.signal,
+              }).catch((err) => {
+                console.error('[Token] Primary endpoint error:', primaryUrl, err.message);
+                return undefined as any;
+              });
+
+              clearTimeout(timeoutId);
+
+              // Try fallback if primary failed
+              if (!response || !response.ok) {
+                console.log('[Token] Trying fallback endpoint:', fallbackUrl);
+                const fallbackController = new AbortController();
+                const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 10000);
+
+                response = await fetch(fallbackUrl, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body,
+                  mode: "cors",
+                  cache: "no-store",
+                  signal: fallbackController.signal,
+                }).catch((err) => {
+                  console.error('[Token] Fallback endpoint error:', fallbackUrl, err.message);
+                  throw err;
+                });
+
+                clearTimeout(fallbackTimeoutId);
+              }
+
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              }
+
+              const responseData = await response.json();
+              console.log('[Token] Token generation success:', responseData);
+              return responseData;
+
+            } catch (error: any) {
+              console.error('[Token] Generation failed:', error.message);
+
+              if (retryCount < maxRetries) {
+                const delay = 1000 * Math.pow(2, retryCount); // Exponential backoff
+                console.log(`[Token] Retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return generateToken(retryCount + 1, maxRetries);
+              }
+
+              throw new Error(`Failed to get Agora credentials after ${maxRetries + 1} attempts: ${error.message}`);
+            }
+          };
+
+          const responseData = await generateToken();
 
           // Handle the response structure from agent server
           const credentials = responseData.data || responseData;
