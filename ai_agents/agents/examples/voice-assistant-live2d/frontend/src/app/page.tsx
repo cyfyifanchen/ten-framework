@@ -1256,7 +1256,7 @@ export default function Home() {
           const agoraConfig: AgoraConfig = {
             appId: credentials.appId || credentials.app_id,
             channel: credentials.channel_name,
-            token: credentials.token,
+            token: (credentials.token && (credentials.token !== (credentials.appId || credentials.app_id))) ? credentials.token : null,
             uid: credentials.uid,
           };
 

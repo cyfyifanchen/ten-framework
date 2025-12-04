@@ -589,14 +589,29 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
         // Wait for Live2D core library to load
         const waitForLive2DCore = () => {
             return new Promise<void>((resolve) => {
-                if (typeof window !== "undefined" && (window as any).Live2DCubismCore) {
+                const hasCore = () => typeof window !== "undefined" && (window as any).Live2DCubismCore;
+                if (hasCore()) {
                     resolve();
                     return;
                 }
 
+                // Attempt to inject the script dynamically if missing
+                const injectScript = (src: string) => {
+                    const existing = document.querySelector(`script[src="${src}"]`);
+                    if (existing) return;
+                    const s = document.createElement("script");
+                    s.src = src;
+                    s.async = false;
+                    document.head.appendChild(s);
+                };
+
+                // Try root path first, then /live2d-prefixed fallback
+                injectScript("/lib/live2dcubismcore.min.js");
+                setTimeout(() => injectScript("/live2d/lib/live2dcubismcore.min.js"), 500);
+
                 const start = Date.now();
                 const checkInterval = setInterval(() => {
-                    if (typeof window !== "undefined" && (window as any).Live2DCubismCore) {
+                    if (hasCore()) {
                         clearInterval(checkInterval);
                         resolve();
                     } else if (Date.now() - start > 30000) {
