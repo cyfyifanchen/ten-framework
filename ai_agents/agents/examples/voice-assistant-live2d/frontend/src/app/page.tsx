@@ -1320,25 +1320,6 @@ export default function Home() {
                 graphName: "voice_assistant_live2d",
                 language: "en",
                 voiceType: selectedModel.voiceType,
-                properties: {
-                  llm: {
-                    greeting: selectedModel.agentGreeting,
-                  },
-                  main_control: {
-                    greeting: selectedModel.agentGreeting,
-                  },
-                  ...(selectedModel.id === "kei"
-                    ? {
-                      tts: {
-                        params: {
-                          voice_setting: {
-                            voice_id: ""
-                          }
-                        }
-                      }
-                    }
-                    : {}),
-                },
               });
 
               console.log("Agent started:", startResult);
