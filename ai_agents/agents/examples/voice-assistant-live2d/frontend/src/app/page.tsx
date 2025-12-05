@@ -1168,7 +1168,8 @@ export default function Home() {
       stopPing();
     }
     const interval = setInterval(() => {
-      apiPing("test-channel");
+      const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p";
+      apiPing(channelName);
     }, 3000);
     setPingInterval(interval);
   };
@@ -1203,7 +1204,8 @@ export default function Home() {
           setIsConnecting(true);
           // Stop the agent service first
           try {
-            await apiStopService("test-channel");
+            const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p";
+            await apiStopService(channelName);
             console.log("Agent stopped");
           } catch (error) {
             console.error("Failed to stop agent:", error);
@@ -1222,411 +1224,412 @@ export default function Home() {
             const body = JSON.stringify({
               request_id: Math.random().toString(36).substring(2, 15),
               uid: Math.floor(Math.random() * 100000),
-              channel_name: "test-channel",
+              channel_name: process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p",
+            }),
+          });
+
+          const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
+          const fallbackUrl = "/api/token/generate";
+
+          console.log(`[Token] Attempting to generate token (attempt ${retryCount + 1}/${maxRetries + 1})`);
+
+          try {
+            // Try primary endpoint with timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+            let response = await fetch(primaryUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body,
+              mode: "cors",
+              cache: "no-store",
+              signal: controller.signal,
+            }).catch((err) => {
+              console.error('[Token] Primary endpoint error:', primaryUrl, err.message);
+              return undefined as any;
             });
 
-            const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
-            const fallbackUrl = "/api/token/generate";
+            clearTimeout(timeoutId);
 
-            console.log(`[Token] Attempting to generate token (attempt ${retryCount + 1}/${maxRetries + 1})`);
+            // Try fallback if primary failed
+            if (!response || !response.ok) {
+              console.log('[Token] Trying fallback endpoint:', fallbackUrl);
+              const fallbackController = new AbortController();
+              const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 10000);
 
-            try {
-              // Try primary endpoint with timeout
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-              let response = await fetch(primaryUrl, {
+              response = await fetch(fallbackUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body,
                 mode: "cors",
                 cache: "no-store",
-                signal: controller.signal,
+                signal: fallbackController.signal,
               }).catch((err) => {
-                console.error('[Token] Primary endpoint error:', primaryUrl, err.message);
-                return undefined as any;
+                console.error('[Token] Fallback endpoint error:', fallbackUrl, err.message);
+                throw err;
               });
 
-              clearTimeout(timeoutId);
-
-              // Try fallback if primary failed
-              if (!response || !response.ok) {
-                console.log('[Token] Trying fallback endpoint:', fallbackUrl);
-                const fallbackController = new AbortController();
-                const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 10000);
-
-                response = await fetch(fallbackUrl, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body,
-                  mode: "cors",
-                  cache: "no-store",
-                  signal: fallbackController.signal,
-                }).catch((err) => {
-                  console.error('[Token] Fallback endpoint error:', fallbackUrl, err.message);
-                  throw err;
-                });
-
-                clearTimeout(fallbackTimeoutId);
-              }
-
-              if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-              }
-
-              const responseData = await response.json();
-              console.log('[Token] Token generation success:', responseData);
-              return responseData;
-
-            } catch (error: any) {
-              console.error('[Token] Generation failed:', error.message);
-
-              if (retryCount < maxRetries) {
-                const delay = 1000 * Math.pow(2, retryCount); // Exponential backoff
-                console.log(`[Token] Retrying in ${delay}ms...`);
-                await new Promise(resolve => setTimeout(resolve, delay));
-                return generateToken(retryCount + 1, maxRetries);
-              }
-
-              throw new Error(`Failed to get Agora credentials after ${maxRetries + 1} attempts: ${error.message}`);
-            }
-          };
-
-          const responseData = await generateToken();
-
-          // Handle the response structure from agent server
-          const credentials = responseData.data || responseData;
-
-          const agoraConfig: AgoraConfig = {
-            appId: credentials.appId || credentials.app_id,
-            channel: credentials.channel_name,
-            token: (credentials.token && (credentials.token !== (credentials.appId || credentials.app_id))) ? credentials.token : null,
-            uid: credentials.uid,
-          };
-
-          console.log("Agora config:", agoraConfig);
-          const success = await agoraService.connect(agoraConfig);
-          if (success) {
-            setIsConnected(true);
-
-            // Sync microphone state with Agora service
-            setIsMuted(agoraService.isMicrophoneMuted());
-
-            // Start the agent service
-            try {
-              const startResult = await apiStartService({
-                channel: agoraConfig.channel,
-                userId: agoraConfig.uid || 0,
-                graphName: process.env.NEXT_PUBLIC_GRAPH_NAME || "voice_assistant_live2d",
-                language: process.env.NEXT_PUBLIC_LANGUAGE || "en-US",
-                voiceType: selectedModel.voiceType,
-              });
-
-              console.log("Agent started:", startResult);
-            } catch (error) {
-              console.error("Failed to start agent:", error);
+              clearTimeout(fallbackTimeoutId);
             }
 
-            startPing();
-          } else {
-            throw new Error("Failed to connect to Agora");
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const responseData = await response.json();
+            console.log('[Token] Token generation success:', responseData);
+            return responseData;
+
+          } catch (error: any) {
+            console.error('[Token] Generation failed:', error.message);
+
+            if (retryCount < maxRetries) {
+              const delay = 1000 * Math.pow(2, retryCount); // Exponential backoff
+              console.log(`[Token] Retrying in ${delay}ms...`);
+              await new Promise(resolve => setTimeout(resolve, delay));
+              return generateToken(retryCount + 1, maxRetries);
+            }
+
+            throw new Error(`Failed to get Agora credentials after ${maxRetries + 1} attempts: ${error.message}`);
           }
-          setIsConnecting(false);
+        };
+
+        const responseData = await generateToken();
+
+        // Handle the response structure from agent server
+        const credentials = responseData.data || responseData;
+
+        const agoraConfig: AgoraConfig = {
+          appId: credentials.appId || credentials.app_id,
+          channel: credentials.channel_name,
+          token: (credentials.token && (credentials.token !== (credentials.appId || credentials.app_id))) ? credentials.token : null,
+          uid: credentials.uid,
+        };
+
+        console.log("Agora config:", agoraConfig);
+        const success = await agoraService.connect(agoraConfig);
+        if (success) {
+          setIsConnected(true);
+
+          // Sync microphone state with Agora service
+          setIsMuted(agoraService.isMicrophoneMuted());
+
+          // Start the agent service
+          try {
+            const startResult = await apiStartService({
+              channel: agoraConfig.channel,
+              userId: agoraConfig.uid || 0,
+              graphName: process.env.NEXT_PUBLIC_GRAPH_NAME || "voice_assistant_live2d",
+              language: process.env.NEXT_PUBLIC_LANGUAGE || "en-US",
+              voiceType: selectedModel.voiceType,
+            });
+
+            console.log("Agent started:", startResult);
+          } catch (error) {
+            console.error("Failed to start agent:", error);
+          }
+
+          startPing();
+        } else {
+          throw new Error("Failed to connect to Agora");
         }
-      } catch (error) {
-        console.error("Connection error:", error);
         setIsConnecting(false);
       }
+      } catch (error) {
+      console.error("Connection error:", error);
+      setIsConnecting(false);
     }
-  };
+  }
+};
 
-  const renderCharacterSwitch = () => (
-    <div className="flex w-full max-w-md flex-wrap items-center justify-center gap-3 rounded-full bg-white/60 p-2 shadow-sm backdrop-blur">
-      {characterOptions.map((model) => {
-        const isActive = model.id === selectedModel.id;
-        return (
-          <button
-            key={model.id}
-            type="button"
-            onClick={() => handleModelSelect(model.id)}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${isActive
-              ? "bg-[#2f3dbd] text-white"
-              : "bg-white/85 text-[#586094] hover:bg-white"
-              }`}
-          >
-            {model.name}
-          </button>
-        );
-      })}
+const renderCharacterSwitch = () => (
+  <div className="flex w-full max-w-md flex-wrap items-center justify-center gap-3 rounded-full bg-white/60 p-2 shadow-sm backdrop-blur">
+    {characterOptions.map((model) => {
+      const isActive = model.id === selectedModel.id;
+      return (
+        <button
+          key={model.id}
+          type="button"
+          onClick={() => handleModelSelect(model.id)}
+          className={`rounded-full px-5 py-2 text-sm font-semibold transition ${isActive
+            ? "bg-[#2f3dbd] text-white"
+            : "bg-white/85 text-[#586094] hover:bg-white"
+            }`}
+        >
+          {model.name}
+        </button>
+      );
+    })}
+  </div>
+);
+
+const backgroundTheme = selectedModel.backgroundTheme;
+const floatingElements =
+  selectedModel.floatingElements ?? defaultFloatingElements;
+const floatingShadowColor =
+  selectedModel.id === "chubbie"
+    ? "rgba(186, 140, 104, 0.38)"
+    : "rgba(210, 180, 255, 0.35)";
+const isImmersiveStage = Boolean(selectedModel.immersiveStage);
+const stageWrapperClass = isImmersiveStage
+  ? "relative w-full max-w-5xl"
+  : "relative w-full max-w-3xl";
+const stageGlowClass = isImmersiveStage
+  ? "-inset-20 absolute -z-10 rounded-[140px] blur-3xl pointer-events-none"
+  : "-inset-5 absolute -z-10 rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl pointer-events-none";
+const stageGlowStyle: React.CSSProperties | undefined = isImmersiveStage
+  ? {
+    background:
+      "radial-gradient(circle at 50% 30%, rgba(255,206,164,0.48) 0%, rgba(170,126,88,0.26) 50%, transparent 78%)",
+    opacity: 0.7,
+  }
+  : undefined;
+const stageInnerClass = isImmersiveStage
+  ? "relative z-10 flex flex-col items-center gap-6 px-2 pt-4 pb-8 md:px-6 md:pt-6 md:pb-12"
+  : "relative z-10 overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8";
+const stageHeaderClass = isImmersiveStage
+  ? "flex w-full items-center justify-between font-semibold text-[#594434] text-[0.62rem] uppercase tracking-[0.32em]"
+  : "flex w-full items-center justify-between font-semibold text-[#87a0ff] text-[0.6rem] uppercase tracking-[0.3em]";
+const headerIndicatorClass = isImmersiveStage
+  ? isConnected
+    ? "inline-flex h-2.5 w-2.5 rounded-full bg-[#4ecb7a]"
+    : "inline-flex h-2.5 w-2.5 rounded-full bg-[#ffb0c1]"
+  : isConnected
+    ? "inline-flex h-2.5 w-2.5 rounded-full bg-[#7dd87d]"
+    : "inline-flex h-2.5 w-2.5 rounded-full bg-[#ff9bae]";
+const stageCanvasWrapperClass = isImmersiveStage
+  ? "relative mt-2 w-full"
+  : "relative mt-4";
+const live2dClassName = isImmersiveStage
+  ? "h-[34rem] w-full md:h-[48rem] drop-shadow-[0_30px_90px_rgba(174,130,90,0.48)]"
+  : "h-[26rem] w-full rounded-[28px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[34rem]";
+const quoteClass = isImmersiveStage
+  ? "mt-6 text-center text-[#5b4635] text-sm md:text-base font-medium"
+  : "mt-4 text-center text-[#6f6a92] text-xs md:text-sm";
+
+return (
+  <div
+    className="relative min-h-[100svh] overflow-hidden text-[#2f2d4b]"
+    style={{ backgroundColor: backgroundTheme.baseColor }}
+  >
+    <div className="absolute inset-0">
+      <div
+        className="absolute inset-0"
+        style={{ backgroundImage: backgroundTheme.primaryGradient }}
+      />
+      <div
+        className="absolute inset-0 mix-blend-screen"
+        style={{
+          backgroundImage: backgroundTheme.radialOverlay.gradient,
+          opacity: backgroundTheme.radialOverlay.opacity,
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: backgroundTheme.patternOverlay.image,
+          opacity: backgroundTheme.patternOverlay.opacity,
+        }}
+      />
+      <div
+        className="absolute inset-0 mix-blend-multiply"
+        style={{
+          backgroundImage: backgroundTheme.accentOverlay.image,
+          opacity: backgroundTheme.accentOverlay.opacity,
+        }}
+      />
     </div>
-  );
 
-  const backgroundTheme = selectedModel.backgroundTheme;
-  const floatingElements =
-    selectedModel.floatingElements ?? defaultFloatingElements;
-  const floatingShadowColor =
-    selectedModel.id === "chubbie"
-      ? "rgba(186, 140, 104, 0.38)"
-      : "rgba(210, 180, 255, 0.35)";
-  const isImmersiveStage = Boolean(selectedModel.immersiveStage);
-  const stageWrapperClass = isImmersiveStage
-    ? "relative w-full max-w-5xl"
-    : "relative w-full max-w-3xl";
-  const stageGlowClass = isImmersiveStage
-    ? "-inset-20 absolute -z-10 rounded-[140px] blur-3xl pointer-events-none"
-    : "-inset-5 absolute -z-10 rounded-[40px] bg-gradient-to-br from-[#ffe1f1]/60 via-[#d8ecff]/60 to-[#fff6d9]/60 blur-3xl pointer-events-none";
-  const stageGlowStyle: React.CSSProperties | undefined = isImmersiveStage
-    ? {
-      background:
-        "radial-gradient(circle at 50% 30%, rgba(255,206,164,0.48) 0%, rgba(170,126,88,0.26) 50%, transparent 78%)",
-      opacity: 0.7,
-    }
-    : undefined;
-  const stageInnerClass = isImmersiveStage
-    ? "relative z-10 flex flex-col items-center gap-6 px-2 pt-4 pb-8 md:px-6 md:pt-6 md:pb-12"
-    : "relative z-10 overflow-hidden rounded-[32px] border border-white/80 bg-white/80 px-5 pt-6 pb-8 shadow-[0_24px_60px_rgba(200,208,255,0.35)] backdrop-blur-xl md:px-8";
-  const stageHeaderClass = isImmersiveStage
-    ? "flex w-full items-center justify-between font-semibold text-[#594434] text-[0.62rem] uppercase tracking-[0.32em]"
-    : "flex w-full items-center justify-between font-semibold text-[#87a0ff] text-[0.6rem] uppercase tracking-[0.3em]";
-  const headerIndicatorClass = isImmersiveStage
-    ? isConnected
-      ? "inline-flex h-2.5 w-2.5 rounded-full bg-[#4ecb7a]"
-      : "inline-flex h-2.5 w-2.5 rounded-full bg-[#ffb0c1]"
-    : isConnected
-      ? "inline-flex h-2.5 w-2.5 rounded-full bg-[#7dd87d]"
-      : "inline-flex h-2.5 w-2.5 rounded-full bg-[#ff9bae]";
-  const stageCanvasWrapperClass = isImmersiveStage
-    ? "relative mt-2 w-full"
-    : "relative mt-4";
-  const live2dClassName = isImmersiveStage
-    ? "h-[34rem] w-full md:h-[48rem] drop-shadow-[0_30px_90px_rgba(174,130,90,0.48)]"
-    : "h-[26rem] w-full rounded-[28px] border border-white/70 bg-gradient-to-b from-white/60 to-[#f5e7ff]/40 md:h-[34rem]";
-  const quoteClass = isImmersiveStage
-    ? "mt-6 text-center text-[#5b4635] text-sm md:text-base font-medium"
-    : "mt-4 text-center text-[#6f6a92] text-xs md:text-sm";
-
-  return (
-    <div
-      className="relative min-h-[100svh] overflow-hidden text-[#2f2d4b]"
-      style={{ backgroundColor: backgroundTheme.baseColor }}
-    >
-      <div className="absolute inset-0">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {floatingElements.map((item, idx) => (
         <div
-          className="absolute inset-0"
-          style={{ backgroundImage: backgroundTheme.primaryGradient }}
-        />
-        <div
-          className="absolute inset-0 mix-blend-screen"
+          key={`${item.type}-${idx}`}
+          className="absolute"
           style={{
-            backgroundImage: backgroundTheme.radialOverlay.gradient,
-            opacity: backgroundTheme.radialOverlay.opacity,
+            top: `${item.top}%`,
+            left: `${item.left}%`,
+            width: `${item.size}px`,
+            height: `${item.size}px`,
+            transform: `rotate(${item.rotate}deg) scale(${item.scale})`,
+            animation: `${item.animation} ${item.duration}s ease-in-out infinite`,
+            animationDelay: item.delay,
+            opacity: item.opacity,
+            filter: `drop-shadow(0 18px 40px ${floatingShadowColor})`,
           }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: backgroundTheme.patternOverlay.image,
-            opacity: backgroundTheme.patternOverlay.opacity,
-          }}
-        />
-        <div
-          className="absolute inset-0 mix-blend-multiply"
-          style={{
-            backgroundImage: backgroundTheme.accentOverlay.image,
-            opacity: backgroundTheme.accentOverlay.opacity,
-          }}
-        />
-      </div>
+        >
+          {renderFloatingShape(item.type)}
+        </div>
+      ))}
+    </div>
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {floatingElements.map((item, idx) => (
-          <div
-            key={`${item.type}-${idx}`}
-            className="absolute"
-            style={{
-              top: `${item.top}%`,
-              left: `${item.left}%`,
-              width: `${item.size}px`,
-              height: `${item.size}px`,
-              transform: `rotate(${item.rotate}deg) scale(${item.scale})`,
-              animation: `${item.animation} ${item.duration}s ease-in-out infinite`,
-              animationDelay: item.delay,
-              opacity: item.opacity,
-              filter: `drop-shadow(0 18px 40px ${floatingShadowColor})`,
-            }}
-          >
-            {renderFloatingShape(item.type)}
-          </div>
-        ))}
-      </div>
+    <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center gap-6 px-4 py-6 md:px-6 lg:gap-10">
+      <header className="max-w-xl space-y-3 text-center lg:max-w-2xl">
+        <span className="inline-flex items-center rounded-full bg-white/70 px-3.5 py-0.5 font-semibold text-[#ff79a8] text-[0.65rem] uppercase tracking-[0.25em] shadow-sm">
+          Say hello to {selectedModel.name}
+        </span>
+        <h1
+          className={`${headlineFont.className} text-3xl text-[#2f2d4b] leading-snug tracking-tight md:text-[2.75rem] md:leading-tight`}
+        >
+          {selectedModel.headline}
+        </h1>
+        <p
+          className={`${subtitleFont.className} text-[#6f6a92] text-sm md:text-base`}
+        >
+          {selectedModel.description}
+        </p>
+      </header>
 
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center gap-6 px-4 py-6 md:px-6 lg:gap-10">
-        <header className="max-w-xl space-y-3 text-center lg:max-w-2xl">
-          <span className="inline-flex items-center rounded-full bg-white/70 px-3.5 py-0.5 font-semibold text-[#ff79a8] text-[0.65rem] uppercase tracking-[0.25em] shadow-sm">
-            Say hello to {selectedModel.name}
-          </span>
-          <h1
-            className={`${headlineFont.className} text-3xl text-[#2f2d4b] leading-snug tracking-tight md:text-[2.75rem] md:leading-tight`}
-          >
-            {selectedModel.headline}
-          </h1>
-          <p
-            className={`${subtitleFont.className} text-[#6f6a92] text-sm md:text-base`}
-          >
-            {selectedModel.description}
-          </p>
-        </header>
+      <main className="flex w-full max-w-5xl flex-col items-center gap-8">
+        {renderCharacterSwitch()}
 
-        <main className="flex w-full max-w-5xl flex-col items-center gap-8">
-          {renderCharacterSwitch()}
-
-          <div className={stageWrapperClass}>
-            <div className={stageGlowClass} style={stageGlowStyle} />
-            <div className={stageInnerClass}>
-              <div className={stageHeaderClass}>
-                <span>{selectedModel.name}</span>
-                <span className="flex items-center gap-2">
-                  <span className={headerIndicatorClass} />
-                  {isConnected ? "Online" : "Waiting"}
-                </span>
-              </div>
-              <div className={stageCanvasWrapperClass}>
-                <ClientOnlyLive2D
-                  key={selectedModel.id}
-                  ref={live2dRef}
-                  modelPath={selectedModel.path}
-                  audioTrack={remoteAudioTrack}
-                  mouthConfig={selectedModel.mouthConfig}
-                  expressions={selectedModel.expressions}
-                  motions={selectedModel.motions}
-                  onModelLoaded={handleModelLoaded}
-                  className={live2dClassName}
-                />
-              </div>
-              <p className={quoteClass}>
-                “{selectedModel.quote}”
-              </p>
-            </div>
-          </div>
-
-          <div className="flex w-full max-w-3xl flex-col items-center gap-4">
-            <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[0.7rem] md:text-xs">
-              <span
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isConnected
-                  ? "bg-[#e6f8ff] text-[#236d94]"
-                  : "bg-[#ffe8ef] text-[#b34f6a]"
-                  }`}
-              >
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ${isConnected ? "bg-[#38a8d8]" : "bg-[#f0708f]"
-                    }`}
-                />
-                {isConnected
-                  ? selectedModel.connectionGreeting ??
-                  `My name is ${selectedModel.name}.`
-                  : "Not connected"}
-              </span>
-              <span
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isMuted
-                  ? "bg-[#ffe8ef] text-[#b34f6a]"
-                  : "bg-[#ecfce1] text-[#2f7d3e]"
-                  }`}
-              >
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ${isMuted ? "bg-[#f0708f]" : "bg-[#4cc073]"
-                    }`}
-                />
-                {isMuted ? "Mic muted" : "Mic open"}
+        <div className={stageWrapperClass}>
+          <div className={stageGlowClass} style={stageGlowStyle} />
+          <div className={stageInnerClass}>
+            <div className={stageHeaderClass}>
+              <span>{selectedModel.name}</span>
+              <span className="flex items-center gap-2">
+                <span className={headerIndicatorClass} />
+                {isConnected ? "Online" : "Waiting"}
               </span>
             </div>
+            <div className={stageCanvasWrapperClass}>
+              <ClientOnlyLive2D
+                key={selectedModel.id}
+                ref={live2dRef}
+                modelPath={selectedModel.path}
+                audioTrack={remoteAudioTrack}
+                mouthConfig={selectedModel.mouthConfig}
+                expressions={selectedModel.expressions}
+                motions={selectedModel.motions}
+                onModelLoaded={handleModelLoaded}
+                className={live2dClassName}
+              />
+            </div>
+            <p className={quoteClass}>
+              “{selectedModel.quote}”
+            </p>
+          </div>
+        </div>
 
-            <div className="flex items-center justify-center gap-4">
-              <button
-                onClick={handleMicToggle}
-                disabled={!isConnected}
-                className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border text-lg shadow-lg transition-all duration-200 ${!isConnected
-                  ? "cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60"
-                  : isMuted
-                    ? "border-[#ffcfe0] bg-[#ffe7f0] text-[#b44f6c] hover:bg-[#ffd9e8]"
-                    : "border-[#cde5ff] bg-[#e7f3ff] text-[#2f63a1] hover:bg-[#d8ecff]"
+        <div className="flex w-full max-w-3xl flex-col items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[0.7rem] md:text-xs">
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isConnected
+                ? "bg-[#e6f8ff] text-[#236d94]"
+                : "bg-[#ffe8ef] text-[#b34f6a]"
+                }`}
+            >
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${isConnected ? "bg-[#38a8d8]" : "bg-[#f0708f]"
                   }`}
-              >
-                {isMuted ? (
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                    <path
-                      d="M3 3l18 18"
+              />
+              {isConnected
+                ? selectedModel.connectionGreeting ??
+                `My name is ${selectedModel.name}.`
+                : "Not connected"}
+            </span>
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ${isMuted
+                ? "bg-[#ffe8ef] text-[#b34f6a]"
+                : "bg-[#ecfce1] text-[#2f7d3e]"
+                }`}
+            >
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${isMuted ? "bg-[#f0708f]" : "bg-[#4cc073]"
+                  }`}
+              />
+              {isMuted ? "Mic muted" : "Mic open"}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={handleMicToggle}
+              disabled={!isConnected}
+              className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border text-lg shadow-lg transition-all duration-200 ${!isConnected
+                ? "cursor-not-allowed border-[#e9e7f7] bg-white text-[#b7b4c9] opacity-60"
+                : isMuted
+                  ? "border-[#ffcfe0] bg-[#ffe7f0] text-[#b44f6c] hover:bg-[#ffd9e8]"
+                  : "border-[#cde5ff] bg-[#e7f3ff] text-[#2f63a1] hover:bg-[#d8ecff]"
+                }`}
+            >
+              {isMuted ? (
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                  <path
+                    d="M3 3l18 18"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeWidth="2"
+                  />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              onClick={handleConnectToggle}
+              disabled={isConnecting}
+              className={`relative flex h-14 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-sm leading-tight shadow-lg transition-all duration-200 ${isConnecting
+                ? "cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]"
+                : isConnected
+                  ? "border-[#ffcfe0] bg-[#ffe6f3] text-[#b44f6c] hover:bg-[#ffd9eb]"
+                  : "border-[#cbeec4] bg-[#e7f8df] text-[#2f7036] hover:bg-[#def6d2]"
+                }`}
+            >
+              {isConnecting ? (
+                <>
+                  <svg
+                    className="h-4 w-4 animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
                       stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeWidth="2"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                ) : (
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                  <span className="text-center text-sm">
+                    Calling {selectedModel.name}...
+                  </span>
+                </>
+              ) : isConnected ? (
+                <>
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="6" y="6" width="12" height="12" rx="2" />
                   </svg>
-                )}
-              </button>
-
-              <button
-                onClick={handleConnectToggle}
-                disabled={isConnecting}
-                className={`relative flex h-14 w-60 items-center justify-center gap-2 rounded-2xl border px-6 text-center font-semibold text-sm leading-tight shadow-lg transition-all duration-200 ${isConnecting
-                  ? "cursor-progress border-[#cde5ff] bg-[#e7f3ff] text-[#5a6a96]"
-                  : isConnected
-                    ? "border-[#ffcfe0] bg-[#ffe6f3] text-[#b44f6c] hover:bg-[#ffd9eb]"
-                    : "border-[#cbeec4] bg-[#e7f8df] text-[#2f7036] hover:bg-[#def6d2]"
-                  }`}
-              >
-                {isConnecting ? (
-                  <>
-                    <svg
-                      className="h-4 w-4 animate-spin"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    <span className="text-center text-sm">
-                      Calling {selectedModel.name}...
-                    </span>
-                  </>
-                ) : isConnected ? (
-                  <>
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <rect x="6" y="6" width="12" height="12" rx="2" />
-                    </svg>
-                    <span className="text-center text-sm">End session</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                    <span className="text-center text-sm">
-                      Connect with {selectedModel.name}
-                    </span>
-                  </>
-                )}
-              </button>
-            </div>
+                  <span className="text-center text-sm">End session</span>
+                </>
+              ) : (
+                <>
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  <span className="text-center text-sm">
+                    Connect with {selectedModel.name}
+                  </span>
+                </>
+              )}
+            </button>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
-  );
+  </div>
+);
 }
