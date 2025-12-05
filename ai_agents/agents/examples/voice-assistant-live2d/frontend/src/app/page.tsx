@@ -1317,8 +1317,8 @@ export default function Home() {
               const startResult = await apiStartService({
                 channel: agoraConfig.channel,
                 userId: agoraConfig.uid || 0,
-                graphName: "voice_assistant_live2d",
-                language: "en",
+                graphName: process.env.NEXT_PUBLIC_GRAPH_NAME || "voice_assistant_live2d",
+                language: process.env.NEXT_PUBLIC_LANGUAGE || "en-US",
                 voiceType: selectedModel.voiceType,
               });
 
