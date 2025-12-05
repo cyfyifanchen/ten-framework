@@ -1,6 +1,6 @@
 [build]
   base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
-  command = "npm run build && cp -r public .next/standalone/public"
+  command = "npm run build && mkdir -p .next/standalone/public && cp -r public/* .next/standalone/public/ && cp -r public .next/"
   publish = ".next"
 
 [[plugins]]
