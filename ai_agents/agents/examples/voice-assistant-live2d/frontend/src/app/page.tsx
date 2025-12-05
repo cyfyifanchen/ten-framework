@@ -1317,7 +1317,7 @@ export default function Home() {
               const startResult = await apiStartService({
                 channel: agoraConfig.channel,
                 userId: agoraConfig.uid || 0,
-                graphName: "va_openai_azure",
+                graphName: "voice_assistant_live2d",
                 language: "en",
                 voiceType: selectedModel.voiceType,
               });
