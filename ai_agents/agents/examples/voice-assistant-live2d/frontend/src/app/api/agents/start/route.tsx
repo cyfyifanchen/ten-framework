@@ -40,12 +40,28 @@ export async function POST(request: NextRequest) {
         const responseData = response.data;
 
         return NextResponse.json(responseData, { status: response.status });
-    } catch (error) {
+    } catch (error: any) {
+        console.error("[API] Start agent failed:", error);
+
+        if (axios.isAxiosError(error)) {
+            const status = error.response?.status || 500;
+            const data = error.response?.data || {
+                code: "1",
+                msg: error.message || "Internal Server Error",
+                data: null
+            };
+            return NextResponse.json(data, { status });
+        }
+
         if (error instanceof Response) {
             const errorData = await error.json();
             return NextResponse.json(errorData, { status: error.status });
         } else {
-            return NextResponse.json({ code: "1", data: null, msg: "Internal Server Error" }, { status: 500 });
+            return NextResponse.json({
+                code: "1",
+                data: null,
+                msg: typeof error === 'string' ? error : (error.message || "Internal Server Error")
+            }, { status: 500 });
         }
     }
 }
