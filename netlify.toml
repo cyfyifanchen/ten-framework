@@ -1,7 +1,11 @@
 [build]
   base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
-  command = "npm run build && mkdir -p .next/standalone/public && cp -r public/* .next/standalone/public/ && cp -r public .next/"
+  command = "pnpm run build"
   publish = ".next"
+
+[functions]
+  # Disable functions to ensure static assets are served correctly
+  directory = "netlify/functions"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

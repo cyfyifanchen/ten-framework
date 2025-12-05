@@ -8,7 +8,6 @@
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build",
-        "postbuild": "mkdir -p .next/standalone/public && cp -r public/* .next/standalone/public/",
         "start": "next start",
         "lint": "next lint"
     },

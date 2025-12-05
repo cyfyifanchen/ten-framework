@@ -596,7 +596,8 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(function 
                 }
 
                 const origin = typeof window !== "undefined" ? window.location.origin : "";
-                const src = `${origin}/lib/live2dcubismcore.min.js`;
+                const basePath = "/live2d";
+                const src = `${origin}${basePath}/lib/live2dcubismcore.min.js`;
                 const existing = document.querySelector(`script[src="${src}"]`);
                 if (!existing) {
                     const s = document.createElement("script");

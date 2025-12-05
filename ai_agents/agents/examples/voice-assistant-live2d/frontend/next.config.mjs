@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  // Removed 'standalone' output for Netlify deployment
+  // The @netlify/plugin-nextjs handles the build process
   basePath: '/live2d',
   reactStrictMode: false, // Disable strict mode to prevent double mounting issues with PIXI
   async rewrites() {
