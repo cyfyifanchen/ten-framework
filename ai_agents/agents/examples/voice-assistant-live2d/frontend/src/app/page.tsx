@@ -1409,6 +1409,21 @@ export default function Home() {
       className="relative min-h-[100svh] overflow-hidden text-[#2f2d4b]"
       style={{ backgroundColor: backgroundTheme.baseColor }}
     >
+      <div className="absolute left-4 top-4 z-30 flex items-center gap-2 rounded-full bg-white/85 px-3 py-2 shadow-sm backdrop-blur">
+        <img
+          src="/images/logo-w-title.png"
+          alt="TEN logo"
+          className="h-8 w-auto"
+          loading="lazy"
+        />
+        <span className="text-xs font-semibold text-[#8c8aa6]">×</span>
+        <img
+          src="/images/minimax.webp"
+          alt="Minimax logo"
+          className="h-8 w-auto"
+          loading="lazy"
+        />
+      </div>
       <div className="absolute inset-0">
         <div
           className="absolute inset-0"
