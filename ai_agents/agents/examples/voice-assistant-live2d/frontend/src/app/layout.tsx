@@ -6,8 +6,8 @@ import Script from 'next/script'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: 'Live2D Voice Assistant',
-    description: 'Real-time voice assistant with Live2D character',
+    title: 'TEN x Minimax - experience the latest Minimax TTS with human like voices',
+    description: 'TEN x Minimax Live2D assistant: experience the latest Minimax TTS with human-like voices, powered by TEN.',
 }
 
 export default function RootLayout({
