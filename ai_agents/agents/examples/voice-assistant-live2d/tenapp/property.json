@@ -48,7 +48,7 @@
                 "max_tokens": 512,
                 "prompt": "",
                 "proxy_url": "${env:OPENAI_PROXY_URL|}",
-                "greeting": "Hello there, nice to meet you! I’m your anime assistant—what’s your name?",
+                "greeting": "TEN Agent connected. How can I help you today?",
                 "max_memory_length": 10
               }
             },
@@ -77,10 +77,10 @@
             {
               "type": "extension",
               "name": "main_control",
-              "addon": "main_python",
+              "addon": "main_cascade_python",
               "extension_group": "control",
               "property": {
-                "greeting": "Hello there, nice to meet you! I’m your anime assistant—what’s your name?"
+                "greeting": "TEN Agent connected. How can I help you today?"
               }
             },
             {
