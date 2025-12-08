@@ -25,7 +25,18 @@
   status = 200
   force = true
 
-# Serve the app at /live2d/* by rewriting to root files
+# Serve the app at /live2d/ by rewriting to root index
+[[redirects]]
+  from = "/live2d"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/live2d/"
+  to = "/index.html"
+  status = 200
+
+# Serve other /live2d/* files by rewriting to root
 [[redirects]]
   from = "/live2d/*"
   to = "/:splat"
