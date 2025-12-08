@@ -1165,7 +1165,7 @@ export default function Home() {
       stopPing();
     }
     const interval = setInterval(() => {
-      const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p";
+      const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "ten_agent_test";
       apiPing(channelName);
     }, 3000);
     setPingInterval(interval);
@@ -1201,7 +1201,7 @@ export default function Home() {
           setIsConnecting(true);
           // Stop the agent service first
           try {
-            const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p";
+            const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "ten_agent_test";
             await apiStopService(channelName);
             console.log("Agent stopped");
           } catch (error) {
