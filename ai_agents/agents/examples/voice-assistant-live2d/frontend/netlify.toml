@@ -76,12 +76,13 @@
 
 [context.production.environment]
   NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
-  NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "https://ten-framework-assets.s3.amazonaws.com/live2d-models"
+  # Use same-origin path so Netlify proxy handles CORS to S3
+  NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
 
 [context.deploy-preview.environment]
   NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
-  NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "https://ten-framework-assets.s3.amazonaws.com/live2d-models"
+  NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
 
 [context.branch-deploy.environment]
   NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
-  NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "https://ten-framework-assets.s3.amazonaws.com/live2d-models"
+  NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
