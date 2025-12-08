@@ -1,6 +1,6 @@
 [build]
   base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
-  command = "pnpm run build"
+  command = "pnpm run build && mkdir -p out_final/live2d && cp -r out/* out_final/live2d/ && rm -rf out && mv out_final out"
   publish = "out"
 
 [functions]
@@ -29,28 +29,6 @@
   from = "/"
   to = "/live2d"
   status = 301
-  force = true
-
-[[redirects]]
-  from = "/_next/*"
-  to = "/_next/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/live2d/_next/*"
-  to = "/live2d/_next/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/lib/*"
-  to = "/lib/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/live2d/lib/*"
-  to = "/lib/:splat"
-  status = 200
   force = true
 
 [[headers]]
