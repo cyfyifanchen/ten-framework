@@ -19,6 +19,13 @@
   status = 200
   force = true
 
+# Catch-all proxy for other API routes (start, stop, ping, etc.)
+[[redirects]]
+  from = "/api/*"
+  to = "https://agent.theten.ai/api/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/models/*"
   to = "https://ten-framework-assets.s3.amazonaws.com/live2d-models/:splat"
