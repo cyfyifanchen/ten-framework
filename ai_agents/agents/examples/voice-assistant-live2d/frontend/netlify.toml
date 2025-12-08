@@ -76,14 +76,13 @@
   force = true
 
 [context.production.environment]
-  NEXT_PUBLIC_API_BASE_URL = "/api"
-  # Use same-origin path so Netlify proxy handles CORS to S3
+  NEXT_PUBLIC_API_BASE_URL = "/api/agents"
   NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
 
 [context.deploy-preview.environment]
-  NEXT_PUBLIC_API_BASE_URL = "https://agent.theten.ai/api"
+  NEXT_PUBLIC_API_BASE_URL = "/api/agents"
   NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
 
 [context.branch-deploy.environment]
-  NEXT_PUBLIC_API_BASE_URL = "https://agent.theten.ai/api"
+  NEXT_PUBLIC_API_BASE_URL = "/api/agents"
   NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
