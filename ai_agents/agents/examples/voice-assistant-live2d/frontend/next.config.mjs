@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export', // Enable static export for Netlify
-  basePath: '/live2d',
+  // Remove basePath - serve from root and use Netlify redirects to map /live2d
   reactStrictMode: false, // Disable strict mode to prevent double mounting issues with PIXI
   images: {
     unoptimized: true, // Required for static export

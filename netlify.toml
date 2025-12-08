@@ -1,6 +1,6 @@
 [build]
   base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
-  command = "pnpm run build && mkdir -p out_final/live2d && cp -r out/* out_final/live2d/ && rm -rf out && mv out_final out"
+  command = "pnpm run build"
   publish = "out"
 
 [functions]
@@ -20,16 +20,22 @@
   force = true
 
 [[redirects]]
-  from = "/live2d/models/*"
+  from = "/models/*"
   to = "https://ten-framework-assets.s3.amazonaws.com/live2d-models/:splat"
   status = 200
   force = true
 
+# Serve the app at /live2d/* by rewriting to root files
+[[redirects]]
+  from = "/live2d/*"
+  to = "/:splat"
+  status = 200
+
+# Redirect root to /live2d
 [[redirects]]
   from = "/"
-  to = "/live2d"
+  to = "/live2d/"
   status = 301
-  force = true
 
 [[headers]]
   for = "/api/*"
