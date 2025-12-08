@@ -14,6 +14,23 @@
   status = 200
   force = true
 
+# Serve the SPA from /live2d by rewriting to the built index
+[[redirects]]
+  from = "/live2d"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/live2d/"
+  to = "/index.html"
+  status = 200
+
+# Allow deep links under /live2d to resolve to static assets
+[[redirects]]
+  from = "/live2d/*"
+  to = "/:splat"
+  status = 200
+
 [[redirects]]
   from = "/live2d/models/*"
   to = "https://ten-framework-assets.s3.amazonaws.com/live2d-models/:splat"
@@ -31,7 +48,7 @@
 
 [[redirects]]
   from = "/"
-  to = "/live2d"
+  to = "/live2d/"
   status = 301
   force = true
 
@@ -54,13 +71,6 @@
 [[redirects]]
   from = "/live2d/lib/*"
   to = "/lib/:splat"
-  status = 200
-  force = true
-
-# Catch-all fallback to the app entry (after API rules)
-[[redirects]]
-  from = "/*"
-  to = "/live2d"
   status = 200
   force = true
 

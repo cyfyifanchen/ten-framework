@@ -6,11 +6,6 @@ const nextConfig = {
   images: {
     unoptimized: true, // Required for static export
   },
-  async rewrites() {
-    // Note: rewrites don't work in static export mode
-    // Model loading is handled by Netlify redirects instead
-    return [];
-  },
   webpack: (config, { webpack }) => {
     // Provide PIXI as a global variable for pixi-live2d-display
     config.plugins.push(
