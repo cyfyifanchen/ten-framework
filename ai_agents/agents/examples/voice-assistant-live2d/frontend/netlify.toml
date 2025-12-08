@@ -4,13 +4,13 @@
 
 [[redirects]]
   from = "/api/token/*"
-  to = "https://api.theten.ai/token/:splat"
+  to = "https://agent.theten.ai/api/token/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/agents/*"
-  to = "https://api.theten.ai/:splat"
+  to = "https://agent.theten.ai/api/agents/:splat"
   status = 200
   force = true
 
@@ -45,7 +45,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://api.theten.ai https://ten-framework-assets.s3.amazonaws.com https://*.agora.io wss://*.agora.io; img-src 'self' data: blob: https://ten-framework-assets.s3.amazonaws.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://agent.theten.ai https://ten-framework-assets.s3.amazonaws.com https://*.agora.io wss://*.agora.io; img-src 'self' data: blob: https://ten-framework-assets.s3.amazonaws.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
 
 [[redirects]]
   from = "/"
@@ -76,14 +76,14 @@
   force = true
 
 [context.production.environment]
-  NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
+  NEXT_PUBLIC_API_BASE_URL = "https://agent.theten.ai/api"
   # Use same-origin path so Netlify proxy handles CORS to S3
   NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
 
 [context.deploy-preview.environment]
-  NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
+  NEXT_PUBLIC_API_BASE_URL = "https://agent.theten.ai/api"
   NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
 
 [context.branch-deploy.environment]
-  NEXT_PUBLIC_API_BASE_URL = "https://api.theten.ai"
+  NEXT_PUBLIC_API_BASE_URL = "https://agent.theten.ai/api"
   NEXT_PUBLIC_LIVE2D_REMOTE_MODELS_BASE_URL = "/live2d/models"
