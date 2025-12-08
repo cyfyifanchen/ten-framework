@@ -83,7 +83,9 @@ class GradiumTTSExtension(AsyncTTS2BaseExtension):
             try:
                 await self.client.clean()
             except Exception as e:
-                ten_env.log_warn(f"Error cleaning client: {traceback.format_exc()}")
+                ten_env.log_warn(
+                    f"Error cleaning client: {traceback.format_exc()}"
+                )
             self.client = None
 
         for request_id, recorder in self.recorder_map.items():
@@ -211,9 +213,9 @@ class GradiumTTSExtension(AsyncTTS2BaseExtension):
                         and self.current_request_id
                         and self.current_request_id in self.recorder_map
                     ):
-                        await self.recorder_map[
-                            self.current_request_id
-                        ].write(audio_chunk)
+                        await self.recorder_map[self.current_request_id].write(
+                            audio_chunk
+                        )
 
                     await self.send_tts_audio_data(audio_chunk)
 
@@ -289,11 +291,7 @@ class GradiumTTSExtension(AsyncTTS2BaseExtension):
             reason=reason,
         )
 
-        if (
-            self.config
-            and self.config.dump
-            and request_id in self.recorder_map
-        ):
+        if self.config and self.config.dump and request_id in self.recorder_map:
             try:
                 await self.recorder_map[request_id].flush()
             except Exception as e:
@@ -312,8 +310,6 @@ class GradiumTTSExtension(AsyncTTS2BaseExtension):
         bytes_per_sample = self.synthesize_audio_sample_width()
         channels = self.synthesize_audio_channels()
         duration_sec = self.total_audio_bytes / (
-            self.synthesize_audio_sample_rate()
-            * bytes_per_sample
-            * channels
+            self.synthesize_audio_sample_rate() * bytes_per_sample * channels
         )
         return int(duration_sec * 1000)
