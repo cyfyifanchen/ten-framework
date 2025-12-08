@@ -2,9 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-// Force dynamic rendering
-export const dynamic = "force-dynamic";
-
 import dynamicImport from "next/dynamic";
 import { Baloo_2, Quicksand } from "next/font/google";
 import type {
