@@ -1,16 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Removed 'standalone' output for Netlify deployment
-  // The @netlify/plugin-nextjs handles the build process
+  output: 'export', // Enable static export for Netlify
   basePath: '/live2d',
   reactStrictMode: false, // Disable strict mode to prevent double mounting issues with PIXI
+  images: {
+    unoptimized: true, // Required for static export
+  },
   async rewrites() {
-    return [
-      {
-        source: '/live2d/models/:path*',
-        destination: 'https://ten-framework-assets.s3.amazonaws.com/live2d-models/:path*',
-      },
-    ];
+    // Note: rewrites don't work in static export mode
+    // Model loading is handled by Netlify redirects instead
+    return [];
   },
   webpack: (config, { webpack }) => {
     // Provide PIXI as a global variable for pixi-live2d-display

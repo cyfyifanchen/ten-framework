@@ -1,14 +1,11 @@
 [build]
   base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
   command = "pnpm run build"
-  publish = ".next"
+  publish = "out"
 
 [functions]
   # Disable functions to ensure static assets are served correctly
   directory = "netlify/functions"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
 
 [[redirects]]
   from = "/api/token/*"

@@ -18,7 +18,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <Script src="/lib/live2dcubismcore.min.js" strategy="beforeInteractive" />
+                <Script src="/live2d/lib/live2dcubismcore.min.js" strategy="beforeInteractive" />
             </head>
             <body className={inter.className}>
                 {children}
