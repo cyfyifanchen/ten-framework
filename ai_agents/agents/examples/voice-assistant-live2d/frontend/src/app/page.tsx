@@ -1409,20 +1409,34 @@ export default function Home() {
       className="relative min-h-[100svh] overflow-hidden text-[#2f2d4b]"
       style={{ backgroundColor: backgroundTheme.baseColor }}
     >
-      <div className="absolute left-4 top-4 z-30 flex items-center gap-2 rounded-full bg-white/85 px-3 py-2 shadow-sm backdrop-blur">
-        <img
-          src="/images/logo-w-title.png"
-          alt="TEN logo"
-          className="h-8 w-auto"
-          loading="lazy"
-        />
-        <span className="text-xs font-semibold text-[#8c8aa6]">×</span>
-        <img
-          src="/images/minimax.webp"
-          alt="Minimax logo"
-          className="h-8 w-auto"
-          loading="lazy"
-        />
+      <div className="absolute left-4 top-6 z-30 flex items-center gap-3 px-2 py-1">
+        <a
+          href="https://github.com/ten-framework/ten-framework"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center"
+        >
+          <img
+            src="/images/logo-w-title.png"
+            alt="TEN logo"
+            className="h-6 w-auto mix-blend-multiply"
+            loading="lazy"
+          />
+        </a>
+        <span className="text-[11px] font-semibold text-[#6b6685]">×</span>
+        <a
+          href="https://www.minimax.io/"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center"
+        >
+          <img
+            src="/images/minimax.webp"
+            alt="Minimax logo"
+            className="h-6 w-auto mix-blend-multiply"
+            loading="lazy"
+          />
+        </a>
       </div>
       <div className="absolute inset-0">
         <div
