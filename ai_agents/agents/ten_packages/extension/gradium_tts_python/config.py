@@ -23,22 +23,26 @@ class GradiumTTSConfig(BaseModel):
 
     def update_params(self) -> None:
         """Merge nested params into top-level fields for convenience."""
-        if "api_key" in self.params:
-            self.api_key = self.params.pop("api_key")
-        if "base_url" in self.params:
-            self.base_url = self.params.pop("base_url")
-        if "region" in self.params:
-            self.region = self.params.pop("region")
-        if "model_name" in self.params:
-            self.model_name = self.params.pop("model_name")
-        if "voice_id" in self.params:
-            self.voice_id = self.params.pop("voice_id")
-        if "output_format" in self.params:
-            self.output_format = self.params.pop("output_format")
-        if "dump" in self.params:
-            self.dump = self.params.pop("dump")
-        if "dump_path" in self.params:
-            self.dump_path = self.params.pop("dump_path")
+        params = dict(self.params)
+
+        if "api_key" in params:
+            self.api_key = params.pop("api_key")
+        if "base_url" in params:
+            self.base_url = params.pop("base_url")
+        if "region" in params:
+            self.region = params.pop("region")
+        if "model_name" in params:
+            self.model_name = params.pop("model_name")
+        if "voice_id" in params:
+            self.voice_id = params.pop("voice_id")
+        if "output_format" in params:
+            self.output_format = params.pop("output_format")
+        if "dump" in params:
+            self.dump = params.pop("dump")
+        if "dump_path" in params:
+            self.dump_path = params.pop("dump_path")
+
+        self.params = params
 
     def validate(self) -> None:
         """Validate configuration values."""

@@ -5,12 +5,11 @@
 import asyncio
 import base64
 import json
-from typing import AsyncIterator, Tuple
+from typing import Any, AsyncIterator, Tuple
 
 import websockets
 from ten_ai_base.const import LOG_CATEGORY_VENDOR
 from ten_runtime import AsyncTenEnv
-from websockets.client import WebSocketClientProtocol
 
 from .config import GradiumTTSConfig
 
@@ -31,7 +30,7 @@ class GradiumTTSClient:
     ):
         self.config = config
         self.ten_env = ten_env
-        self.ws: WebSocketClientProtocol | None = None
+        self.ws: Any | None = None
         self._is_cancelled = False
 
     async def start(self) -> None:
@@ -78,7 +77,7 @@ class GradiumTTSClient:
         await self._disconnect()
 
     async def get(
-        self, text: str, request_id: str, text_input_end: bool
+        self, text: str, request_id: str, _text_input_end: bool
     ) -> AsyncIterator[Tuple[bytes | None, int]]:
         """Send a TTS request and yield audio chunks."""
         if len(text.strip()) == 0:

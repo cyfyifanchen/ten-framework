@@ -83,9 +83,7 @@ class GradiumTTSExtension(AsyncTTS2BaseExtension):
             try:
                 await self.client.clean()
             except Exception as e:
-                ten_env.log_warn(
-                    f"Error cleaning client: {traceback.format_exc()}"
-                )
+                ten_env.log_warn(f"Error cleaning client: {e}")
             self.client = None
 
         for request_id, recorder in self.recorder_map.items():
