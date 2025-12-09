@@ -48,7 +48,7 @@
                 "max_tokens": 512,
                 "prompt": "",
                 "proxy_url": "${env:OPENAI_PROXY_URL|}",
-                "greeting": "TEN Agent connected. How can I help you today?",
+                "greeting": "This is Kei, how can I help you?",
                 "max_memory_length": 10
               }
             },
