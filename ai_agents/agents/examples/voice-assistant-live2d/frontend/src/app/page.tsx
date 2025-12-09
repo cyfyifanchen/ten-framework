@@ -1221,7 +1221,8 @@ export default function Home() {
             const body = JSON.stringify({
               request_id: Math.random().toString(36).substring(2, 15),
               uid: Math.floor(Math.random() * 100000),
-              channel_name: process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p",
+              // Default to the same channel as the property.json graph so agent and client stay in sync.
+              channel_name: process.env.NEXT_PUBLIC_CHANNEL_NAME || "ten_agent_test",
             });
 
             const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
