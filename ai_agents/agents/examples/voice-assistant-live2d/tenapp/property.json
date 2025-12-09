@@ -66,7 +66,7 @@
                     "sample_rate": 16000
                   },
                   "voice_setting": {
-                    "voice_id": "English_Jovialman"
+                    "voice_id": ""
                   },
                   "url": "wss://api.minimaxi.com/ws/v1/t2a_v2"
                 },

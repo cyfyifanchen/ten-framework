@@ -1653,6 +1653,11 @@ export default function Home() {
               </button>
             </div>
           </div>
+          <div className="mt-10 px-6 pb-8 text-center text-[11px] leading-relaxed text-[#7a7694] max-w-3xl mx-auto">
+            This content uses sample data owned and copyrighted by Live2D Inc. The sample data
+            are utilized in accordance with terms and conditions set by Live2D Inc. This
+            content itself is created at the author’s sole discretion.
+          </div>
         </main>
       </div>
     </div>
