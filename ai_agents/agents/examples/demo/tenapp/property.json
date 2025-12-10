@@ -2459,7 +2459,7 @@
                     "sample_rate": 16000
                   },
                   "voice_setting": {
-                    "voice_id": ""
+                    "voice_id": "Japanese_KindLady"
                   },
                   "url": "wss://api.minimax.io/ws/v1/t2a_v2"
                 },
