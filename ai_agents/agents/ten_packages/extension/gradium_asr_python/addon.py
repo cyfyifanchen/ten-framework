@@ -10,7 +10,9 @@ from .extension import GradiumASRExtension
 class GradiumASRExtensionAddon(Addon):
     """Addon class for registering the Gradium ASR extension."""
 
-    def on_create_instance(self, ten_env: TenEnv, addon_name: str, context) -> None:
+    def on_create_instance(
+        self, ten_env: TenEnv, addon_name: str, context
+    ) -> None:
         """
         Create an instance of the Gradium ASR extension.
 
@@ -19,5 +21,9 @@ class GradiumASRExtensionAddon(Addon):
             addon_name: Name of the addon.
             context: Context for instance creation.
         """
-        ten_env.log_info(f"Creating Gradium ASR extension instance: {addon_name}")
-        ten_env.on_create_instance_done(GradiumASRExtension(addon_name), context)
+        ten_env.log_info(
+            f"Creating Gradium ASR extension instance: {addon_name}"
+        )
+        ten_env.on_create_instance_done(
+            GradiumASRExtension(addon_name), context
+        )
