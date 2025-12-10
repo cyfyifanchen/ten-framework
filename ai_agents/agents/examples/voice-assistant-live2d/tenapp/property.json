@@ -80,7 +80,7 @@
               "addon": "main_cascade_python",
               "extension_group": "control",
               "property": {
-                "greeting": "TEN Agent connected. How can I help you today?"
+                "greeting": "TEN connected, how can I help you today?"
               }
             },
             {
