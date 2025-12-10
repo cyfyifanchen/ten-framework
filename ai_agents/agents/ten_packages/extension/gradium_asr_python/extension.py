@@ -13,6 +13,7 @@ from websockets.asyncio.client import ClientConnection
 from .config import GradiumASRConfig
 from .const import (
     LOG_CATEGORY_KEY_POINT,
+    MODULE_NAME_ASR,
     WS_MSG_TYPE_SETUP,
     WS_MSG_TYPE_READY,
     WS_MSG_TYPE_AUDIO,
@@ -83,9 +84,10 @@ class GradiumASRExtension(AsyncASRBaseExtension):
             )
         except Exception as e:
             ten_env.log_error(f"invalid property: {e}")
+            self.config = GradiumASRConfig.model_validate_json("{}")
             await self.send_asr_error(
                 ModuleError(
-                    module="asr",
+                    module=MODULE_NAME_ASR,
                     code=ModuleErrorCode.FATAL_ERROR.value,
                     message=str(e),
                 )
@@ -97,11 +99,13 @@ class GradiumASRExtension(AsyncASRBaseExtension):
 
     @override
     async def start_connection(self) -> None:
+        assert self.config is not None
+        self.ten_env.log_info("start_connection")
+
         if self.connected:
             return
 
         try:
-
             # Connect to WebSocket
             self.websocket = await websockets.connect(
                 self.config.get_websocket_url(),
@@ -119,7 +123,6 @@ class GradiumASRExtension(AsyncASRBaseExtension):
                 setup_message["language"] = self.config.language
 
             await self.websocket.send(json.dumps(setup_message))
-            logger.info(f"Sent setup message: {setup_message}")
 
             # Wait for ready message
             ready_msg = await self.websocket.recv()
@@ -142,7 +145,7 @@ class GradiumASRExtension(AsyncASRBaseExtension):
             self.connected = False
             await self.send_asr_error(
                 ModuleError(
-                    module="asr",
+                    module=MODULE_NAME_ASR,
                     code=ModuleErrorCode.FATAL_ERROR.value,
                     message=str(e),
                 ),
@@ -245,7 +248,7 @@ class GradiumASRExtension(AsyncASRBaseExtension):
             self.connected = False
             await self.send_asr_error(
                 ModuleError(
-                    module="asr",
+                    module=MODULE_NAME_ASR,
                     code=ModuleErrorCode.NON_FATAL_ERROR.value,
                     message=str(e),
                 ),

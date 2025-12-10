@@ -8,6 +8,9 @@ from ten_ai_base.const import LOG_CATEGORY_KEY_POINT
 EXTENSION_NAME = "gradium_asr_python"
 """Name of the Gradium ASR extension."""
 
+MODULE_NAME_ASR = "asr"
+"""Name of the ASR module."""
+
 PROPERTY_FILE_NAME = "property.json"
 """Name of the property configuration file."""
 

@@ -29,15 +29,13 @@
               "type": "string"
             },
             "region": {
-              "type": "string",
-              "enum": ["eu", "us"]
+              "type": "string"
             },
             "model_name": {
               "type": "string"
             },
             "input_format": {
-              "type": "string",
-              "enum": ["pcm", "wav", "opus"]
+              "type": "string"
             },
             "sample_rate": {
               "type": "int64"
@@ -49,5 +47,14 @@
         }
       }
     }
+  },
+  "package": {
+    "include": [
+      "manifest.json",
+      "property.json",
+      "**.py",
+      "requirements.txt",
+      "docs/**"
+    ]
   }
 }
