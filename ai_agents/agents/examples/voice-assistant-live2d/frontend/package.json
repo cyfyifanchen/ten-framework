@@ -7,7 +7,7 @@
     },
     "scripts": {
         "dev": "next dev --turbopack",
-        "build": "next build",
+        "build": "next build --webpack",
         "start": "next start",
         "lint": "next lint"
     },
@@ -27,7 +27,7 @@
         "clsx": "^2.1.1",
         "live2d-motionsync": "0.0.4",
         "lucide-react": "^0.454.0",
-        "next": "^15.0.3",
+        "next": "^16.0.7",
         "pixi-live2d-display": "^0.4.0",
         "pixi.js": "^6.5.10",
         "react": "^18",
@@ -41,8 +41,8 @@
         "@types/react": "^18",
         "@types/react-dom": "^18",
         "autoprefixer": "^10.4.20",
-        "eslint": "^8",
-        "eslint-config-next": "^15.0.3",
+        "eslint": "^9.39.1",
+        "eslint-config-next": "^16.0.7",
         "postcss": "^8.4.47",
         "tailwindcss": "^3.4.14",
         "typescript": "^5"

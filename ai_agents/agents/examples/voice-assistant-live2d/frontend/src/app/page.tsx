@@ -2,9 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-// Force dynamic rendering
-export const dynamic = "force-dynamic";
-
 import dynamicImport from "next/dynamic";
 import { Baloo_2, Quicksand } from "next/font/google";
 import type {
@@ -1168,7 +1165,7 @@ export default function Home() {
       stopPing();
     }
     const interval = setInterval(() => {
-      const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p";
+      const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "ten_agent_test";
       apiPing(channelName);
     }, 3000);
     setPingInterval(interval);
@@ -1204,7 +1201,7 @@ export default function Home() {
           setIsConnecting(true);
           // Stop the agent service first
           try {
-            const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p";
+            const channelName = process.env.NEXT_PUBLIC_CHANNEL_NAME || "ten_agent_test";
             await apiStopService(channelName);
             console.log("Agent stopped");
           } catch (error) {
@@ -1224,7 +1221,8 @@ export default function Home() {
             const body = JSON.stringify({
               request_id: Math.random().toString(36).substring(2, 15),
               uid: Math.floor(Math.random() * 100000),
-              channel_name: process.env.NEXT_PUBLIC_CHANNEL_NAME || "agora_cafs0p",
+              // Default to the same channel as the property.json graph so agent and client stay in sync.
+              channel_name: process.env.NEXT_PUBLIC_CHANNEL_NAME || "ten_agent_test",
             });
 
             const primaryUrl = apiBase ? `${apiBase}/token/generate` : "/api/token/generate";
@@ -1412,6 +1410,35 @@ export default function Home() {
       className="relative min-h-[100svh] overflow-hidden text-[#2f2d4b]"
       style={{ backgroundColor: backgroundTheme.baseColor }}
     >
+      <div className="absolute left-4 top-6 z-30 flex items-center gap-3 px-2 py-1">
+        <a
+          href="https://github.com/ten-framework/ten-framework"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center"
+        >
+          <img
+            src="/images/logo-w-title.png"
+            alt="TEN logo"
+            className="h-6 w-auto mix-blend-multiply"
+            loading="lazy"
+          />
+        </a>
+        <span className="text-[11px] font-semibold text-[#6b6685]">×</span>
+        <a
+          href="https://www.minimax.io/"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center"
+        >
+          <img
+            src="/images/minimax.webp"
+            alt="Minimax logo"
+            className="h-6 w-auto mix-blend-multiply"
+            loading="lazy"
+          />
+        </a>
+      </div>
       <div className="absolute inset-0">
         <div
           className="absolute inset-0"
@@ -1626,6 +1653,11 @@ export default function Home() {
                 )}
               </button>
             </div>
+          </div>
+          <div className="mt-10 px-6 pb-8 text-center text-[11px] leading-relaxed text-[#7a7694] max-w-3xl mx-auto">
+            This content uses sample data owned and copyrighted by Live2D Inc. The sample data
+            are utilized in accordance with terms and conditions set by Live2D Inc. This
+            content itself is created at the author’s sole discretion.
           </div>
         </main>
       </div>

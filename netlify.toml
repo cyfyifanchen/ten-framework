@@ -1,14 +1,11 @@
 [build]
   base = "ai_agents/agents/examples/voice-assistant-live2d/frontend"
   command = "pnpm run build"
-  publish = ".next"
+  publish = "out"
 
 [functions]
   # Disable functions to ensure static assets are served correctly
   directory = "netlify/functions"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
 
 [[redirects]]
   from = "/api/token/*"
@@ -22,44 +19,56 @@
   status = 200
   force = true
 
+# Catch-all proxy for other API routes (start, stop, ping, etc.)
+[[redirects]]
+  from = "/api/*"
+  to = "https://agent.theten.ai/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/models/*"
+  to = "https://ten-framework-assets.s3.amazonaws.com/live2d-models/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/live2d/models/*"
   to = "https://ten-framework-assets.s3.amazonaws.com/live2d-models/:splat"
   status = 200
   force = true
 
+# Serve the app at /live2d/ by rewriting to root index
+[[redirects]]
+  from = "/live2d"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/live2d/"
+  to = "/index.html"
+  status = 200
+
+# Serve other /live2d/* files by rewriting to root
+[[redirects]]
+  from = "/live2d/*"
+  to = "/:splat"
+  status = 200
+
+# Redirect root to /live2d
 [[redirects]]
   from = "/"
-  to = "/live2d"
+  to = "/live2d/"
   status = 301
-  force = true
-
-[[redirects]]
-  from = "/_next/*"
-  to = "/_next/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/live2d/_next/*"
-  to = "/live2d/_next/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/lib/*"
-  to = "/lib/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/live2d/lib/*"
-  to = "/lib/:splat"
-  status = 200
-  force = true
 
 [[headers]]
   for = "/api/*"
   [headers.values]
     Cache-Control = "no-store"
+    Access-Control-Allow-Origin = "https://ten-minimax.netlify.app"
+    Access-Control-Allow-Credentials = "true"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, Accept"
 
 [[headers]]
   for = "/*"
@@ -79,7 +88,7 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 [context.production.environment]
-  NEXT_PUBLIC_API_BASE_URL = ""
+  NEXT_PUBLIC_API_BASE_URL = "/api/agents"
 
 [context.deploy-preview.environment]
   NEXT_PUBLIC_API_BASE_URL = ""
