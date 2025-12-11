@@ -6,9 +6,9 @@ import asyncio
 import base64
 import json
 
+from typing import Any
 from typing_extensions import override
 import websockets
-from websockets.asyncio.client import ClientConnection
 
 from .config import GradiumASRConfig
 from ten_ai_base.const import LOG_CATEGORY_KEY_POINT
@@ -51,7 +51,7 @@ class GradiumASRExtension(AsyncASRBaseExtension):
         """
         super().__init__(name)
         self.config: GradiumASRConfig | None = None
-        self.websocket: ClientConnection | None = None
+        self.websocket: Any | None = None
         self.connected: bool = False
         self.receive_task: asyncio.Task | None = None
         self.audio_queue: AsyncQueue = AsyncQueue()
