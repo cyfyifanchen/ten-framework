@@ -4,7 +4,7 @@ Configuration module for Gradium ASR extension.
 
 import json
 from pydantic import BaseModel, Field
-from typing import Any, Dict, List, Literal
+from typing import Any, Dict, Literal
 
 
 class GradiumASRConfig(BaseModel):
