@@ -11,8 +11,8 @@ import websockets
 from websockets.asyncio.client import ClientConnection
 
 from .config import GradiumASRConfig
+from ten_ai_base.const import LOG_CATEGORY_KEY_POINT
 from .const import (
-    LOG_CATEGORY_KEY_POINT,
     MODULE_NAME_ASR,
     WS_MSG_TYPE_SETUP,
     WS_MSG_TYPE_READY,
@@ -137,7 +137,7 @@ class GradiumASRExtension(AsyncASRBaseExtension):
                 # Start send task
                 self.send_task = asyncio.create_task(self._send_loop())
             else:
-                raise Exception(
+                raise ValueError(
                     f"Unexpected message type: {ready_data.get('type')}"
                 )
 

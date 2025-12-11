@@ -2,7 +2,6 @@
 Constants for Gradium ASR extension.
 """
 
-from ten_ai_base.const import LOG_CATEGORY_KEY_POINT
 
 
 EXTENSION_NAME = "gradium_asr_python"
