@@ -2,7 +2,7 @@
 Addon registration for Gradium ASR extension.
 """
 
-from ten import Addon, register_addon_as_extension, TenEnv
+from ten_runtime import Addon, register_addon_as_extension, TenEnv
 from .extension import GradiumASRExtension
 
 
