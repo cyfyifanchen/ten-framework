@@ -7,9 +7,7 @@ from ten_ai_base.tts2_http import AsyncTTS2HttpConfig
 
 class GeminiProTTSConfig(AsyncTTS2HttpConfig):
     dump: bool = Field(default=False)
-    dump_path: str = Field(
-        default_factory=lambda: utils.generate_random_string(16)
-    )
+    dump_path: str = Field(default="./")
     params: dict[str, Any] = Field(default_factory=dict)
 
     def update_params(self) -> None:

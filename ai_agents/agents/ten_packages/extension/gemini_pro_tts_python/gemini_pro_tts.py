@@ -14,8 +14,9 @@ class GeminiProTTSClient(AsyncTTS2HttpClient):
         config: GeminiProTTSConfig,
         ten_env: AsyncTenEnv,
     ):
-        super().__init__(config, ten_env)
+        super().__init__()
         self.config: GeminiProTTSConfig = config
+        self.ten_env: AsyncTenEnv = ten_env
         self.client = None
         self._is_cancelled = False
 
