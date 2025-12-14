@@ -5,16 +5,16 @@ from ten_ai_base import utils
 from ten_ai_base.tts2_http import AsyncTTS2HttpConfig
 
 
-class GeminiProTTSConfig(AsyncTTS2HttpConfig):
+class GeminiTTSConfig(AsyncTTS2HttpConfig):
     dump: bool = Field(default=False)
     dump_path: str = Field(default="./")
     params: dict[str, Any] = Field(default_factory=dict)
 
     def update_params(self) -> None:
         """Transform params for Gemini API compatibility"""
-        # Ensure model is set
+        # Ensure model is set (default to Flash for low latency)
         if "model" not in self.params:
-            self.params["model"] = "gemini-2.5-pro-preview-tts"
+            self.params["model"] = "gemini-2.5-flash-preview-tts"
 
         # Ensure voice is set
         if "voice" not in self.params:
@@ -37,6 +37,6 @@ class GeminiProTTSConfig(AsyncTTS2HttpConfig):
     def validate(self) -> None:
         """Validate required fields"""
         if "api_key" not in self.params or not self.params["api_key"]:
-            raise ValueError("API key is required for Gemini Pro TTS")
+            raise ValueError("API key is required for Gemini TTS")
         if "model" not in self.params or not self.params["model"]:
-            raise ValueError("Model is required for Gemini Pro TTS")
+            raise ValueError("Model is required for Gemini TTS")

@@ -1,10 +1,11 @@
-# gemini_flash_tts_python
+# gemini_tts_python
 
-A Google Gemini 2.5 Flash TTS extension for the TEN framework, providing low-latency text-to-speech synthesis.
+A Google Gemini 2.5 TTS extension for the TEN framework, supporting both Flash (low latency) and Pro (high quality) models.
 
 ## Features
 
-- Integration with Google Gemini 2.5 Flash TTS (optimized for low latency)
+- Integration with Google Gemini 2.5 TTS API
+- Support for both Flash and Pro models via configuration
 - Full compatibility with the TEN TTS interface
 - 30 prebuilt voices with distinct characteristics
 - 24 language support
@@ -31,6 +32,27 @@ Set the `GEMINI_API_KEY` environment variable with your Google Gemini API key:
 export GEMINI_API_KEY=your_api_key
 ```
 
+## Supported Models
+
+### gemini-2.5-flash-preview-tts (Default)
+- **Optimization**: Low latency
+- **Best for**: Real-time applications, voice assistants, chatbots
+- **Speed**: Faster response times
+
+### gemini-2.5-pro-preview-tts
+- **Optimization**: High quality
+- **Best for**: Podcasts, audiobooks, professional content creation
+- **Speed**: Slower, but higher fidelity
+
+To use the Pro model, set:
+```json
+{
+  "params": {
+    "model": "gemini-2.5-pro-preview-tts"
+  }
+}
+```
+
 ## Available Voices
 
 30 prebuilt voices including:
@@ -54,28 +76,32 @@ export GEMINI_API_KEY=your_api_key
 - Portuguese
 - And more...
 
-## Usage Example
+## Usage Examples
 
+### Basic Usage (Flash Model)
 ```json
 {
   "params": {
     "api_key": "your-gemini-api-key",
     "model": "gemini-2.5-flash-preview-tts",
     "voice": "Kore",
-    "language_code": "en-US",
-    "style_prompt": "cheerful and enthusiastic"
+    "language_code": "en-US"
   }
 }
 ```
 
-## Differences from Gemini Pro TTS
-
-| Feature | Flash TTS | Pro TTS |
-|---------|-----------|---------|
-| **Optimization** | Low latency | High quality |
-| **Speed** | Faster | Slower |
-| **Use Cases** | Real-time, interactive | Podcasts, audiobooks |
-| **Cost** | More cost-efficient | Higher quality |
+### High Quality (Pro Model)
+```json
+{
+  "params": {
+    "api_key": "your-gemini-api-key",
+    "model": "gemini-2.5-pro-preview-tts",
+    "voice": "Charon",
+    "language_code": "en-US",
+    "style_prompt": "professional and authoritative, suitable for a podcast"
+  }
+}
+```
 
 ## Audio Specifications
 
@@ -107,7 +133,7 @@ Before pushing your code:
 - [ ] All lines are ≤ 80 characters
 - [ ] Run `task format` (from ai_agents directory)
 - [ ] Run `task check` (format check)
-- [ ] Run `task lint-extension EXTENSION=gemini_flash_tts_python`
+- [ ] Run `task lint-extension EXTENSION=gemini_tts_python`
 - [ ] All type hints are present
 - [ ] Naming conventions followed
 - [ ] Exception handling with proper logging

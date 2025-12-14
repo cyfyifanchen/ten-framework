@@ -1,24 +1,24 @@
 {
   "type": "extension",
-  "name": "gemini_pro_tts_python",
+  "name": "gemini_tts_python",
   "version": "0.1.0",
   "display_name": {
     "locales": {
       "en-US": {
-        "content": "Gemini 2.5 Pro TTS Extension"
+        "content": "Gemini 2.5 TTS Extension"
       },
       "zh-CN": {
-        "content": "Gemini 2.5 Pro TTS"
+        "content": "Gemini 2.5 TTS"
       }
     }
   },
   "description": {
     "locales": {
       "en-US": {
-        "content": "Google Gemini 2.5 Pro TTS extension for TEN Framework (optimized for quality)"
+        "content": "Google Gemini 2.5 TTS extension for TEN Framework (supports Flash and Pro models)"
       },
       "zh-CN": {
-        "content": "TEN Framework 的 Google Gemini 2.5 Pro TTS（质量优化）"
+        "content": "TEN Framework 的 Google Gemini 2.5 TTS（支持 Flash 和 Pro 模型）"
       }
     }
   },

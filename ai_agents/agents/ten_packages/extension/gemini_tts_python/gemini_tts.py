@@ -5,17 +5,17 @@ from ten_runtime import AsyncTenEnv
 from ten_ai_base.tts2_http import AsyncTTS2HttpClient
 from ten_ai_base.struct import TTS2HttpResponseEventType
 from ten_ai_base.const import LOG_CATEGORY_VENDOR
-from .config import GeminiProTTSConfig
+from .config import GeminiTTSConfig
 
 
-class GeminiProTTSClient(AsyncTTS2HttpClient):
+class GeminiTTSClient(AsyncTTS2HttpClient):
     def __init__(
         self,
-        config: GeminiProTTSConfig,
+        config: GeminiTTSConfig,
         ten_env: AsyncTenEnv,
     ):
         super().__init__()
-        self.config: GeminiProTTSConfig = config
+        self.config: GeminiTTSConfig = config
         self.ten_env: AsyncTenEnv = ten_env
         self.client = None
         self._is_cancelled = False
@@ -34,11 +34,11 @@ class GeminiProTTSClient(AsyncTTS2HttpClient):
             if not self.client:
                 api_key = self.config.params.get("api_key")
                 self.client = genai.Client(api_key=api_key)
-                self.ten_env.log_debug("Gemini Pro TTS client initialized")
+                self.ten_env.log_debug("Gemini TTS client initialized")
 
             # Prepare request parameters
             model = self.config.params.get(
-                "model", "gemini-2.5-pro-preview-tts"
+                "model", "gemini-2.5-flash-preview-tts"
             )
             voice = self.config.params.get("voice", "Kore")
             language_code = self.config.params.get("language_code", "en-US")
@@ -93,7 +93,7 @@ class GeminiProTTSClient(AsyncTTS2HttpClient):
                         return
 
                     self.ten_env.log_debug(
-                        f"Received {len(audio_bytes)} bytes " f"of audio data"
+                        f"Received {len(audio_bytes)} bytes of audio data"
                     )
 
                     # Yield audio data
@@ -102,13 +102,13 @@ class GeminiProTTSClient(AsyncTTS2HttpClient):
                     # Signal completion
                     yield None, TTS2HttpResponseEventType.END
                 else:
-                    error_msg = "No audio data in response from Gemini Pro TTS"
+                    error_msg = "No audio data in response from Gemini TTS"
                     self.ten_env.log_error(error_msg)
                     yield error_msg.encode(
                         "utf-8"
                     ), TTS2HttpResponseEventType.ERROR
             else:
-                error_msg = "Empty response received from Gemini Pro TTS"
+                error_msg = "Empty response received from Gemini TTS"
                 self.ten_env.log_error(error_msg)
                 yield error_msg.encode("utf-8"), TTS2HttpResponseEventType.ERROR
 
@@ -137,12 +137,12 @@ class GeminiProTTSClient(AsyncTTS2HttpClient):
 
     async def cancel(self):
         """Cancel ongoing request"""
-        self.ten_env.log_info("Cancelling Gemini Pro TTS request")
+        self.ten_env.log_info("Cancelling Gemini TTS request")
         self._is_cancelled = True
 
     async def clean(self):
         """Clean up resources"""
-        self.ten_env.log_info("Cleaning up Gemini Pro TTS client")
+        self.ten_env.log_info("Cleaning up Gemini TTS client")
         self._is_cancelled = False
         self.client = None
 
