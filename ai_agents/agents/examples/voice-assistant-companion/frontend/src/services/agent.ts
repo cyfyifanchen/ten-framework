@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AgentStatus } from "@/types";
+import type { AgentStatus } from "@/types";
 
 export class AgentService {
   private baseUrl: string;

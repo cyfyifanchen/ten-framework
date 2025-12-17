@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   forwardRef,
   useCallback,
   useEffect,
@@ -687,7 +687,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
 
       // Add global error handler for MotionSync errors
       const handleGlobalError = (event: ErrorEvent) => {
-        if (event.message && event.message.includes("addLast")) {
+        if (event.message?.includes("addLast")) {
           console.error(
             "[Live2DCharacter] MotionSync error caught globally:",
             event
@@ -700,7 +700,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
       };
 
       const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-        if (event.reason && event.reason.toString().includes("addLast")) {
+        if (event.reason?.toString().includes("addLast")) {
           console.error(
             "[Live2DCharacter] MotionSync promise rejection caught:",
             event.reason
@@ -910,9 +910,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
 
                 // Validate that the model and internalModel are properly initialized
                 if (
-                  model &&
-                  model.internalModel &&
-                  model.internalModel.coreModel
+                  model?.internalModel?.coreModel
                 ) {
                   console.log(
                     "[Live2DCharacter] Creating MotionSync instance..."
@@ -979,13 +977,11 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
         setIsModelLoaded(false);
       };
     }, [
-      modelPath,
-      mouthConfig,
-      expressions,
-      motions,
-      onModelLoaded,
-      onModelError,
-      motionSyncEnabled,
+      modelPath, 
+      mouthConfig, 
+      onModelLoaded, 
+      onModelError, 
+      motionSyncEnabled, applyDefaultExpression, ensureIdleMotion, resolveMouthParameters, stopFallbackLipSync
     ]);
 
     // Effect for handling audioTrack from Agora
@@ -994,7 +990,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
       // Ensure model is loaded (MotionSync is optional)
       if (!isModelLoaded) return;
 
-      if (audioTrack && audioTrack.getMediaStreamTrack) {
+      if (audioTrack?.getMediaStreamTrack) {
         console.log(
           "[Live2DCharacter] Received audioTrack, creating MediaStream."
         );
@@ -1159,7 +1155,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
           audioElementRef.current = null;
         }
       };
-    }, [audioTrack, isModelLoaded]);
+    }, [audioTrack, isModelLoaded, motionSyncEnabled, startFallbackLipSync, stopFallbackLipSync]);
 
     // Component unmount cleanup
     useEffect(() => {
@@ -1237,7 +1233,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
           appRef.current = null;
         }
       };
-    }, []);
+    }, [stopFallbackLipSync]);
 
     // Show loading state during SSR or before client hydration
     if (!isClient) {
@@ -1250,7 +1246,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-primary border-b-2"></div>
               <p className="text-muted-foreground">Loading Live2D Model...</p>
             </div>
           </div>
@@ -1268,7 +1264,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
         {!isModelLoaded && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 text-white">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-white border-b-2"></div>
               <p>Loading Live2D Model...</p>
             </div>
           </div>

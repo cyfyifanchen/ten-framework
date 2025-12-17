@@ -1,8 +1,8 @@
 const express = require("express");
 const next = require("next");
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const http = require("http");
-const { parse } = require("url");
+const http = require("node:http");
+const { parse } = require("node:url");
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -27,10 +27,10 @@ function getOrCreateProxy(wsPort, devMode) {
         changeOrigin: true,
         ws: true,
         logLevel: devMode ? "debug" : "warn",
-        onError: (err, req, res) => {
+        onError: (err, _req, _res) => {
           console.error(`WebSocket proxy error (port ${wsPort}):`, err.message);
         },
-        onProxyReqWs: (proxyReq, req, socket, options, head) => {
+        onProxyReqWs: (_proxyReq, req, _socket, _options, _head) => {
           console.log(
             `WebSocket proxy request: ${req.url} -> ws://localhost:${wsPort}`
           );

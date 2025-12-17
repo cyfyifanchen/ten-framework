@@ -1,4 +1,4 @@
-import { CSSProperties, HTMLAttributes, useEffect, useRef } from "react";
+import { type CSSProperties, type HTMLAttributes, useEffect, useRef } from "react";
 import { Renderer, Program, Mesh, Triangle, Color } from "ogl";
 
 const vertexShader = `

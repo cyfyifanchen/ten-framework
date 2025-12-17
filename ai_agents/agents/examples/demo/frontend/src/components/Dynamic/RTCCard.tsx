@@ -2,15 +2,15 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import {
+import type {
   ICameraVideoTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
 } from "agora-rtc-sdk-ng";
 import { useAppSelector, useAppDispatch } from "@/common/hooks";
 import { VideoSourceType } from "@/common/constant";
-import { ITextItem, EMessageType, IChatItem } from "@/types";
-import { rtcManager, IUserTracks, IRtcUser } from "@/manager";
+import type { IChatItem } from "@/types";
+import { rtcManager, type IUserTracks, type IRtcUser } from "@/manager";
 import {
   setRoomConnected,
   addChatItem,
@@ -20,7 +20,6 @@ import {
 import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect";
 import AgentView from "@/components/Agent/View";
 import MicrophoneBlock from "@/components/Agent/Microphone";
-import CameraBlock from "@/components/Agent/Camera";
 import VideoBlock from "@/components/Agent/Camera";
 
 let hasInit: boolean = false;
@@ -30,8 +29,8 @@ export default function RTCCard(props: { className?: string }) {
 
   const dispatch = useAppDispatch();
   const options = useAppSelector((state) => state.global.options);
-  const voiceType = useAppSelector((state) => state.global.voiceType);
-  const selectedGraphId = useAppSelector((state) => state.global.graphName);
+  const _voiceType = useAppSelector((state) => state.global.voiceType);
+  const _selectedGraphId = useAppSelector((state) => state.global.graphName);
   const { userId, channel } = options;
   const [videoTrack, setVideoTrack] = React.useState<ICameraVideoTrack>();
   const [audioTrack, setAudioTrack] = React.useState<IMicrophoneAudioTrack>();
@@ -56,7 +55,7 @@ export default function RTCCard(props: { className?: string }) {
         destory();
       }
     };
-  }, [options.channel]);
+  }, [options.channel, destory, init]);
 
   const init = async () => {
     console.log("[rtc] init");
@@ -111,7 +110,7 @@ export default function RTCCard(props: { className?: string }) {
     dispatch(addChatItem(text));
   };
 
-  const onVoiceChange = (value: any) => {
+  const _onVoiceChange = (value: any) => {
     dispatch(setVoiceType(value));
   };
 
@@ -121,13 +120,12 @@ export default function RTCCard(props: { className?: string }) {
   };
 
   return (
-    <>
-      <div className={cn("flex-shrink-0", "overflow-y-auto", className)}>
+    <div className={cn("flex-shrink-0", "overflow-y-auto", className)}>
         <div className="flex h-full w-full flex-col">
           {/* -- Agent */}
           <div className="w-full">
             <div className="flex w-full items-center justify-between p-2">
-              <h2 className="mb-2 text-xl font-semibold">Audio & Video</h2>
+              <h2 className="mb-2 font-semibold text-xl">Audio & Video</h2>
               <AgentVoicePresetSelect />
             </div>
             <AgentView audioTrack={remoteuser?.audioTrack} />
@@ -145,6 +143,5 @@ export default function RTCCard(props: { className?: string }) {
           </div>
         </div>
       </div>
-    </>
   );
 }

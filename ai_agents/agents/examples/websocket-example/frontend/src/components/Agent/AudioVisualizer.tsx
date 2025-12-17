@@ -76,7 +76,7 @@ export function AudioVisualizer({
         // Use logarithmic scaling to better represent higher frequencies
         // Map bar index to frequency bin using logarithmic scale
         const normalizedIndex = i / (barCount - 1);
-        const logIndex = Math.pow(normalizedIndex, 0.5); // Square root for better distribution
+        const logIndex = normalizedIndex ** 0.5; // Square root for better distribution
         const binIndex = Math.floor(logIndex * dataLength);
         const clampedIndex = Math.min(binIndex, dataLength - 1);
 
@@ -116,7 +116,7 @@ export function AudioVisualizer({
     <div
       suppressHydrationWarning
       className={cn(
-        "absolute inset-0 flex w-full h-full items-end justify-center gap-0.5",
+        "absolute inset-0 flex h-full w-full items-end justify-center gap-0.5",
         className
       )}
       style={{
@@ -131,7 +131,7 @@ export function AudioVisualizer({
         // Use a curve: left side (0) = 0.8x, right side (1) = 2.5x
         const sensitivityMultiplier =
           0.8 + normalizedIndex * normalizedIndex * 1.7; // Quadratic curve for smoother transition
-        const amplifiedValue = Math.pow(value / 255, 0.5) * 255; // Stronger amplification (0.5 = even more amplification)
+        const amplifiedValue = (value / 255) ** 0.5 * 255; // Stronger amplification (0.5 = even more amplification)
         const barHeight = isActive
           ? Math.min(
               maxBarHeight,

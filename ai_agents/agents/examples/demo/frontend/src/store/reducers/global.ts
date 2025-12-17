@@ -1,4 +1,4 @@
-import {
+import type {
   IOptions,
   IChatItem,
   Language,
@@ -8,7 +8,7 @@ import {
   IDifySettings,
   IOceanBaseSettings,
 } from "@/types";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import {
   EMobileActiveTab,
   DEFAULT_OPTIONS,
@@ -92,13 +92,13 @@ export const globalSlice = createSlice({
     addChatItem: (state, action: PayloadAction<IChatItem>) => {
       const { userId, text, isFinal, type, time } = action.payload;
       const LastFinalIndex = state.chatItems.findLastIndex((el) => {
-        return el.userId == userId && el.isFinal;
+        return el.userId === userId && el.isFinal;
       });
       const LastNonFinalIndex = state.chatItems.findLastIndex((el) => {
-        return el.userId == userId && !el.isFinal;
+        return el.userId === userId && !el.isFinal;
       });
-      let LastFinalItem = state.chatItems[LastFinalIndex];
-      let LastNonFinalItem = state.chatItems[LastNonFinalIndex];
+      const LastFinalItem = state.chatItems[LastFinalIndex];
+      const LastNonFinalItem = state.chatItems[LastNonFinalIndex];
       if (LastFinalItem) {
         // has last final Item
         if (time <= LastFinalItem.time) {

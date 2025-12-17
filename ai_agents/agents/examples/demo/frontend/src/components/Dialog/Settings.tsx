@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,7 +15,6 @@ import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,9 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -114,17 +110,17 @@ export const useSettingsTabs = () => {
 
   React.useEffect(() => {
     if (enableCozeSettingsMemo) {
-      setTabs((prev) => [
+      setTabs((_prev) => [
         { label: "Agent", value: "agent" },
         { label: "Coze", value: "coze" },
       ]);
     } else if (enableDifySettingsMemo) {
-      setTabs((prev) => [
+      setTabs((_prev) => [
         { label: "Agent", value: "agent" },
         { label: "Dify", value: "dify" },
       ]);
     } else if (enableOceanBaseSettingsMemo) {
-      setTabs((prev) => [
+      setTabs((_prev) => [
         { label: "Agent", value: "agent" },
         { label: "OceanBase", value: "oceanbase" },
       ]);
@@ -433,7 +429,7 @@ export function CozeSettingsTab(props: {
               Save Coze Settings
             </Button>
           </div>
-          <Label className="flex select-none items-center gap-1 pt-2 text-right text-xs text-muted-foreground">
+          <Label className="flex select-none items-center gap-1 pt-2 text-right text-muted-foreground text-xs">
             <ShieldCheckIcon className="me-1 size-3" />
             Settings are saved in your browser only
           </Label>
@@ -531,7 +527,7 @@ export function DifySettingsTab(props: {
               Save Dify Settings
             </Button>
           </div>
-          <Label className="flex select-none items-center gap-1 pt-2 text-right text-xs text-muted-foreground">
+          <Label className="flex select-none items-center gap-1 pt-2 text-right text-muted-foreground text-xs">
             <ShieldCheckIcon className="me-1 size-3" />
             Settings are saved in your browser only
           </Label>
@@ -678,7 +674,7 @@ export function OceanBaseSettingsTab(props: {
               Save OceanBase Settings
             </Button>
           </div>
-          <Label className="flex select-none items-center gap-1 pt-2 text-right text-xs text-muted-foreground">
+          <Label className="flex select-none items-center gap-1 pt-2 text-right text-muted-foreground text-xs">
             <ShieldCheckIcon className="me-1 size-3" />
             Settings are saved in your browser only
           </Label>

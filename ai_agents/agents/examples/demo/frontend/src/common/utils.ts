@@ -1,4 +1,4 @@
-import { LanguageOptionItem } from "@/types";
+import type { LanguageOptionItem } from "@/types";
 
 export const genRandomString = (length: number = 10) => {
   let result = "";
@@ -17,7 +17,7 @@ export const getRandomUserId = (): number => {
 };
 
 export const getRandomChannel = (number = 6) => {
-  return "agora_" + genRandomString(number);
+  return `agora_${genRandomString(number)}`;
 };
 
 export const sleep = (ms: number) => {
@@ -44,7 +44,7 @@ export const normalizeFrequencies = (frequencies: Float32Array) => {
 };
 
 export const genUUID = () => {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);

@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useIsCompactLayout } from "@/common";
+
 import { useAppDispatch, useAppSelector } from "@/common/hooks";
 import {
   Select,
@@ -33,12 +32,11 @@ export function RemoteGraphSelect() {
   // Truncate label for display when closed (max 20 chars on mobile, 25 on desktop)
   const truncatedLabel =
     displayLabel.length > 20
-      ? displayLabel.substring(0, 17) + "..."
+      ? `${displayLabel.substring(0, 17)}...`
       : displayLabel;
 
   return (
-    <>
-      <Select
+    <Select
         value={graphName}
         onValueChange={onGraphNameChange}
         disabled={agentConnected}
@@ -56,6 +54,5 @@ export function RemoteGraphSelect() {
           ))}
         </SelectContent>
       </Select>
-    </>
   );
 }

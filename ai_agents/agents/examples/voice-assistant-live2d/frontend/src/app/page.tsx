@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
@@ -1083,7 +1084,7 @@ export default function Home() {
   const [pingInterval, setPingInterval] = useState<NodeJS.Timeout | null>(null);
   const [isAssistantSpeaking, setIsAssistantSpeaking] = useState(false);
   const live2dRef = useRef<Live2DHandle | null>(null);
-  const [modelLoadedTick, setModelLoadedTick] = useState(0);
+  const [_modelLoadedTick, setModelLoadedTick] = useState(0);
   const processedVoiceCommandIdsRef = useRef<string[]>([]);
   const handleModelLoaded = useCallback(
     () => setModelLoadedTick((tick) => tick + 1),
@@ -1136,7 +1137,7 @@ export default function Home() {
     return () => {
       stopPing();
     };
-  }, []);
+  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
 
   const handleConnectionChange = (status: any) => {
     setIsConnected(status.rtc === "connected");
@@ -1195,11 +1196,11 @@ export default function Home() {
 
   useEffect(() => {
     prevSpeakingRef.current = false;
-  }, [selectedModel.id, modelLoadedTick]);
+  }, []);
 
   useEffect(() => {
     processedVoiceCommandIdsRef.current = [];
-  }, [selectedModel.id]);
+  }, []);
 
   useEffect(() => {
     const controller = live2dRef.current;
@@ -1220,7 +1221,7 @@ export default function Home() {
         priority: idleMotion.priority,
       });
     }
-  }, [selectedModel, modelLoadedTick]);
+  }, [selectedModel]);
 
   useEffect(() => {
     const controller = live2dRef.current;
@@ -1664,7 +1665,7 @@ export default function Home() {
             key={model.id}
             type="button"
             onClick={() => handleModelSelect(model.id)}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
+            className={`rounded-full px-5 py-2 font-semibold text-sm transition ${
               isActive
                 ? "bg-[#2f3dbd] text-white"
                 : "bg-white/85 text-[#586094] hover:bg-white"

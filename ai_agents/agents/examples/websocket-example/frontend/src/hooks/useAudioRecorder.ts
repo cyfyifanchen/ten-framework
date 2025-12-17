@@ -44,7 +44,7 @@ export function useAudioRecorder(wsManager: WebSocketManager | null) {
       setRecording("idle");
       console.error("Failed to start recording:", err);
     }
-  }, [isRecording, wsManager, setRecording]);
+  }, [isRecording, setRecording]);
 
   const stopRecording = useCallback(() => {
     if (!isRecording || !recorderRef.current) {

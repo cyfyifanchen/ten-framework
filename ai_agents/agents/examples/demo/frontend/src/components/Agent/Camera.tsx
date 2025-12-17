@@ -4,8 +4,8 @@ import * as React from "react";
 // import CamSelect from "./camSelect"
 import { CamIconByStatus } from "@/components/Icon";
 import AgoraRTC, {
-  ICameraVideoTrack,
-  ILocalVideoTrack,
+  type ICameraVideoTrack,
+  type ILocalVideoTrack,
 } from "agora-rtc-sdk-ng";
 // import { LocalStreamPlayer } from "../streamPlayer"
 // import { useSmallScreen } from "@/common"
@@ -58,7 +58,7 @@ export function VideoDeviceWrapper(props: {
     <div className="flex flex-col">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="text-sm font-medium">{props.title}</div>
+          <div className="font-medium text-sm">{props.title}</div>
           <div className="w-[150px]">
             <Select value={videoSourceType} onValueChange={onVideoSourceChange}>
               <SelectTrigger>

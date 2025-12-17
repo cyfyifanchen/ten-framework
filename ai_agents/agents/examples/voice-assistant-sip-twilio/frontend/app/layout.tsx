@@ -19,19 +19,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-50">
-          <header className="bg-white shadow-sm border-b">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center py-6">
-                <h1 className="text-3xl font-bold text-gray-900">
+          <header className="border-b bg-white shadow-sm">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between py-6">
+                <h1 className="font-bold text-3xl text-gray-900">
                   Twilio Voice Assistant
                 </h1>
-                <div className="text-sm text-gray-500">
+                <div className="text-gray-500 text-sm">
                   Powered by TEN Framework
                 </div>
               </div>
             </div>
           </header>
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
             {children}
           </main>
         </div>

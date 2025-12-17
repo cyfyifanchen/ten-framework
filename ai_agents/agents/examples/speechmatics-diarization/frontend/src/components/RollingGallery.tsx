@@ -63,7 +63,7 @@ export default function RollingGallery(props: RollingGalleryProps) {
     if (items.length >= faceCount) {
       return items;
     }
-    const repeats = Math.ceil(faceCount / items.length);
+    const _repeats = Math.ceil(faceCount / items.length);
     return Array.from(
       { length: faceCount },
       (_, idx) => items[idx % items.length]

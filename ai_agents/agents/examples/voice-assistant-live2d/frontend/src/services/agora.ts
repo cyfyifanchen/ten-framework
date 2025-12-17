@@ -1,11 +1,11 @@
 import AgoraRTC, {
-  IAgoraRTCClient,
-  IMicrophoneAudioTrack,
-  IRemoteAudioTrack,
-  ConnectionState,
-  NetworkQuality,
+  type IAgoraRTCClient,
+  type IMicrophoneAudioTrack,
+  type IRemoteAudioTrack,
+  type ConnectionState,
+  type NetworkQuality,
 } from "agora-rtc-sdk-ng";
-import { AgoraConfig, ConnectionStatus, TranscriptMessage } from "@/types";
+import type { AgoraConfig, ConnectionStatus, TranscriptMessage } from "@/types";
 import axios from "axios";
 
 type TextChunk = {
@@ -19,7 +19,6 @@ export class AgoraService {
   private rtcClient: IAgoraRTCClient | null = null;
   private localAudioTrack: IMicrophoneAudioTrack | null = null;
   private remoteAudioTrack: IRemoteAudioTrack | null = null;
-  private config: AgoraConfig | null = null;
   private connectionStatus: ConnectionStatus = {
     rtc: "disconnected",
     rtm: "disconnected",
@@ -73,7 +72,7 @@ export class AgoraService {
 
     this.rtcClient.on("user-published", async (user, mediaType) => {
       if (mediaType === "audio") {
-        await this.rtcClient!.subscribe(user, mediaType);
+        await this.rtcClient?.subscribe(user, mediaType);
         this.remoteAudioTrack = user.audioTrack as IRemoteAudioTrack;
 
         // Play the remote audio track
@@ -83,7 +82,7 @@ export class AgoraService {
       }
     });
 
-    this.rtcClient.on("user-unpublished", (user, mediaType) => {
+    this.rtcClient.on("user-unpublished", (_user, mediaType) => {
       if (mediaType === "audio") {
         if (this.remoteAudioTrack) {
           this.remoteAudioTrack.stop();

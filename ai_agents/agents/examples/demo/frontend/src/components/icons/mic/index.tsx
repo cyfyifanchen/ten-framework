@@ -1,4 +1,4 @@
-import { IconProps } from "../types";
+import type { IconProps } from "../types";
 import micMuteSvg from "@/assets/mic_mute.svg";
 import micUnMuteSvg from "@/assets/mic_unmute.svg";
 

@@ -2,7 +2,6 @@
 
 // import AudioVisualizer from "../audioVisualizer"
 import type {
-  IMicrophoneAudioTrack,
   IRemoteAudioTrack,
   IRemoteVideoTrack,
 } from "agora-rtc-sdk-ng";
@@ -32,7 +31,7 @@ export default function AgentView(props: AgentViewProps) {
         currentTrack.stop();
       };
     }
-  }, [videoTrack?.getUserId()]);
+  }, [videoTrack]);
 
   return videoTrack ? (
     <div

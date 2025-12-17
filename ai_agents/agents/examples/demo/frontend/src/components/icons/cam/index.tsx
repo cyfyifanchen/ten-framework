@@ -1,6 +1,6 @@
 import camMuteSvg from "@/assets/cam_mute.svg";
 import camUnMuteSvg from "@/assets/cam_unmute.svg";
-import { IconProps } from "../types";
+import type { IconProps } from "../types";
 
 interface ICamIconProps extends IconProps {
   active?: boolean;

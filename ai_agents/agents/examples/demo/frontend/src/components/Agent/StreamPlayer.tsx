@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
+import type {
   ICameraVideoTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
@@ -18,7 +18,7 @@ export interface StreamPlayerProps {
 }
 
 export const LocalStreamPlayer = React.forwardRef(
-  (props: StreamPlayerProps, ref) => {
+  (props: StreamPlayerProps, _ref) => {
     const {
       videoTrack,
       audioTrack,

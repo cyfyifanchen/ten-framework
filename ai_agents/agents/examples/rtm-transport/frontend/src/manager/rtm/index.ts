@@ -1,7 +1,7 @@
 "use client";
 
 import AgoraRTM, { type RTMClient } from "agora-rtm";
-import { type IRTMTextItem } from "@/types";
+import type { IRTMTextItem } from "@/types";
 import { AGEventEmitter } from "../events";
 
 export interface IRtmEvents {
@@ -86,9 +86,9 @@ export class RtmManager extends AGEventEmitter<IRtmEvents> {
   }
 
   private _listenRtmEvents() {
-    this._client!.addEventListener("message", this._boundHandleRtmMessage!);
+    this._client?.addEventListener("message", this._boundHandleRtmMessage!);
     // tmp add presence
-    this._client!.addEventListener("presence", this._boundHandleRtmPresence!);
+    this._client?.addEventListener("presence", this._boundHandleRtmPresence!);
     console.log("[RTM] Listen RTM events success!");
   }
 

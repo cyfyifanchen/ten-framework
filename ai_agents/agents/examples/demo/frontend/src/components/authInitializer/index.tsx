@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 import {
   useAppDispatch,
   getOptionsFromLocal,
@@ -28,7 +28,7 @@ const AuthInitializer = (props: AuthInitializerProps) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const data = getOptionsFromLocal();
-      if (data && data?.options?.channel) {
+      if (data?.options?.channel) {
         dispatch(reset());
         dispatch(setOptions(data.options));
         dispatch(setAgentSettings(data.settings));

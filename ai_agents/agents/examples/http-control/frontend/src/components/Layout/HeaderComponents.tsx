@@ -43,8 +43,7 @@ export function HeaderRoomInfo() {
   }, [agentConnected]);
 
   return (
-    <>
-      <TooltipProvider delayDuration={200}>
+    <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger className="flex items-center space-x-2 font-semibold text-lg">
             <InfoIcon className="h-4 w-4 md:h-5 md:w-5" />
@@ -91,7 +90,6 @@ export function HeaderRoomInfo() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    </>
   );
 }
 
@@ -125,8 +123,7 @@ export const ThemePalettePopover = () => {
   };
 
   return (
-    <>
-      <Popover>
+    <Popover>
         <PopoverTrigger>
           <PaletteIcon className="h-4 w-4 md:h-5 md:w-5" color={themeColor} />
         </PopoverTrigger>
@@ -168,7 +165,6 @@ export const ThemePalettePopover = () => {
           </div>
         </PopoverContent>
       </Popover>
-    </>
   );
 };
 

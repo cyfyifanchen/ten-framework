@@ -67,7 +67,7 @@ export default function HomePage() {
     );
     // volume indicator for local + remote tracks
     try {
-      // @ts-ignore
+      // @ts-expect-error
       client.enableAudioVolumeIndicator?.();
       client.on("volume-indicator", (vols: any[]) => {
         const me = vols.find((v) => String(v.uid) === String(userId));
@@ -83,7 +83,7 @@ export default function HomePage() {
     await client.publish([audio]);
     console.log("[UI] Mic published");
     setJoined(true);
-  }, [channel, userId, joined]);
+  }, [channel, userId, joined, handleStreamMessage]);
 
   const handleStreamMessage = useCallback(
     (data: any) => {
@@ -149,7 +149,7 @@ export default function HomePage() {
     } finally {
       setJoined(false);
     }
-  }, []);
+  }, [channel]);
 
   useEffect(
     () => () => {
@@ -169,7 +169,7 @@ export default function HomePage() {
       setUserId(id);
       localStorage.setItem("uid", String(id));
     }
-  }, []);
+  }, [userId]);
 
   if (!mounted) return null;
 

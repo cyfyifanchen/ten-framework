@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Phone, MessageSquare, PhoneOff } from "lucide-react";
-import { CallResponse } from "../app/api";
+import type { CallResponse } from "../app/api";
 
 interface OutboundCallFormProps {
   onCall: (phoneNumber: string, message: string) => void;
@@ -33,9 +33,9 @@ export default function OutboundCallForm({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-        <Phone className="w-5 h-5 mr-2 text-blue-600" />
+    <div className="rounded-lg bg-white p-6 shadow-md">
+      <h2 className="mb-4 flex items-center font-semibold text-gray-900 text-xl">
+        <Phone className="mr-2 h-5 w-5 text-blue-600" />
         Initiate Outbound Call
       </h2>
 
@@ -43,7 +43,7 @@ export default function OutboundCallForm({
         <div>
           <label
             htmlFor="outboundPhoneNumber"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="mb-2 block font-medium text-gray-700 text-sm"
           >
             Phone Number
           </label>
@@ -56,7 +56,7 @@ export default function OutboundCallForm({
             className="input-field"
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="mt-1 text-gray-500 text-xs">
             Please enter the complete phone number including country code
           </p>
         </div>
@@ -64,9 +64,9 @@ export default function OutboundCallForm({
         <div>
           <label
             htmlFor="outboundMessage"
-            className="block text-sm font-medium text-gray-700 mb-2 flex items-center"
+            className="mb-2 block flex items-center font-medium text-gray-700 text-sm"
           >
-            <MessageSquare className="w-4 h-4 mr-1" />
+            <MessageSquare className="mr-1 h-4 w-4" />
             Call Message
           </label>
           <textarea
@@ -77,7 +77,7 @@ export default function OutboundCallForm({
             rows={3}
             className="input-field resize-none"
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="mt-1 text-gray-500 text-xs">
             This is the message that the AI assistant will play at the beginning
             of the call
           </p>
@@ -88,16 +88,16 @@ export default function OutboundCallForm({
             type="button"
             onClick={handleHangUp}
             disabled={isLoading}
-            className="btn-danger w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="btn-danger flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-white border-b-2"></div>
                 Hanging up...
               </>
             ) : (
               <>
-                <PhoneOff className="w-4 h-4 mr-2" />
+                <PhoneOff className="mr-2 h-4 w-4" />
                 Hang Up Call
               </>
             )}
@@ -106,16 +106,16 @@ export default function OutboundCallForm({
           <button
             type="submit"
             disabled={!phoneNumber.trim() || isLoading}
-            className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="btn-primary flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-white border-b-2"></div>
                 Dialing...
               </>
             ) : (
               <>
-                <Phone className="w-4 h-4 mr-2" />
+                <Phone className="mr-2 h-4 w-4" />
                 Initiate Outbound Call
               </>
             )}

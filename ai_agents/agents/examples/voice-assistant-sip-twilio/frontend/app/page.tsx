@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Phone, PhoneIncoming, PhoneOutgoing } from "lucide-react";
+import { PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import OutboundCallForm from "@/components/OutboundCallForm";
 import InboundCallModal from "@/components/InboundCallModal";
 import CallStatus from "@/components/CallStatus";
-import { twilioAPI, CallResponse, ServerConfig } from "./api";
+import { twilioAPI, type CallResponse, type ServerConfig } from "./api";
 
 export default function Home() {
   const [activeCall, setActiveCall] = useState<CallResponse | null>(null);
@@ -101,17 +101,17 @@ export default function Home() {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="mb-4 font-bold text-4xl text-gray-900">
           Twilio Voice Assistant
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-gray-600 text-lg">
           AI-powered voice assistant for outbound and inbound calls
         </p>
       </div>
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg
@@ -127,8 +127,8 @@ export default function Home() {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Error</h3>
-              <div className="mt-2 text-sm text-red-700">
+              <h3 className="font-medium text-red-800 text-sm">Error</h3>
+              <div className="mt-2 text-red-700 text-sm">
                 <p>{error}</p>
               </div>
             </div>
@@ -137,12 +137,12 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Outbound Call Section */}
         <div className="space-y-6">
           <div className="flex items-center">
-            <PhoneOutgoing className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <PhoneOutgoing className="mr-3 h-6 w-6 text-blue-600" />
+            <h2 className="font-semibold text-2xl text-gray-900">
               Outbound Calls
             </h2>
           </div>
@@ -157,29 +157,29 @@ export default function Home() {
         {/* Inbound Call Section */}
         <div className="space-y-6">
           <div className="flex items-center">
-            <PhoneIncoming className="w-6 h-6 text-green-600 mr-3" />
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <PhoneIncoming className="mr-3 h-6 w-6 text-green-600" />
+            <h2 className="font-semibold text-2xl text-gray-900">
               Inbound Calls
             </h2>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <p className="text-gray-600 mb-4">
+          <div className="rounded-lg bg-white p-6 shadow-md">
+            <p className="mb-4 text-gray-600">
               Click the button below to simulate an incoming call notification.
             </p>
             <button
               onClick={() => handleInboundCallNotification(twilioFromNumber)}
               disabled={isConfigLoading}
-              className="btn-success w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-success flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isConfigLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-white border-b-2"></div>
                   Loading...
                 </>
               ) : (
                 <>
-                  <PhoneIncoming className="w-5 h-5 mr-2" />
+                  <PhoneIncoming className="mr-2 h-5 w-5" />
                   Simulate Inbound Call
                 </>
               )}

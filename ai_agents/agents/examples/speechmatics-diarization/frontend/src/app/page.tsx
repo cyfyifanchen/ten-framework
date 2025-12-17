@@ -68,7 +68,7 @@ const sectionTitleStyle: CSSProperties = {
   fontWeight: 600,
 };
 
-const sectionSubtitleStyle: CSSProperties = {
+const _sectionSubtitleStyle: CSSProperties = {
   marginTop: 6,
   fontSize: 14,
   color: TEXT_MUTED,
@@ -100,13 +100,13 @@ const generateUserId = () => {
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
-  const [channel, setChannel] = useState<string>(DEFAULT_CHANNEL);
+  const [channel, _setChannel] = useState<string>(DEFAULT_CHANNEL);
   const [userId, setUserId] = useState<number>(0);
   const [joined, setJoined] = useState<boolean>(false);
   const [items, setItems] = useState<ChatItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<boolean>(false);
-  const [micEnabled, setMicEnabled] = useState<boolean>(false);
+  const [_micEnabled, setMicEnabled] = useState<boolean>(false);
   const [lastReplySpeaker, setLastReplySpeaker] = useState<string | null>(null);
   const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null);
 
@@ -253,12 +253,10 @@ export default function HomePage() {
 
     return base;
   }, [
-    recognisedSpeakers,
-    speakerTranscriptMap,
-    lastSpeakerLines,
-    focusSpeaker,
-    activeSpeaker,
-    lastReplySpeaker,
+    recognisedSpeakers, 
+    speakerTranscriptMap, 
+    lastSpeakerLines, 
+    focusSpeaker
   ]);
 
   useEffect(() => {
@@ -272,7 +270,7 @@ export default function HomePage() {
         block: "nearest",
       });
     }
-  }, [focusSpeaker, speakerCards]);
+  }, [focusSpeaker]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -412,7 +410,7 @@ export default function HomePage() {
     } finally {
       setPending(false);
     }
-  }, [channel, userId, joined, pending, handleStreamMessage]);
+  }, [channel, userId, joined, pending, handleStreamMessage, stop]);
 
   const start = useCallback(async () => {
     if (joined || pending) return;
@@ -961,7 +959,7 @@ function TranscriptRow({ item }: { item: ChatItem }) {
   );
 }
 
-function StatusCard({
+function _StatusCard({
   title,
   value,
   tone = "neutral",

@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useIsCompactLayout } from "@/common";
+
 import { useAppDispatch, useAppSelector } from "@/common/hooks";
 import {
   Select,
@@ -27,8 +26,7 @@ export function RemoteGraphSelect() {
   }));
 
   return (
-    <>
-      <Select
+    <Select
         value={graphName}
         onValueChange={onGraphNameChange}
         disabled={agentConnected}
@@ -48,6 +46,5 @@ export function RemoteGraphSelect() {
           ))}
         </SelectContent>
       </Select>
-    </>
   );
 }

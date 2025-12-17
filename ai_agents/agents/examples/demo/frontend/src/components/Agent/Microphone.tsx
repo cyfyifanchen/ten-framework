@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useMultibandTrackVolume } from "@/common";
 import AudioVisualizer from "@/components/Agent/AudioVisualizer";
-import AgoraRTC, { IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
+import AgoraRTC, { type IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
 import {
   Select,
   SelectContent,
@@ -31,7 +31,7 @@ export default function MicrophoneBlock(props: {
     return () => {
       audioTrack?.off("track-updated", onAudioTrackupdated);
     };
-  }, [audioTrack]);
+  }, [audioTrack, onAudioTrackupdated]);
 
   React.useEffect(() => {
     audioTrack?.setMuted(audioMute);
@@ -86,7 +86,7 @@ export function CommonDeviceWrapper(props: {
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-medium">{title}</div>
+        <div className="font-medium text-sm">{title}</div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"

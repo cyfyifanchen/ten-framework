@@ -31,7 +31,7 @@ export default function MicrophoneBlock(props: {
     return () => {
       audioTrack?.off("track-updated", onAudioTrackupdated);
     };
-  }, [audioTrack]);
+  }, [audioTrack, onAudioTrackupdated]);
 
   React.useEffect(() => {
     audioTrack?.setMuted(audioMute);

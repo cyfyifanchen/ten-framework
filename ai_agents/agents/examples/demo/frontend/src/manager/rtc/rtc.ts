@@ -1,16 +1,14 @@
 "use client";
 
-import protoRoot from "@/protobuf/SttMessage_es6.js";
 import AgoraRTC, {
-  IAgoraRTCClient,
-  IMicrophoneAudioTrack,
-  IRemoteAudioTrack,
-  UID,
-  ICameraVideoTrack,
+  type IAgoraRTCClient,
+  type IMicrophoneAudioTrack,
+  type IRemoteAudioTrack,
+  type UID,
 } from "agora-rtc-sdk-ng";
-import { EMessageDataType, EMessageType, IChatItem, ITextItem } from "@/types";
+import { EMessageDataType, EMessageType, type IChatItem, type ITextItem } from "@/types";
 import { AGEventEmitter } from "../events";
-import { RtcEvents, IUserTracks } from "./types";
+import type { RtcEvents, IUserTracks } from "./types";
 import { apiGenAgoraData } from "@/common/request";
 import { VideoSourceType } from "@/common/constant";
 
@@ -43,7 +41,7 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
     if (!this._joined) {
       const res = await apiGenAgoraData({ channel, userId });
       const { code, data } = res;
-      if (code != 0) {
+      if (code !== 0) {
         throw new Error("Failed to get Agora token");
       }
       const { appId, token } = data;
@@ -164,12 +162,12 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
         videoTrack: user.videoTrack,
       });
     });
-    this.client.on("stream-message", (uid: UID, stream: any) => {
+    this.client.on("stream-message", (_uid: UID, stream: any) => {
       this._parseData(stream);
     });
   }
 
-  private _parseData(data: any): ITextItem | void {
+  private _parseData(data: any): ITextItem | undefined {
     const ascii = String.fromCharCode(...new Uint8Array(data));
 
     console.log("[test] textstream raw data", ascii);
@@ -252,7 +250,7 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
         };
 
         if (data_type === "raw") {
-          let { data, type } = JSON.parse(text);
+          const { data, type } = JSON.parse(text);
           if (type === "image_url") {
             textItem = {
               ...textItem,

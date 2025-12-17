@@ -4,7 +4,7 @@ import poorSvg from "@/assets/network/poor.svg";
 import disconnectedSvg from "@/assets/network/disconnected.svg";
 import excellentSvg from "@/assets/network/excellent.svg";
 
-import { IconProps } from "../types";
+import type { IconProps } from "../types";
 
 interface INetworkIconProps extends IconProps {
   level?: number;

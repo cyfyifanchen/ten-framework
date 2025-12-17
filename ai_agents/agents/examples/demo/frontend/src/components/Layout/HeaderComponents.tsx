@@ -25,7 +25,7 @@ import {
   // genRandomString,
   API_GH_GET_REPO_INFO,
 } from "@/common";
-import { setThemeColor, setOptions } from "@/store/reducers/global";
+import { setThemeColor, } from "@/store/reducers/global";
 import { cn } from "@/lib/utils";
 import { HexColorPicker } from "react-colorful";
 import dynamic from "next/dynamic";
@@ -35,7 +35,7 @@ import { formatNumber } from "@/lib/utils";
 import styles from "./Header.module.css";
 
 export function HeaderRoomInfo() {
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
 
   const options = useAppSelector((state) => state.global.options);
   const { channel, userId } = options;
@@ -53,10 +53,9 @@ export function HeaderRoomInfo() {
   // }
 
   return (
-    <>
-      <TooltipProvider delayDuration={200}>
+    <TooltipProvider delayDuration={200}>
         <Tooltip>
-          <TooltipTrigger className="flex items-center space-x-2 text-xs font-semibold md:text-sm">
+          <TooltipTrigger className="flex items-center space-x-2 font-semibold text-xs md:text-sm">
             <span className="max-w-24 truncate text-ellipsis">{channel}</span>
           </TooltipTrigger>
           <TooltipContent
@@ -87,7 +86,7 @@ export function HeaderRoomInfo() {
                 </tr>
                 <tr>
                   <td colSpan={2}>
-                    <hr className="my-2 border-t border-gray-600" />
+                    <hr className="my-2 border-gray-600 border-t" />
                   </td>
                 </tr>
                 <tr>
@@ -112,7 +111,6 @@ export function HeaderRoomInfo() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    </>
   );
 }
 
@@ -148,13 +146,12 @@ export const ThemePalettePopover = () => {
   };
 
   return (
-    <>
-      <Popover>
+    <Popover>
         <PopoverTrigger>
           <PaletteIcon className="h-4 w-4 md:h-5 md:w-5" color={themeColor} />
         </PopoverTrigger>
         <PopoverContent className="space-y-2 border-none bg-[var(--background-color,#1C1E22)]">
-          <div className="text-sm font-semibold text-[var(--Grey-300,#EAECF0)]">
+          <div className="font-semibold text-[var(--Grey-300,#EAECF0)] text-sm">
             STYLE
           </div>
           <div className="mt-4 flex gap-3">
@@ -191,7 +188,6 @@ export const ThemePalettePopover = () => {
           </div>
         </PopoverContent>
       </Popover>
-    </>
   );
 };
 
@@ -218,7 +214,7 @@ export const ThemePalettePopover = () => {
 //   )
 // }
 
-const NetworkIndicator = dynamic(
+const _NetworkIndicator = dynamic(
   () => import("@/components/Dynamic/NetworkIndicator"),
   {
     ssr: false,
@@ -237,7 +233,7 @@ export const GitHubStar = () => {
   const starsCntMemo = React.useMemo(() => {
     if (!data || !data.stargazers_count) return null;
     return formatNumber(data?.stargazers_count || 0);
-  }, [data?.stargazers_count]);
+  }, [data?.stargazers_count, data]);
 
   return (
     <Button size="sm" variant="ghost" asChild>
@@ -245,7 +241,7 @@ export const GitHubStar = () => {
         <GitHubIcon className="h-4 w-4 md:h-5 md:w-5" />
         <span className="sr-only">GitHub</span>
         {starsCntMemo && (
-          <span className="text-xs font-semibold md:text-sm">
+          <span className="font-semibold text-xs md:text-sm">
             {starsCntMemo}
           </span>
         )}

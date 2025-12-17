@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { AnimatedSpinnerIcon } from "@/components/Icon";
 
 export interface LoadingButtonProps extends Omit<ButtonProps, "asChild"> {

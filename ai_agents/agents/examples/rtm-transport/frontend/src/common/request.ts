@@ -1,12 +1,12 @@
 import axios from "axios";
 import type { Language } from "@/types";
 import { isEditModeOn } from "./constant";
-import {
-  type AddonDef,
-  type Connection,
-  type Graph,
-  type Node,
-  type ProtocolLabel,
+import type {
+  AddonDef,
+  Connection,
+  Graph,
+  Node,
+  ProtocolLabel,
 } from "./graph";
 import { genUUID } from "./utils";
 

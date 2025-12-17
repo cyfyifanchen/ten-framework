@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // Import PIXI setup first to ensure global availability
 import PIXI from "@/lib/pixi-setup";
 import { MotionSync } from "live2d-motionsync/stream";
@@ -37,7 +37,7 @@ export default function Live2DCharacter({
 
     // Add global error handler for MotionSync errors
     const handleGlobalError = (event: ErrorEvent) => {
-      if (event.message && event.message.includes("addLast")) {
+      if (event.message?.includes("addLast")) {
         console.error(
           "[Live2DCharacter] MotionSync error caught globally:",
           event
@@ -50,7 +50,7 @@ export default function Live2DCharacter({
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      if (event.reason && event.reason.toString().includes("addLast")) {
+      if (event.reason?.toString().includes("addLast")) {
         console.error(
           "[Live2DCharacter] MotionSync promise rejection caught:",
           event.reason
@@ -251,9 +251,7 @@ export default function Live2DCharacter({
 
               // Validate that the model and internalModel are properly initialized
               if (
-                model &&
-                model.internalModel &&
-                model.internalModel.coreModel
+                model?.internalModel?.coreModel
               ) {
                 console.log(
                   "[Live2DCharacter] Creating MotionSync instance..."
@@ -321,7 +319,7 @@ export default function Live2DCharacter({
     // Ensure model is loaded (MotionSync is optional)
     if (!isModelLoaded) return;
 
-    if (audioTrack && audioTrack.getMediaStreamTrack) {
+    if (audioTrack?.getMediaStreamTrack) {
       console.log(
         "[Live2DCharacter] Received audioTrack, creating MediaStream."
       );
@@ -476,7 +474,7 @@ export default function Live2DCharacter({
         audioElementRef.current = null;
       }
     };
-  }, [audioTrack, isModelLoaded]);
+  }, [audioTrack, isModelLoaded, motionSyncEnabled]);
 
   // Component unmount cleanup
   useEffect(() => {
@@ -565,7 +563,7 @@ export default function Live2DCharacter({
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-primary border-b-2"></div>
             <p className="text-muted-foreground">Loading Live2D Model...</p>
           </div>
         </div>
@@ -583,7 +581,7 @@ export default function Live2DCharacter({
       {!isModelLoaded && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 text-white">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-white border-b-2"></div>
             <p>Loading Live2D Model...</p>
           </div>
         </div>

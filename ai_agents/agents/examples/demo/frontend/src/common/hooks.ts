@@ -1,8 +1,8 @@
 "use client";
 
-import { IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
+import type { IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
 import { normalizeFrequencies } from "./utils";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { AppDispatch, AppStore, RootState } from "../store";
 import { useDispatch, useSelector, useStore } from "react-redux";
 
@@ -24,7 +24,7 @@ export const useMultibandTrackVolume = (
     }
 
     const ctx = new AudioContext();
-    let finTrack =
+    const finTrack =
       track instanceof MediaStreamTrack ? track : track.getMediaStreamTrack();
     const mediaStream = new MediaStream([finTrack]);
     const source = ctx.createMediaStreamSource(mediaStream);
@@ -68,7 +68,7 @@ export const useMultibandTrackVolume = (
 };
 
 export const useAutoScroll = (ref: React.RefObject<HTMLElement | null>) => {
-  const callback: MutationCallback = (mutationList, observer) => {
+  const callback: MutationCallback = (mutationList, _observer) => {
     mutationList.forEach((mutation) => {
       switch (mutation.type) {
         case "childList":
@@ -94,7 +94,7 @@ export const useAutoScroll = (ref: React.RefObject<HTMLElement | null>) => {
     return () => {
       observer.disconnect();
     };
-  }, [ref]);
+  }, [ref, callback]);
 };
 
 // export const useSmallScreen = () => {

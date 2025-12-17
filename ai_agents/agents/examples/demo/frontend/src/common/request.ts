@@ -1,5 +1,5 @@
 import { genUUID } from "./utils";
-import { IOceanBaseSettings, Language } from "@/types";
+import type { IOceanBaseSettings, Language } from "@/types";
 import axios from "axios";
 
 export interface StartRequestConfig {

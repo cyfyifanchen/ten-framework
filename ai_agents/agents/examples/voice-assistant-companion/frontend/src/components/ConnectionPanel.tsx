@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AgoraConfig, ConnectionStatus } from "@/types";
-import { NetworkQuality } from "agora-rtc-sdk-ng";
+import type { AgoraConfig, ConnectionStatus } from "@/types";
+import type { NetworkQuality } from "agora-rtc-sdk-ng";
 // IRemoteAudioTrack will be imported dynamically
 import { Wifi, WifiOff, Activity, Mic, MicOff } from "lucide-react";
 
@@ -31,7 +31,7 @@ export default function ConnectionPanel({
 
   const [isConnecting, setIsConnecting] = useState(false);
   const [isMicEnabled, setIsMicEnabled] = useState(true);
-  const [networkQuality, setNetworkQuality] = useState(0);
+  const [_networkQuality, setNetworkQuality] = useState(0);
   const [agoraService, setAgoraService] = useState<any>(null);
 
   useEffect(() => {
@@ -157,17 +157,17 @@ export default function ConnectionPanel({
         >
           {isConnecting ? (
             <>
-              <Activity className="h-4 w-4 mr-2 animate-spin" />
+              <Activity className="mr-2 h-4 w-4 animate-spin" />
               Connecting...
             </>
           ) : isConnected ? (
             <>
-              <WifiOff className="h-4 w-4 mr-2" />
+              <WifiOff className="mr-2 h-4 w-4" />
               Disconnect
             </>
           ) : (
             <>
-              <Wifi className="h-4 w-4 mr-2" />
+              <Wifi className="mr-2 h-4 w-4" />
               Connect
             </>
           )}

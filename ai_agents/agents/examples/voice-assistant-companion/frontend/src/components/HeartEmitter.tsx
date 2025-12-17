@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Heart = {
   id: number;
@@ -59,7 +60,7 @@ export function HeartEmitter({ active }: HeartEmitterProps) {
   }, [active]);
 
   return (
-    <div className="pointer-events-none absolute bottom-[24%] left-1/2 flex h-0 w-full max-w-[460px] -translate-x-1/2 justify-center">
+    <div className="-translate-x-1/2 pointer-events-none absolute bottom-[24%] left-1/2 flex h-0 w-full max-w-[460px] justify-center">
       {hearts.map((heart) => (
         <span
           key={heart.id}

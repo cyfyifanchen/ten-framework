@@ -1,4 +1,4 @@
-import { IconProps } from "../types";
+import type { IconProps } from "../types";
 import ColorPickerSvg from "@/assets/color_picker.svg";
 
 export const ColorPickerIcon = (props: IconProps) => {

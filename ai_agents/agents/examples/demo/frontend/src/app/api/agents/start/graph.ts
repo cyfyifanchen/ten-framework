@@ -163,7 +163,7 @@ export const getGraphProperties = (
     };
   }
 
-  let combined_greeting = greeting || localizationOptions["greeting"];
+  let combined_greeting = greeting || localizationOptions.greeting;
   const converteLanguage = convertLanguage(language);
   const characterOverrides: Record<
     string,
@@ -212,13 +212,13 @@ export const getGraphProperties = (
     ? characterOverrides[characterId] || {}
     : {};
   const localeOverride = characterId
-    ? (characterLocaleOverrides[characterId] || {})[language] || {}
+    ? characterLocaleOverrides[characterId]?.[language] || {}
     : {};
   const resolvedGreeting =
     greeting ||
     localeOverride.greeting ||
     characterConfig.greeting ||
-    localizationOptions["greeting"];
+    localizationOptions.greeting;
   const resolvedPrompt =
     prompt || localeOverride.prompt || characterConfig.prompt;
   const resolvedVoiceType = characterConfig.voiceType || voiceType;
@@ -228,7 +228,7 @@ export const getGraphProperties = (
     "Japanese_KindLady";
 
   if (graphName === "va_coze_azure") {
-    combined_greeting = greeting || localizationOptions["coze_greeting"];
+    combined_greeting = greeting || localizationOptions.coze_greeting;
     return {
       stt: {
         params: {
@@ -246,7 +246,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },
@@ -256,7 +256,7 @@ export const getGraphProperties = (
     return {
       v2v: {
         model: OPENAI_REALTIME_MODEL,
-        voice: voiceNameMap[language]["openai"][voiceType],
+        voice: voiceNameMap[language].openai[voiceType],
         language: converteLanguage,
         prompt: prompt,
       },
@@ -268,7 +268,7 @@ export const getGraphProperties = (
     return {
       v2v: {
         model: OPENAI_REALTIME_MINI_MODEL,
-        voice: voiceNameMap[language]["openai"][voiceType],
+        voice: voiceNameMap[language].openai[voiceType],
         language: converteLanguage,
         prompt: prompt,
       },
@@ -295,7 +295,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },
@@ -305,8 +305,8 @@ export const getGraphProperties = (
     return {
       v2v: {
         prompt: prompt,
-        language: voiceNameMap[language]["gemini"]["langCode"],
-        voice: voiceNameMap[language]["gemini"][voiceType],
+        language: voiceNameMap[language].gemini.langCode,
+        voice: voiceNameMap[language].gemini[voiceType],
         // "greeting": combined_greeting,
       },
     };
@@ -314,7 +314,7 @@ export const getGraphProperties = (
     return {
       v2v: {
         prompt: prompt,
-        voice: voiceNameMap[language]["gemini"][voiceType],
+        voice: voiceNameMap[language].gemini[voiceType],
         // "greeting": combined_greeting,
       },
     };
@@ -336,7 +336,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },
@@ -362,7 +362,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },
@@ -387,7 +387,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },
@@ -426,7 +426,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure_grok4"][voiceType],
+              voiceNameMap[language].azure_grok4[voiceType],
             ],
           ],
         },
@@ -450,7 +450,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },
@@ -461,8 +461,8 @@ export const getGraphProperties = (
     return {
       v2v: {
         model: "gpt-4o",
-        voice_name: voiceNameMap[language]["azure"][voiceType],
-        language: voiceNameMap[language]["azure"]["langCode"] || language,
+        voice_name: voiceNameMap[language].azure[voiceType],
+        language: voiceNameMap[language].azure.langCode || language,
         prompt: prompt,
       },
       main_control: {
@@ -490,7 +490,7 @@ export const getGraphProperties = (
           propertys: [
             [
               "SpeechServiceConnection_SynthVoice",
-              voiceNameMap[language]["azure"][voiceType],
+              voiceNameMap[language].azure[voiceType],
             ],
           ],
         },

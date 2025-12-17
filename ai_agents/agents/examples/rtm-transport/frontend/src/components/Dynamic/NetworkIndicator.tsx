@@ -14,7 +14,7 @@ export default function NetworkIndicator() {
     return () => {
       rtcManager.off("networkQuality", onNetworkQuality);
     };
-  }, []);
+  }, [onNetworkQuality]);
 
   const onNetworkQuality = (quality: NetworkQuality) => {
     setNetworkQuality(quality);

@@ -1,4 +1,4 @@
-import {
+import type {
   IAgentSettings,
   IOptions,
   ICozeSettings,
@@ -25,7 +25,7 @@ export const getOptionsFromLocal = (): {
   difySettings: IDifySettings;
   oceanbaseSettings: IOceanBaseSettings;
 } => {
-  let data = {
+  const data = {
     options: DEFAULT_OPTIONS,
     settings: DEFAULT_AGENT_SETTINGS,
     cozeSettings: DEFAULT_COZE_SETTINGS,

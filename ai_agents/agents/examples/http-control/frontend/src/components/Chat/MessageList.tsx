@@ -1,10 +1,6 @@
-import { Bot, Brain, MessageCircleQuestion } from "lucide-react";
+import { Bot, Brain, } from "lucide-react";
 import * as React from "react";
 import {
-  GRAPH_OPTIONS,
-  isRagGraph,
-  LANGUAGE_OPTIONS,
-  useAppDispatch,
   useAppSelector,
   useAutoScroll,
 } from "@/common";
@@ -26,7 +22,7 @@ export default function MessageList(props: { className?: string }) {
       ref={containerRef}
       className={cn("grow space-y-2 overflow-y-auto p-4", className)}
     >
-      {chatItems.map((item, index) => {
+      {chatItems.map((item, _index) => {
         return <MessageItem data={item} key={item.time} />;
       })}
     </div>
@@ -37,8 +33,7 @@ export function MessageItem(props: { data: IChatItem }) {
   const { data } = props;
 
   return (
-    <>
-      <div
+    <div
         className={cn("flex items-start gap-2", {
           "flex-row-reverse": data.type === EMessageType.USER,
         })}
@@ -74,6 +69,5 @@ export function MessageItem(props: { data: IChatItem }) {
           )}
         </div>
       </div>
-    </>
   );
 }

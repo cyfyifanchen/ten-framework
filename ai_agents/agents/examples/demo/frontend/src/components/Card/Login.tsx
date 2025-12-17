@@ -71,9 +71,8 @@ export default function LoginCard() {
   };
 
   return (
-    <>
-      <div className="flex h-full w-full items-center justify-center overflow-y-auto p-4">
-        <Card className="w-full max-w-md rounded-xl border border-[#20272D] bg-transparent bg-gradient-to-br from-[rgba(31,69,141,0.16)] via-[rgba(31,69,141,0)] to-[#1F458D] shadow-[0px_3.999px_48.988px_0px_rgba(0,7,72,0.12)] backdrop-blur-[8.8px]">
+    <div className="flex h-full w-full items-center justify-center overflow-y-auto p-4">
+        <Card className="w-full max-w-md rounded-xl border border-[#20272D] bg-gradient-to-br bg-transparent from-[rgba(31,69,141,0.16)] via-[rgba(31,69,141,0)] to-[#1F458D] shadow-[0px_3.999px_48.988px_0px_rgba(0,7,72,0.12)] backdrop-blur-[8.8px]">
           <CardHeader>
             <Button
               asChild
@@ -89,7 +88,7 @@ export default function LoginCard() {
             <CardTitle className="text-center text-2xl md:text-3xl">
               TEN Agent
             </CardTitle>
-            <CardDescription className="text-md text-center text-inherit md:text-lg">
+            <CardDescription className="text-center text-inherit text-md md:text-lg">
               Multi-Purpose Voice Assistant Agent Example Powered by TEN
             </CardDescription>
           </CardHeader>
@@ -116,11 +115,10 @@ export default function LoginCard() {
               </LoadingButton>
             </form>
           </CardContent>
-          <CardFooter className="flex w-full items-center justify-center text-sm text-muted-foreground">
+          <CardFooter className="flex w-full items-center justify-center text-muted-foreground text-sm">
             <p>Version {version}</p>
           </CardFooter>
         </Card>
       </div>
-    </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 // agoraService will be imported dynamically
-import { TranscriptMessage } from "@/types";
+import type { TranscriptMessage } from "@/types";
 import {
   MessageSquare,
   Trash2,
@@ -75,7 +75,7 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
     if (isAutoScroll && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, isAutoScroll]);
+  }, [isAutoScroll]);
 
   const clearMessages = () => {
     setMessages([]);
@@ -161,7 +161,7 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
               size="sm"
               disabled={messages.length === 0}
             >
-              <Download className="h-4 w-4 mr-1" />
+              <Download className="mr-1 h-4 w-4" />
               Export
             </Button>
 
@@ -171,18 +171,18 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
               size="sm"
               disabled={messages.length === 0}
             >
-              <Trash2 className="h-4 w-4 mr-1" />
+              <Trash2 className="mr-1 h-4 w-4" />
               Clear
             </Button>
           </div>
         </div>
 
         {/* Messages */}
-        <div className="h-48 overflow-y-auto border rounded-lg p-2 space-y-2 bg-muted/20">
+        <div className="h-48 space-y-2 overflow-y-auto rounded-lg border bg-muted/20 p-2">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-muted-foreground">
+            <div className="flex h-full items-center justify-center text-muted-foreground">
               <div className="text-center">
-                <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <MessageSquare className="mx-auto mb-2 h-8 w-8 opacity-50" />
                 <p>No messages yet</p>
                 <p className="text-sm">
                   Start a conversation to see the transcript
@@ -193,10 +193,10 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
             messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-3 p-3 rounded-lg ${
+                className={`flex gap-3 rounded-lg p-3 ${
                   message.isUser
-                    ? "bg-primary/10 border-l-4 border-primary"
-                    : "bg-secondary/50 border-l-4 border-secondary"
+                    ? "border-primary border-l-4 bg-primary/10"
+                    : "border-secondary border-l-4 bg-secondary/50"
                 }`}
               >
                 <div className="flex-shrink-0">
@@ -207,12 +207,12 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
                   )}
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex items-center gap-2">
                     <span className="font-medium text-sm">
                       {message.isUser ? "You" : "Assistant"}
                     </span>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1 text-muted-foreground text-xs">
                       <Clock className="h-3 w-3" />
                       {formatTimestamp(message.timestamp)}
                     </div>
@@ -225,7 +225,7 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
                     )}
                   </div>
 
-                  <p className="text-sm break-words">{message.text}</p>
+                  <p className="break-words text-sm">{message.text}</p>
                 </div>
               </div>
             ))
@@ -235,7 +235,7 @@ export default function TranscriptPanel({ className }: TranscriptPanelProps) {
 
         {/* Stats */}
         {messages.length > 0 && (
-          <div className="text-xs text-muted-foreground text-center">
+          <div className="text-center text-muted-foreground text-xs">
             {messages.length} message{messages.length !== 1 ? "s" : ""} •
             {messages.filter((m) => m.isUser).length} from you •
             {messages.filter((m) => !m.isUser).length} from assistant

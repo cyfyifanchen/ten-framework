@@ -1,5 +1,5 @@
 import { getRandomUserId } from "./utils";
-import { IChatItem, EMessageType, EMessageDataType } from "@/types";
+import { type IChatItem, EMessageType, EMessageDataType } from "@/types";
 
 const SENTENCES = [
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -15,7 +15,7 @@ export const genRandomParagraph = (num: number = 0): string => {
   let paragraph = "";
   for (let i = 0; i < num; i++) {
     const randomIndex = Math.floor(Math.random() * SENTENCES.length);
-    paragraph += SENTENCES[randomIndex] + " ";
+    paragraph += `${SENTENCES[randomIndex]} `;
   }
 
   return paragraph.trim();
@@ -27,7 +27,7 @@ export const genRandomChatList = (num: number = 10): IChatItem[] => {
     const type = Math.random() > 0.5 ? EMessageType.AGENT : EMessageType.USER;
     arr.push({
       userId: getRandomUserId(),
-      userName: type == "agent" ? "Agent" : "You",
+      userName: type === "agent" ? "Agent" : "You",
       text: genRandomParagraph(3),
       data_type: EMessageDataType.TEXT,
       type,

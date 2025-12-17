@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getGraphProperties } from "./graph";
 import axios from "axios";
 /**
@@ -56,13 +56,13 @@ export async function POST(request: NextRequest) {
       };
     }
     if (graph_name.includes("coze")) {
-      properties["llm"]["token"] = coze_token;
-      properties["llm"]["bot_id"] = coze_bot_id;
-      properties["llm"]["base_url"] = coze_base_url;
+      properties.llm.token = coze_token;
+      properties.llm.bot_id = coze_bot_id;
+      properties.llm.base_url = coze_base_url;
     }
     if (graph_name.includes("dify")) {
-      properties["llm"]["api_key"] = dify_api_key;
-      properties["llm"]["base_url"] = dify_base_url;
+      properties.llm.api_key = dify_api_key;
+      properties.llm.base_url = dify_base_url;
     }
 
     console.log(

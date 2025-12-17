@@ -12,13 +12,11 @@ import {
   useAppSelector,
   useIsCompactLayout,
   VideoSourceType,
-  VOICE_OPTIONS,
 } from "@/common";
 import Avatar from "@/components/Agent/AvatarTrulience";
 import VideoBlock from "@/components/Agent/Camera";
 import MicrophoneBlock from "@/components/Agent/Microphone";
 import AgentView from "@/components/Agent/View";
-import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect";
 import ChatCard from "@/components/Chat/ChatCard";
 import { cn } from "@/lib/utils";
 import { type IRtcUser, type IUserTracks, rtcManager } from "@/manager";
@@ -28,7 +26,7 @@ import {
   setRoomConnected,
   setVoiceType,
 } from "@/store/reducers/global";
-import { EMessageType, type IChatItem, ITextItem } from "@/types";
+import type { IChatItem, } from "@/types";
 
 let hasInit: boolean = false;
 
@@ -53,7 +51,7 @@ export default function RTCCard(props: { className?: string }) {
 
   const isCompactLayout = useIsCompactLayout();
 
-  const DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
+  const _DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
     ssr: false,
   });
 
@@ -72,7 +70,7 @@ export default function RTCCard(props: { className?: string }) {
         destory();
       }
     };
-  }, [options.channel]);
+  }, [options.channel, destory, init]);
 
   const init = async () => {
     console.log("[rtc] init");
@@ -133,7 +131,7 @@ export default function RTCCard(props: { className?: string }) {
     dispatch(addChatItem(text));
   };
 
-  const onVoiceChange = (value: any) => {
+  const _onVoiceChange = (value: any) => {
     dispatch(setVoiceType(value));
   };
 

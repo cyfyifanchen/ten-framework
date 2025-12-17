@@ -10,29 +10,21 @@ import {
   isRagGraph,
   isLanguageSupported,
 } from "@/common";
-import { setRtmConnected, addChatItem } from "@/store/reducers/global";
 import MessageList from "@/components/Chat/MessageList";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { rtmManager } from "@/manager/rtm";
-import {
-  type IRTMTextItem,
-  EMessageDataType,
-  EMessageType,
-  ERTMTextType,
-} from "@/types";
 
-let hasInit: boolean = false;
+const hasInit: boolean = false;
 
 export default function ChatCard(props: { className?: string }) {
   const { className } = props;
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, _setInputValue] = React.useState("");
 
   const graphName = useAppSelector((state) => state.global.graphName);
   const rtmConnected = useAppSelector((state) => state.global.rtmConnected);
   const options = useAppSelector((state) => state.global.options);
   const agentConnected = useAppSelector((state) => state.global.agentConnected);
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
 
   const disableInputMemo = React.useMemo(() => {
     return (
@@ -123,7 +115,7 @@ export default function ChatCard(props: { className?: string }) {
   //   }
   // }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (_e: React.ChangeEvent<HTMLInputElement>) => {
     // setInputValue(e.target.value)
   };
 
@@ -151,7 +143,7 @@ export default function ChatCard(props: { className?: string }) {
           <MessageList />
           <div
             className={cn("border-t pt-4", {
-              ["hidden"]: !graphName.includes("rtm"), // TODO: TMP use rtm key word
+              "hidden": !graphName.includes("rtm"), // TODO: TMP use rtm key word
             })}
           >
             <form
@@ -167,18 +159,18 @@ export default function ChatCard(props: { className?: string }) {
                 className={cn(
                   "flex-grow rounded-md border bg-background p-1.5 focus:outline-none focus:ring-1 focus:ring-ring",
                   {
-                    ["cursor-not-allowed"]: disableInputMemo,
+                    "cursor-not-allowed": disableInputMemo,
                   }
                 )}
               />
               <Button
                 type="submit"
-                disabled={disableInputMemo || inputValue.length == 0}
+                disabled={disableInputMemo || inputValue.length === 0}
                 size="icon"
                 variant="outline"
                 className={cn("bg-transparent", {
-                  ["opacity-50"]: disableInputMemo || inputValue.length == 0,
-                  ["cursor-not-allowed"]: disableInputMemo,
+                  "opacity-50": disableInputMemo || inputValue.length === 0,
+                  "cursor-not-allowed": disableInputMemo,
                 })}
               >
                 <Send className="h-4 w-4" />

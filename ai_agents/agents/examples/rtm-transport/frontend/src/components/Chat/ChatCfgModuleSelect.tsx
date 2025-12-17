@@ -11,18 +11,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
-  apiAddConnection,
-  apiAddNode,
-  apiGetDefaultProperty,
-  apiRemoveNode,
-  apiReplaceNodeModule,
   isLLM,
 } from "@/common";
 import {
-  AddonDef,
-  Destination,
   type Graph,
-  ProtocolLabel as GraphConnProtocol,
   GraphEditor,
   ProtocolLabel,
 } from "@/common/graph";
@@ -38,18 +30,14 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -62,7 +50,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { fetchGraphDetails } from "@/store/reducers/global";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -362,7 +349,7 @@ const GraphModuleCfgForm = ({
 
     // If no LLM or V2V module is selected, return all tool modules
     return [];
-  }, [installedAndRegisteredToolModules, selectedGraph, llmValue, v2vValue]);
+  }, [installedAndRegisteredToolModules, llmValue, v2vValue]);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     onUpdate(data, selectedTools);

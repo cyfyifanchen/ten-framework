@@ -28,7 +28,7 @@ import SettingsDialog, {
   difySettingsFormSchema,
   oceanbaseSettingsFormSchema,
 } from "@/components/Dialog/Settings";
-import { IOceanBaseSettings } from "@/types";
+import type { IOceanBaseSettings } from "@/types";
 
 let intervalId: NodeJS.Timeout | null = null;
 
@@ -57,11 +57,11 @@ export default function Action(props: { className?: string }) {
     if (channel) {
       checkAgentConnected();
     }
-  }, [channel]);
+  }, [channel, checkAgentConnected]);
 
   const checkAgentConnected = async () => {
     const res: any = await apiPing(channel);
-    if (res?.code == 0) {
+    if (res?.code === 0) {
       dispatch(setAgentConnected(true));
     }
   };
@@ -150,8 +150,8 @@ export default function Action(props: { className?: string }) {
         // common -- start service
         const res = await apiStartService(startServicePayload);
         const { code, msg } = res || {};
-        if (code != 0) {
-          if (code == "10001") {
+        if (code !== 0) {
+          if (code === "10001") {
             toast.error(
               "The number of users experiencing the program simultaneously has exceeded the limit. Please try again later."
             );
@@ -205,8 +205,8 @@ export default function Action(props: { className?: string }) {
       >
         {/* -- Description Part */}
         <div className="hidden md:block">
-          <span className="text-sm font-bold">Description</span>
-          <span className="ml-2 text-xs text-muted-foreground">
+          <span className="font-bold text-sm">Description</span>
+          <span className="ml-2 text-muted-foreground text-xs">
             Multi-Purpose Voice Assistant Agent Example Powered by TEN
           </span>
         </div>

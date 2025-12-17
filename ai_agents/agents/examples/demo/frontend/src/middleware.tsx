@@ -1,5 +1,5 @@
 // middleware.js
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 const { AGENT_SERVER_URL } = process.env;
 

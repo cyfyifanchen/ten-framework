@@ -45,11 +45,11 @@ export default function Action(props: { className?: string }) {
     if (channel) {
       checkAgentConnected();
     }
-  }, [channel]);
+  }, [channel, checkAgentConnected]);
 
   const checkAgentConnected = async () => {
     const res: any = await apiPing(channel);
-    if (res?.code == 0) {
+    if (res?.code === 0) {
       dispatch(setAgentConnected(true));
     }
   };
@@ -89,8 +89,8 @@ export default function Action(props: { className?: string }) {
           : undefined,
       });
       const { code, msg } = res || {};
-      if (code != 0) {
-        if (code == "10001") {
+      if (code !== 0) {
+        if (code === "10001") {
           toast.error(
             "The number of users experiencing the program simultaneously has exceeded the limit. Please try again later."
           );

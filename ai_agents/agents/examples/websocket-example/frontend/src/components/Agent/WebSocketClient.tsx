@@ -78,7 +78,7 @@ export function WebSocketClient() {
     };
     autoStart();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount
+  }, [startRecording]); // Only run on mount
 
   // Handle start agent
   const handleStartAgent = async () => {
@@ -133,15 +133,15 @@ export function WebSocketClient() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto max-w-6xl py-6 px-4">
+      <div className="container mx-auto max-w-6xl px-4 py-6">
         <div className="space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              <h1 className="font-bold text-3xl text-foreground tracking-tight">
                 WebSocket Voice Assistant
               </h1>
-              <div className="flex items-center gap-2 flex-wrap text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
                 <span>Real-time voice interaction with AI assistant</span>
                 {port && (
                   <Badge variant="secondary" className="font-normal">
@@ -154,7 +154,7 @@ export function WebSocketClient() {
           </div>
 
           {/* Main Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
             {/* Left column: Connection + Voice */}
             <div className="lg:col-span-1">
               <Card className="shadow-sm">
@@ -204,7 +204,7 @@ export function WebSocketClient() {
                     />
                   </div>
                 </CardHeader>
-                <CardContent className="pt-2 space-y-4">
+                <CardContent className="space-y-4 pt-2">
                   {(initError || agentState.error) && (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
@@ -217,7 +217,7 @@ export function WebSocketClient() {
 
                   {/* Audio Visualizer */}
                   <div
-                    className="relative rounded-xl bg-muted/30 overflow-hidden p-0 ring-1 ring-border/40 border border-border/30"
+                    className="relative overflow-hidden rounded-xl border border-border/30 bg-muted/30 p-0 ring-1 ring-border/40"
                     style={{ height: 48 }}
                   >
                     <AudioVisualizer
@@ -233,19 +233,19 @@ export function WebSocketClient() {
                   {/* Status Text */}
                   <div className="text-center">
                     {isRunning && !wsConnected && (
-                      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                      <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm">
                         <Loader2 className="h-4 w-4 animate-spin" />
                         <span>Connecting to WebSocket...</span>
                       </div>
                     )}
                     {isRunning && wsConnected && !isRecording && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Click the microphone to start speaking
                       </p>
                     )}
                     {isRunning && wsConnected && isRecording && (
                       <div className="flex items-center justify-center gap-2 text-sm text-white">
-                        <div className="h-2 w-2 rounded-full bg-white animate-pulse" />
+                        <div className="h-2 w-2 animate-pulse rounded-full bg-white" />
                         <span>Listening... Click to stop</span>
                       </div>
                     )}

@@ -1,4 +1,4 @@
-const http = require("http");
+const http = require("node:http");
 
 const server = http.createServer((req, res) => {
   // Set CORS headers
@@ -36,7 +36,7 @@ const server = http.createServer((req, res) => {
 
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(response));
-      } catch (error) {
+      } catch (_error) {
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Invalid JSON" }));
       }

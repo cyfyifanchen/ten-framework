@@ -13,8 +13,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -41,7 +39,7 @@ export default function PdfSelect() {
     if (agentConnected) {
       getPDFOptions();
     }
-  }, [agentConnected]);
+  }, [agentConnected, getPDFOptions]);
 
   const getPDFOptions = async () => {
     const res = await apiGetDocumentList();
@@ -82,8 +80,7 @@ export default function PdfSelect() {
   };
 
   return (
-    <>
-      <Dialog>
+    <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="w-fit bg-transparent">
             <FileTextIcon />
@@ -115,7 +112,6 @@ export default function PdfSelect() {
           </div>
         </DialogContent>
       </Dialog>
-    </>
   );
 }
 
@@ -163,7 +159,7 @@ export function UploadPdf({
       } else {
         toast.info(data.msg);
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error(`Upload ${file.name} failed`);
     } finally {
       setUploading(false);

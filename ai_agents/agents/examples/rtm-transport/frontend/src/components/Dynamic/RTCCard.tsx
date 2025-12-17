@@ -51,7 +51,7 @@ export default function RTCCard(props: { className?: string }) {
 
   const isCompactLayout = useIsCompactLayout();
 
-  const DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
+  const _DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
     ssr: false,
   });
 
@@ -70,7 +70,7 @@ export default function RTCCard(props: { className?: string }) {
         destory();
       }
     };
-  }, [options.channel]);
+  }, [options.channel, destory, init]);
 
   const init = async () => {
     console.log("[rtc] init");
@@ -151,7 +151,7 @@ export default function RTCCard(props: { className?: string }) {
     }
   };
 
-  const onVoiceChange = (value: any) => {
+  const _onVoiceChange = (value: any) => {
     dispatch(setVoiceType(value));
   };
 
