@@ -147,7 +147,10 @@ export default function RTCCard(props: { className?: string }) {
   return (
     <div className={cn("flex h-full min-h-0 flex-col", className)}>
       {/* Top region (Avatar or ChatCard) */}
-      <div className="z-10 min-h-0 flex-1 overflow-y-auto" style={{ minHeight: '240px' }}>
+      <div
+        className="z-10 min-h-0 flex-1 overflow-y-auto"
+        style={{ minHeight: "240px" }}
+      >
         {useTrulienceAvatar ? (
           !avatarInLargeWindow ? (
             <div className="h-60 w-full p-1">
@@ -162,7 +165,10 @@ export default function RTCCard(props: { className?: string }) {
             )
           )
         ) : (
-          <AgentView audioTrack={remoteuser?.audioTrack} videoTrack={remoteuser?.videoTrack} />
+          <AgentView
+            audioTrack={remoteuser?.audioTrack}
+            videoTrack={remoteuser?.videoTrack}
+          />
         )}
       </div>
 

@@ -1,6 +1,9 @@
 "use client";
 
-import type { IMicrophoneAudioTrack, IRemoteAudioTrack } from "agora-rtc-sdk-ng";
+import type {
+  IMicrophoneAudioTrack,
+  IRemoteAudioTrack,
+} from "agora-rtc-sdk-ng";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import type { AddonDef, Graph, Node } from "@/common/graph";
