@@ -5,7 +5,13 @@ import { AudioVisualizer } from "@/components/Agent/AudioVisualizer";
 import { ChatHistory } from "@/components/Agent/ChatHistory";
 import { ConnectionStatus } from "@/components/Agent/ConnectionStatus";
 import { TranscriptionDisplay } from "@/components/Agent/TranscriptionDisplay";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -29,10 +35,22 @@ export function WebSocketClient() {
   }, []);
 
   // Agent lifecycle management
-  const { state: agentState, startAgent, stopAgent, reset, isStarting, isRunning, hasError } = useAgentLifecycle();
+  const {
+    state: agentState,
+    startAgent,
+    stopAgent,
+    reset,
+    isStarting,
+    isRunning,
+    hasError,
+  } = useAgentLifecycle();
 
   // WebSocket connection (don't auto-connect, but allow unlimited retries)
-  const { wsManager, connect: connectWebSocket, disconnect: disconnectWebSocket } = useWebSocket({
+  const {
+    wsManager,
+    connect: connectWebSocket,
+    disconnect: disconnectWebSocket,
+  } = useWebSocket({
     url: port ? getWebSocketUrl(port) : "ws://localhost:8765",
     autoConnect: false,
     maxReconnectAttempts: -1, // Unlimited retries
@@ -80,7 +98,9 @@ export function WebSocketClient() {
       }, 2000); // 2 second delay to allow server to start
     } catch (error) {
       console.error("Failed to start agent:", error);
-      setInitError(error instanceof Error ? error.message : "Failed to start agent");
+      setInitError(
+        error instanceof Error ? error.message : "Failed to start agent"
+      );
     }
   };
 
@@ -196,7 +216,10 @@ export function WebSocketClient() {
                   )}
 
                   {/* Audio Visualizer */}
-                  <div className="relative rounded-xl bg-muted/30 overflow-hidden p-0 ring-1 ring-border/40 border border-border/30" style={{ height: 48 }}>
+                  <div
+                    className="relative rounded-xl bg-muted/30 overflow-hidden p-0 ring-1 ring-border/40 border border-border/30"
+                    style={{ height: 48 }}
+                  >
                     <AudioVisualizer
                       stream={getMediaStream()}
                       isActive={isRecording}

@@ -25,11 +25,7 @@ export function AudioControls({
       {isRecording ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              size="sm"
-              className="gap-2"
-              onClick={onStopRecording}
-            >
+            <Button size="sm" className="gap-2" onClick={onStopRecording}>
               <MicOff className="h-4 w-4" />
               Mic
             </Button>
@@ -41,11 +37,7 @@ export function AudioControls({
       ) : (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              size="sm"
-              className="gap-2"
-              onClick={onStartRecording}
-            >
+            <Button size="sm" className="gap-2" onClick={onStartRecording}>
               <Mic className="h-4 w-4" />
               Mic
             </Button>

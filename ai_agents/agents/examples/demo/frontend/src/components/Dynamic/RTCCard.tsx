@@ -1,120 +1,124 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import { ICameraVideoTrack, ILocalVideoTrack, IMicrophoneAudioTrack } from "agora-rtc-sdk-ng"
-import { useAppSelector, useAppDispatch } from "@/common/hooks"
-import { VideoSourceType } from "@/common/constant"
-import { ITextItem, EMessageType, IChatItem } from "@/types"
-import { rtcManager, IUserTracks, IRtcUser } from "@/manager"
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import {
+  ICameraVideoTrack,
+  ILocalVideoTrack,
+  IMicrophoneAudioTrack,
+} from "agora-rtc-sdk-ng";
+import { useAppSelector, useAppDispatch } from "@/common/hooks";
+import { VideoSourceType } from "@/common/constant";
+import { ITextItem, EMessageType, IChatItem } from "@/types";
+import { rtcManager, IUserTracks, IRtcUser } from "@/manager";
 import {
   setRoomConnected,
   addChatItem,
   setVoiceType,
   setOptions,
-} from "@/store/reducers/global"
-import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect"
-import AgentView from "@/components/Agent/View"
-import MicrophoneBlock from "@/components/Agent/Microphone"
-import CameraBlock from "@/components/Agent/Camera"
-import VideoBlock from "@/components/Agent/Camera"
+} from "@/store/reducers/global";
+import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect";
+import AgentView from "@/components/Agent/View";
+import MicrophoneBlock from "@/components/Agent/Microphone";
+import CameraBlock from "@/components/Agent/Camera";
+import VideoBlock from "@/components/Agent/Camera";
 
-let hasInit: boolean = false
+let hasInit: boolean = false;
 
 export default function RTCCard(props: { className?: string }) {
-  const { className } = props
+  const { className } = props;
 
-  const dispatch = useAppDispatch()
-  const options = useAppSelector((state) => state.global.options)
-  const voiceType = useAppSelector((state) => state.global.voiceType)
-  const selectedGraphId = useAppSelector((state) => state.global.graphName)
-  const { userId, channel } = options
-  const [videoTrack, setVideoTrack] = React.useState<ICameraVideoTrack>()
-  const [audioTrack, setAudioTrack] = React.useState<IMicrophoneAudioTrack>()
-  const [screenTrack, setScreenTrack] = React.useState<ILocalVideoTrack>()
-  const [remoteuser, setRemoteUser] = React.useState<IRtcUser>()
-  const [videoSourceType, setVideoSourceType] = React.useState<VideoSourceType>(VideoSourceType.CAMERA)
+  const dispatch = useAppDispatch();
+  const options = useAppSelector((state) => state.global.options);
+  const voiceType = useAppSelector((state) => state.global.voiceType);
+  const selectedGraphId = useAppSelector((state) => state.global.graphName);
+  const { userId, channel } = options;
+  const [videoTrack, setVideoTrack] = React.useState<ICameraVideoTrack>();
+  const [audioTrack, setAudioTrack] = React.useState<IMicrophoneAudioTrack>();
+  const [screenTrack, setScreenTrack] = React.useState<ILocalVideoTrack>();
+  const [remoteuser, setRemoteUser] = React.useState<IRtcUser>();
+  const [videoSourceType, setVideoSourceType] = React.useState<VideoSourceType>(
+    VideoSourceType.CAMERA
+  );
 
   React.useEffect(() => {
     if (!options.channel) {
-      return
+      return;
     }
     if (hasInit) {
-      return
+      return;
     }
 
-    init()
+    init();
 
     return () => {
       if (hasInit) {
-        destory()
+        destory();
       }
-    }
-  }, [options.channel])
+    };
+  }, [options.channel]);
 
   const init = async () => {
-    console.log("[rtc] init")
-    rtcManager.on("localTracksChanged", onLocalTracksChanged)
-    rtcManager.on("textChanged", onTextChanged)
-    rtcManager.on("remoteUserChanged", onRemoteUserChanged)
-    await rtcManager.createCameraTracks()
-    await rtcManager.createMicrophoneTracks()
+    console.log("[rtc] init");
+    rtcManager.on("localTracksChanged", onLocalTracksChanged);
+    rtcManager.on("textChanged", onTextChanged);
+    rtcManager.on("remoteUserChanged", onRemoteUserChanged);
+    await rtcManager.createCameraTracks();
+    await rtcManager.createMicrophoneTracks();
     await rtcManager.join({
       channel,
       userId,
-    })
+    });
     dispatch(
       setOptions({
         ...options,
         appId: rtcManager.appId ?? "",
         token: rtcManager.token ?? "",
-      }),
-    )
-    await rtcManager.publish()
-    dispatch(setRoomConnected(true))
-    hasInit = true
-  }
+      })
+    );
+    await rtcManager.publish();
+    dispatch(setRoomConnected(true));
+    hasInit = true;
+  };
 
   const destory = async () => {
-    console.log("[rtc] destory")
-    rtcManager.off("textChanged", onTextChanged)
-    rtcManager.off("localTracksChanged", onLocalTracksChanged)
-    rtcManager.off("remoteUserChanged", onRemoteUserChanged)
-    await rtcManager.destroy()
-    dispatch(setRoomConnected(false))
-    hasInit = false
-  }
+    console.log("[rtc] destory");
+    rtcManager.off("textChanged", onTextChanged);
+    rtcManager.off("localTracksChanged", onLocalTracksChanged);
+    rtcManager.off("remoteUserChanged", onRemoteUserChanged);
+    await rtcManager.destroy();
+    dispatch(setRoomConnected(false));
+    hasInit = false;
+  };
 
   const onRemoteUserChanged = (user: IRtcUser) => {
-    console.log("[rtc] onRemoteUserChanged", user)
-    setRemoteUser(user)
-  }
+    console.log("[rtc] onRemoteUserChanged", user);
+    setRemoteUser(user);
+  };
 
   const onLocalTracksChanged = (tracks: IUserTracks) => {
-    console.log("[rtc] onLocalTracksChanged", tracks)
-    const { videoTrack, audioTrack, screenTrack } = tracks
-    setVideoTrack(videoTrack)
-    setScreenTrack(screenTrack)
+    console.log("[rtc] onLocalTracksChanged", tracks);
+    const { videoTrack, audioTrack, screenTrack } = tracks;
+    setVideoTrack(videoTrack);
+    setScreenTrack(screenTrack);
     if (audioTrack) {
-      setAudioTrack(audioTrack)
+      setAudioTrack(audioTrack);
     }
-  }
+  };
 
   const onTextChanged = (text: IChatItem) => {
-    console.log("[rtc] onTextChanged", text)
-    dispatch(
-      addChatItem(text),
-    )
-  }
+    console.log("[rtc] onTextChanged", text);
+    dispatch(addChatItem(text));
+  };
 
   const onVoiceChange = (value: any) => {
-    dispatch(setVoiceType(value))
-  }
+    dispatch(setVoiceType(value));
+  };
 
   const onVideoSourceTypeChange = async (value: VideoSourceType) => {
-    await rtcManager.switchVideoSource(value)
-    setVideoSourceType(value)
-  }
+    await rtcManager.switchVideoSource(value);
+    setVideoSourceType(value);
+  };
 
   return (
     <>
@@ -142,5 +146,5 @@ export default function RTCCard(props: { className?: string }) {
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -27,21 +27,15 @@ export default function ChatCard(props: { className?: string }) {
   const graphName = useAppSelector((state) => state.global.selectedGraphId);
   const agentConnected = useAppSelector((state) => state.global.agentConnected);
   const options = useAppSelector((state) => state.global.options);
-  const httpPortNumber = useAppSelector((state) => state.global.options.http_port_number);
+  const httpPortNumber = useAppSelector(
+    (state) => state.global.options.http_port_number
+  );
 
   const disableInputMemo = React.useMemo(() => {
     return (
-      !options.channel ||
-      !options.userId ||
-      !httpPortNumber ||
-      !agentConnected
+      !options.channel || !options.userId || !httpPortNumber || !agentConnected
     );
-  }, [
-    options.channel,
-    options.userId,
-    httpPortNumber,
-    agentConnected,
-  ]);
+  }, [options.channel, options.userId, httpPortNumber, agentConnected]);
 
   // const chatItems = genRandomChatList(10)
   const chatRef = React.useRef(null);

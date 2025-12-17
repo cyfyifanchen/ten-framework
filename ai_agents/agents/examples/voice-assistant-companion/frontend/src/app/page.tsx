@@ -21,7 +21,12 @@ const ClientOnlyLive2D = dynamicImport(
   }
 );
 
-import { apiPing, apiStartService, apiStopService, apiSaveMemory } from "@/lib/request";
+import {
+  apiPing,
+  apiStartService,
+  apiStopService,
+  apiSaveMemory,
+} from "@/lib/request";
 import type { AgoraConfig, Live2DModel } from "@/types";
 
 const defaultModel: Live2DModel = {
@@ -116,7 +121,9 @@ export default function Home() {
         try {
           const level = readLevel();
           const speaking = level > 0.05;
-          setIsAssistantSpeaking((prev) => (prev === speaking ? prev : speaking));
+          setIsAssistantSpeaking((prev) =>
+            prev === speaking ? prev : speaking
+          );
         } catch (err) {
           console.warn("Unable to read remote audio level:", err);
           setIsAssistantSpeaking(false);
@@ -173,7 +180,7 @@ export default function Home() {
 
             // Wait a bit to let UserLeftEvent handler save the conversation
             console.log("Waiting for memory save...");
-            await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+            await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 seconds delay
 
             // Then stop the companion service
             await apiStopService("companion_channel");
@@ -201,7 +208,9 @@ export default function Home() {
           });
 
           if (!response.ok) {
-            throw new Error(`Failed to get Agora credentials: ${response.statusText}`);
+            throw new Error(
+              `Failed to get Agora credentials: ${response.statusText}`
+            );
           }
 
           const responseData = await response.json();
@@ -259,7 +268,9 @@ export default function Home() {
         {/* Phone call header */}
         <div className="w-full max-w-md">
           <div className="text-center space-y-2 mb-8">
-            <div className={`${titleFont.className} text-gray-800 text-xl font-semibold tracking-tight`}>
+            <div
+              className={`${titleFont.className} text-gray-800 text-xl font-semibold tracking-tight`}
+            >
               {isConnected ? "Call in Progress" : "AI Companion"}
             </div>
             {isConnected && (
@@ -280,8 +291,13 @@ export default function Home() {
               )}
 
               {/* Main character container */}
-              <div className={`relative rounded-full overflow-hidden shadow-2xl transition-all duration-300 ${isAssistantSpeaking ? "ring-4 ring-green-400 ring-offset-4 ring-offset-white" : "ring-2 ring-gray-200"
-                }`}>
+              <div
+                className={`relative rounded-full overflow-hidden shadow-2xl transition-all duration-300 ${
+                  isAssistantSpeaking
+                    ? "ring-4 ring-green-400 ring-offset-4 ring-offset-white"
+                    : "ring-2 ring-gray-200"
+                }`}
+              >
                 <div className="aspect-square bg-gradient-to-br from-purple-50 to-blue-50">
                   <ClientOnlyLive2D
                     key={selectedModel.id}
@@ -300,7 +316,9 @@ export default function Home() {
           </div>
 
           {/* Status text */}
-          <div className={`${bodyFont.className} text-center text-gray-600 text-sm mb-12`}>
+          <div
+            className={`${bodyFont.className} text-center text-gray-600 text-sm mb-12`}
+          >
             {isConnecting ? (
               "Connecting..."
             ) : isConnected ? (
@@ -318,27 +336,30 @@ export default function Home() {
             <button
               onClick={handleConnectToggle}
               disabled={isConnecting}
-              className={`group relative transition-all duration-300 ${isConnecting ? "cursor-wait" : "cursor-pointer"
-                }`}
+              className={`group relative transition-all duration-300 ${
+                isConnecting ? "cursor-wait" : "cursor-pointer"
+              }`}
             >
               {/* Button glow effect */}
               <div
-                className={`absolute inset-0 rounded-full blur-xl transition-all duration-300 ${isConnecting
-                  ? "bg-gray-400/30"
-                  : isConnected
-                    ? "bg-red-500/40 group-hover:bg-red-500/60"
-                    : "bg-green-500/40 group-hover:bg-green-500/60"
-                  }`}
+                className={`absolute inset-0 rounded-full blur-xl transition-all duration-300 ${
+                  isConnecting
+                    ? "bg-gray-400/30"
+                    : isConnected
+                      ? "bg-red-500/40 group-hover:bg-red-500/60"
+                      : "bg-green-500/40 group-hover:bg-green-500/60"
+                }`}
               ></div>
 
               {/* Main button */}
               <div
-                className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl ${isConnecting
-                  ? "bg-gradient-to-br from-gray-400 to-gray-500 scale-95"
-                  : isConnected
-                    ? "bg-gradient-to-br from-red-500 to-red-600 group-hover:scale-105 group-hover:shadow-red-500/50"
-                    : "bg-gradient-to-br from-green-500 to-green-600 group-hover:scale-105 group-hover:shadow-green-500/50"
-                  } ${isConnecting ? "" : "group-active:scale-95"}`}
+                className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl ${
+                  isConnecting
+                    ? "bg-gradient-to-br from-gray-400 to-gray-500 scale-95"
+                    : isConnected
+                      ? "bg-gradient-to-br from-red-500 to-red-600 group-hover:scale-105 group-hover:shadow-red-500/50"
+                      : "bg-gradient-to-br from-green-500 to-green-600 group-hover:scale-105 group-hover:shadow-green-500/50"
+                } ${isConnecting ? "" : "group-active:scale-95"}`}
               >
                 {isConnecting ? (
                   <svg
@@ -384,10 +405,11 @@ export default function Home() {
               {/* Inner ring animation */}
               {!isConnecting && (
                 <div
-                  className={`absolute inset-0 rounded-full border-2 transition-all duration-300 ${isConnected
-                    ? "border-red-300/50 scale-110 group-hover:scale-115"
-                    : "border-green-300/50 scale-110 group-hover:scale-115"
-                    }`}
+                  className={`absolute inset-0 rounded-full border-2 transition-all duration-300 ${
+                    isConnected
+                      ? "border-red-300/50 scale-110 group-hover:scale-115"
+                      : "border-green-300/50 scale-110 group-hover:scale-115"
+                  }`}
                 ></div>
               )}
             </button>
@@ -395,7 +417,11 @@ export default function Home() {
             {/* Button label */}
             <div className={`${bodyFont.className} text-center`}>
               <div className="text-gray-700 font-semibold text-base">
-                {isConnecting ? "Connecting..." : isConnected ? "Hang Up" : "Call"}
+                {isConnecting
+                  ? "Connecting..."
+                  : isConnected
+                    ? "Hang Up"
+                    : "Call"}
               </div>
               {isConnected && (
                 <div className="text-gray-500 text-xs mt-1">
@@ -417,7 +443,9 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <div className={`${bodyFont.className} text-gray-400 text-xs text-center mt-8`}>
+        <div
+          className={`${bodyFont.className} text-gray-400 text-xs text-center mt-8`}
+        >
           <p>Your AI Companion is always here for you</p>
         </div>
       </div>

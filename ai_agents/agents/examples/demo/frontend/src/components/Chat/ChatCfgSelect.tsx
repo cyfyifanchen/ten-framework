@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Select,
@@ -8,13 +8,13 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   useAppDispatch,
   LANGUAGE_OPTIONS,
   useAppSelector,
   GROUPED_GRAPH_OPTIONS,
-} from "@/common"
+} from "@/common";
 import {
   OpenAIIcon,
   GeminiIcon,
@@ -27,33 +27,33 @@ import {
   DifyIcon,
   CozeIcon,
   OceanBaseIcon,
-} from "@/components/Icon"
-import type { Language } from "@/types"
-import { setGraphName, setLanguage } from "@/store/reducers/global"
+} from "@/components/Icon";
+import type { Language } from "@/types";
+import { setGraphName, setLanguage } from "@/store/reducers/global";
 
 const getBrandIcon = (label: string) => {
-  if (label.includes("OpenAI")) return OpenAIIcon
-  if (label.includes("Gemini")) return GeminiIcon
-  if (label.includes("Azure")) return AzureIcon
-  if (label.includes("Llama")) return MetaIcon
-  if (label.includes("Nova")) return NovaIcon
-  if (label.includes("DeepSeek")) return DeepSeekIcon
-  if (label.includes("Grok")) return XAIIcon
-  if (label.includes("Qwen") || label.includes("QwQ")) return QwenIcon
-  if (label.includes("Dify")) return DifyIcon
-  if (label.includes("Coze")) return CozeIcon
-  if (label.includes("OceanBase")) return OceanBaseIcon
+  if (label.includes("OpenAI")) return OpenAIIcon;
+  if (label.includes("Gemini")) return GeminiIcon;
+  if (label.includes("Azure")) return AzureIcon;
+  if (label.includes("Llama")) return MetaIcon;
+  if (label.includes("Nova")) return NovaIcon;
+  if (label.includes("DeepSeek")) return DeepSeekIcon;
+  if (label.includes("Grok")) return XAIIcon;
+  if (label.includes("Qwen") || label.includes("QwQ")) return QwenIcon;
+  if (label.includes("Dify")) return DifyIcon;
+  if (label.includes("Coze")) return CozeIcon;
+  if (label.includes("OceanBase")) return OceanBaseIcon;
   // Default fallback
-  return () => <span className="w-3 h-3 rounded-full bg-current opacity-50" />
-}
+  return () => <span className="w-3 h-3 rounded-full bg-current opacity-50" />;
+};
 
 export function GraphSelect() {
-  const dispatch = useAppDispatch()
-  const graphName = useAppSelector((state) => state.global.graphName)
-  const agentConnected = useAppSelector((state) => state.global.agentConnected)
+  const dispatch = useAppDispatch();
+  const graphName = useAppSelector((state) => state.global.graphName);
+  const agentConnected = useAppSelector((state) => state.global.agentConnected);
   const onGraphNameChange = (val: string) => {
-    dispatch(setGraphName(val))
-  }
+    dispatch(setGraphName(val));
+  };
 
   return (
     <>
@@ -73,33 +73,37 @@ export function GraphSelect() {
                   {category}
                 </SelectLabel>
                 {options.map((item) => {
-                  const BrandIcon = getBrandIcon(item.label)
+                  const BrandIcon = getBrandIcon(item.label);
                   return (
-                    <SelectItem value={item.value} key={item.value} className="pl-8">
+                    <SelectItem
+                      value={item.value}
+                      key={item.value}
+                      className="pl-8"
+                    >
                       <span className="flex items-center gap-2">
                         <BrandIcon className="w-4 h-4 flex-shrink-0" />
                         {item.label}
                       </span>
                     </SelectItem>
-                  )
+                  );
                 })}
               </SelectGroup>
-            )
+            );
           })}
         </SelectContent>
       </Select>
     </>
-  )
+  );
 }
 
 export function LanguageSelect() {
-  const dispatch = useAppDispatch()
-  const language = useAppSelector((state) => state.global.language)
-  const agentConnected = useAppSelector((state) => state.global.agentConnected)
+  const dispatch = useAppDispatch();
+  const language = useAppSelector((state) => state.global.language);
+  const agentConnected = useAppSelector((state) => state.global.agentConnected);
 
   const onLanguageChange = (val: Language) => {
-    dispatch(setLanguage(val))
-  }
+    dispatch(setLanguage(val));
+  };
 
   return (
     <>
@@ -117,10 +121,10 @@ export function LanguageSelect() {
               <SelectItem value={item.value} key={item.value}>
                 {item.label}
               </SelectItem>
-            )
+            );
           })}
         </SelectContent>
       </Select>
     </>
-  )
+  );
 }

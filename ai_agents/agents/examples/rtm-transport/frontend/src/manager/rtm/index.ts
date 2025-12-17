@@ -26,7 +26,9 @@ export class RtmManager extends AGEventEmitter<IRtmEvents> {
   userId: number = 0;
   appId: string = "";
   token: string = "";
-  private _boundHandleRtmMessage: ((e: TRTMMessageEvent) => Promise<void>) | null = null;
+  private _boundHandleRtmMessage:
+    | ((e: TRTMMessageEvent) => Promise<void>)
+    | null = null;
   private _boundHandleRtmPresence: ((e: any) => Promise<void>) | null = null;
 
   constructor() {
@@ -62,7 +64,6 @@ export class RtmManager extends AGEventEmitter<IRtmEvents> {
       const rtm = new AgoraRTM.RTM(appId, String(userId), {
         logLevel: "debug",
       });
-
 
       await rtm.login({ token });
       console.log("[RTM] Login successful");
@@ -139,7 +140,10 @@ export class RtmManager extends AGEventEmitter<IRtmEvents> {
     try {
       // Remove event listeners
       this._client.removeEventListener("message", this._boundHandleRtmMessage!);
-      this._client.removeEventListener("presence", this._boundHandleRtmPresence!);
+      this._client.removeEventListener(
+        "presence",
+        this._boundHandleRtmPresence!
+      );
 
       // Unsubscribe from channel
       await this._client.unsubscribe(this.channel);

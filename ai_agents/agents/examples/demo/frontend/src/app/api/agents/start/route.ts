@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getGraphProperties } from './graph';
-import axios from 'axios';
+import { NextRequest, NextResponse } from "next/server";
+import { getGraphProperties } from "./graph";
+import axios from "axios";
 /**
  * Handles the POST request to start an agent.
  *
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       coze_base_url,
       dify_api_key,
       dify_base_url,
-      oceanbase_settings
+      oceanbase_settings,
     } = body;
 
     // Build graph overrides (server-side defaults), then merge any client-provided overrides.
@@ -65,14 +65,16 @@ export async function POST(request: NextRequest) {
       properties["llm"]["base_url"] = dify_base_url;
     }
 
-    console.log(`Starting agent for request ID: ${JSON.stringify({
-      request_id,
-      channel_name,
-      user_uid,
-      graph_name,
-      // Get the graph properties based on the graph name, language, and voice type
-      properties,
-    })}`);
+    console.log(
+      `Starting agent for request ID: ${JSON.stringify({
+        request_id,
+        channel_name,
+        user_uid,
+        graph_name,
+        // Get the graph properties based on the graph name, language, and voice type
+        properties,
+      })}`
+    );
 
     console.log(`AGENT_SERVER_URL: ${AGENT_SERVER_URL}/start`);
 
@@ -96,7 +98,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(errorData, { status: error.status });
     } else {
       console.error(`Error starting agent: ${error}`);
-      return NextResponse.json({ code: "1", data: null, msg: "Internal Server Error" }, { status: 500 });
+      return NextResponse.json(
+        { code: "1", data: null, msg: "Internal Server Error" },
+        { status: 500 }
+      );
     }
   }
 }

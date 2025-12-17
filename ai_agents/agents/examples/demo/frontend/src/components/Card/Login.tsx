@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import type React from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import {
   GITHUB_URL,
   getRandomUserId,
   useAppDispatch,
   getRandomChannel,
-} from "@/common"
-import { setOptions } from "@/store/reducers/global"
-import packageData from "../../../package.json"
+} from "@/common";
+import { setOptions } from "@/store/reducers/global";
+import packageData from "../../../package.json";
 
 import {
   Card,
@@ -19,56 +19,56 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import NextLink from "next/link"
-import { GitHubIcon } from "@/components/Icon"
-import { toast } from "sonner"
-import { LoadingButton } from "@/components/Button/LoadingButton"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import NextLink from "next/link";
+import { GitHubIcon } from "@/components/Icon";
+import { toast } from "sonner";
+import { LoadingButton } from "@/components/Button/LoadingButton";
 
-const { version } = packageData
+const { version } = packageData;
 
 export default function LoginCard() {
-  const dispatch = useAppDispatch()
-  const router = useRouter()
-  const [userName, setUserName] = useState("")
-  const [isLoadingSuccess, setIsLoadingSuccess] = useState(false)
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [userName, setUserName] = useState("");
+  const [isLoadingSuccess, setIsLoadingSuccess] = useState(false);
 
   const onUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value
-    value = value.replace(/\s/g, "")
-    setUserName(value)
-  }
+    let value = e.target.value;
+    value = value.replace(/\s/g, "");
+    setUserName(value);
+  };
 
   useEffect(() => {
     const onPageLoad = () => {
-      setIsLoadingSuccess(true)
-    }
+      setIsLoadingSuccess(true);
+    };
 
     if (document.readyState === "complete") {
-      onPageLoad()
+      onPageLoad();
     } else {
-      window.addEventListener("load", onPageLoad, false)
-      return () => window.removeEventListener("load", onPageLoad)
+      window.addEventListener("load", onPageLoad, false);
+      return () => window.removeEventListener("load", onPageLoad);
     }
-  }, [])
+  }, []);
 
   const onClickJoin = () => {
     if (!userName) {
-      toast.error("please enter a user name")
-      return
+      toast.error("please enter a user name");
+      return;
     }
-    const userId = getRandomUserId()
+    const userId = getRandomUserId();
     dispatch(
       setOptions({
         userName,
         channel: getRandomChannel(),
         userId,
-      }),
-    )
-    router.push("/home")
-  }
+      })
+    );
+    router.push("/home");
+  };
 
   return (
     <>
@@ -96,8 +96,8 @@ export default function LoginCard() {
           <CardContent className="">
             <form
               onSubmit={(e) => {
-                e.preventDefault()
-                onClickJoin()
+                e.preventDefault();
+                onClickJoin();
               }}
               className="flex flex-col gap-6"
             >
@@ -122,5 +122,5 @@ export default function LoginCard() {
         </Card>
       </div>
     </>
-  )
+  );
 }

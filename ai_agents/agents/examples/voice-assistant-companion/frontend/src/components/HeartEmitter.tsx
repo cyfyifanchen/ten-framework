@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -29,8 +29,7 @@ export function HeartEmitter({ active }: HeartEmitterProps) {
 
       const id = nextId.current++;
       const side: Heart["side"] = Math.random() > 0.5 ? "left" : "right";
-      const baseX =
-        (side === "left" ? -1 : 1) * (90 + Math.random() * 55); // around cheeks
+      const baseX = (side === "left" ? -1 : 1) * (90 + Math.random() * 55); // around cheeks
 
       const heart: Heart = {
         id,
@@ -65,14 +64,16 @@ export function HeartEmitter({ active }: HeartEmitterProps) {
         <span
           key={heart.id}
           className="heart-emit select-none"
-          style={{
-            fontSize: `${heart.size}px`,
-            animationDuration: `${heart.duration}s`,
-            ["--heart-base-x" as string]: `${heart.baseX}px`,
-            ["--heart-jitter" as string]: `${heart.jitter}px`,
-            ["--heart-y" as string]: `${heart.verticalJitter}px`,
-            ["--heart-rot" as string]: `${heart.rotation}deg`,
-          } as React.CSSProperties}
+          style={
+            {
+              fontSize: `${heart.size}px`,
+              animationDuration: `${heart.duration}s`,
+              ["--heart-base-x" as string]: `${heart.baseX}px`,
+              ["--heart-jitter" as string]: `${heart.jitter}px`,
+              ["--heart-y" as string]: `${heart.verticalJitter}px`,
+              ["--heart-rot" as string]: `${heart.rotation}deg`,
+            } as React.CSSProperties
+          }
         >
           ❤️
         </span>

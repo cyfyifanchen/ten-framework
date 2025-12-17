@@ -9,11 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { rtmManager } from "@/manager/rtm";
 import { addChatItem } from "@/store/reducers/global";
-import {
-  EMessageDataType,
-  EMessageType,
-  type IRTMTextItem,
-} from "@/types";
+import { EMessageDataType, EMessageType, type IRTMTextItem } from "@/types";
 
 export default function ChatCard(props: { className?: string }) {
   const { className } = props;
@@ -28,17 +24,9 @@ export default function ChatCard(props: { className?: string }) {
 
   const disableInputMemo = React.useMemo(() => {
     return (
-      !options.channel ||
-      !options.userId ||
-      !rtmConnected ||
-      !agentConnected
+      !options.channel || !options.userId || !rtmConnected || !agentConnected
     );
-  }, [
-    options.channel,
-    options.userId,
-    rtmConnected,
-    agentConnected,
-  ]);
+  }, [options.channel, options.userId, rtmConnected, agentConnected]);
 
   // const chatItems = genRandomChatList(10)
   const chatRef = React.useRef(null);
@@ -67,7 +55,8 @@ export default function ChatCard(props: { className?: string }) {
         addChatItem({
           userId: options.userId,
           text: text.text,
-          type: text.role === "assistant" ? EMessageType.AGENT : EMessageType.USER,
+          type:
+            text.role === "assistant" ? EMessageType.AGENT : EMessageType.USER,
           data_type: EMessageDataType.TEXT,
           isFinal: text.is_final,
           time: text.text_ts,

@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useAppSelector, EMobileActiveTab } from "@/common"
-import dynamic from "next/dynamic"
+import { useAppSelector, EMobileActiveTab } from "@/common";
+import dynamic from "next/dynamic";
 
-import Header from "@/components/Layout/Header"
-import Action from "@/components/Layout/Action"
+import Header from "@/components/Layout/Header";
+import Action from "@/components/Layout/Action";
 // import RTCCard from "@/components/Dynamic/RTCCard"
 // import ChatCard from "@/components/Chat/ChatCard"
-import AuthInitializer from "@/components/authInitializer"
-import { cn } from "@/lib/utils"
+import AuthInitializer from "@/components/authInitializer";
+import { cn } from "@/lib/utils";
 
 const DynamicRTCCard = dynamic(() => import("@/components/Dynamic/RTCCard"), {
   ssr: false,
-})
+});
 
 const DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
   ssr: false,
-})
+});
 
 export default function Home() {
   const mobileActiveTab = useAppSelector(
-    (state) => state.global.mobileActiveTab,
-  )
+    (state) => state.global.mobileActiveTab
+  );
 
   return (
     <AuthInitializer>
@@ -34,7 +34,7 @@ export default function Home() {
               "m-0 w-full rounded-b-lg bg-[#181a1d] md:w-[480px] md:rounded-lg",
               {
                 ["hidden md:block"]: mobileActiveTab === EMobileActiveTab.CHAT,
-              },
+              }
             )}
           />
           <DynamicChatCard
@@ -42,11 +42,11 @@ export default function Home() {
               "m-0 w-full rounded-b-lg bg-[#181a1d] md:rounded-lg",
               {
                 ["hidden md:block"]: mobileActiveTab === EMobileActiveTab.AGENT,
-              },
+              }
             )}
           />
         </div>
       </div>
     </AuthInitializer>
-  )
+  );
 }

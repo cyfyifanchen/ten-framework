@@ -100,8 +100,5 @@ export async function proxy(req: NextRequest) {
 
 // Configure which routes should be processed by the proxy
 export const config = {
-  matcher: [
-    "/api/:path*",
-    "/proxy/:path*",
-  ],
+  matcher: ["/api/:path*", "/proxy/:path*"],
 };

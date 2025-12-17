@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import NextLink from "next/link"
+import * as React from "react";
+import NextLink from "next/link";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { GitHubIcon, PaletteIcon } from "@/components/Icon"
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { GitHubIcon, PaletteIcon } from "@/components/Icon";
 import {
   useAppSelector,
   useAppDispatch,
@@ -24,24 +24,24 @@ import {
   // getRandomChannel,
   // genRandomString,
   API_GH_GET_REPO_INFO,
-} from "@/common"
-import { setThemeColor, setOptions } from "@/store/reducers/global"
-import { cn } from "@/lib/utils"
-import { HexColorPicker } from "react-colorful"
-import dynamic from "next/dynamic"
-import { useCancelableSWR } from "@/hooks"
-import { formatNumber } from "@/lib/utils"
+} from "@/common";
+import { setThemeColor, setOptions } from "@/store/reducers/global";
+import { cn } from "@/lib/utils";
+import { HexColorPicker } from "react-colorful";
+import dynamic from "next/dynamic";
+import { useCancelableSWR } from "@/hooks";
+import { formatNumber } from "@/lib/utils";
 
-import styles from "./Header.module.css"
+import styles from "./Header.module.css";
 
 export function HeaderRoomInfo() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const options = useAppSelector((state) => state.global.options)
-  const { channel, userId } = options
+  const options = useAppSelector((state) => state.global.options);
+  const { channel, userId } = options;
 
-  const roomConnected = useAppSelector((state) => state.global.roomConnected)
-  const agentConnected = useAppSelector((state) => state.global.agentConnected)
+  const roomConnected = useAppSelector((state) => state.global.roomConnected);
+  const agentConnected = useAppSelector((state) => state.global.agentConnected);
 
   // const handleRegenerateChannelAndUserId = () => {
   //   const newOptions = {
@@ -113,7 +113,7 @@ export function HeaderRoomInfo() {
         </Tooltip>
       </TooltipProvider>
     </>
-  )
+  );
 }
 
 export function HeaderActions() {
@@ -128,24 +128,24 @@ export function HeaderActions() {
       {/* <ThemePalettePopover />
       <NetworkIndicator /> */}
     </div>
-  )
+  );
 }
 
 export const ThemePalettePopover = () => {
-  const themeColor = useAppSelector((state) => state.global.themeColor)
-  const dispatch = useAppDispatch()
+  const themeColor = useAppSelector((state) => state.global.themeColor);
+  const dispatch = useAppDispatch();
 
   const onMainClickSelect = (index: number) => {
-    const target = COLOR_LIST[index]
+    const target = COLOR_LIST[index];
     if (target.active !== themeColor) {
-      dispatch(setThemeColor(target.active))
+      dispatch(setThemeColor(target.active));
     }
-  }
+  };
 
   const onColorSliderChange = (color: string) => {
-    console.log(color)
-    dispatch(setThemeColor(color))
-  }
+    console.log(color);
+    dispatch(setThemeColor(color));
+  };
 
   return (
     <>
@@ -159,7 +159,7 @@ export const ThemePalettePopover = () => {
           </div>
           <div className="mt-4 flex gap-3">
             {COLOR_LIST.map((item, index) => {
-              const isSelected = item.active === themeColor
+              const isSelected = item.active === themeColor;
               return (
                 <button
                   onClick={() => onMainClickSelect(index)}
@@ -168,7 +168,7 @@ export const ThemePalettePopover = () => {
                     {
                       "ring-2 ring-offset-2": isSelected,
                     },
-                    "transition-all duration-200 ease-in-out",
+                    "transition-all duration-200 ease-in-out"
                   )}
                   style={{
                     backgroundColor: item.default,
@@ -183,7 +183,7 @@ export const ThemePalettePopover = () => {
                     }}
                   ></span>
                 </button>
-              )
+              );
             })}
           </div>
           <div className={cn("flex h-6 items-center", styles.colorPicker)}>
@@ -192,8 +192,8 @@ export const ThemePalettePopover = () => {
         </PopoverContent>
       </Popover>
     </>
-  )
-}
+  );
+};
 
 // export const Network = () => {
 //   const [networkQuality, setNetworkQuality] = React.useState<NetworkQuality>()
@@ -222,22 +222,22 @@ const NetworkIndicator = dynamic(
   () => import("@/components/Dynamic/NetworkIndicator"),
   {
     ssr: false,
-  },
-)
+  }
+);
 
 export const GitHubStar = () => {
   const [{ data, error, isLoading }] = useCancelableSWR<{
-    stargazers_count: number
+    stargazers_count: number;
   }>(API_GH_GET_REPO_INFO, {
     refreshInterval: 1000 * 60 * 60, // 1 hour
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-  })
+  });
 
   const starsCntMemo = React.useMemo(() => {
-    if (!data || !data.stargazers_count) return null
-    return formatNumber(data?.stargazers_count || 0)
-  }, [data?.stargazers_count])
+    if (!data || !data.stargazers_count) return null;
+    return formatNumber(data?.stargazers_count || 0);
+  }, [data?.stargazers_count]);
 
   return (
     <Button size="sm" variant="ghost" asChild>
@@ -251,5 +251,5 @@ export const GitHubStar = () => {
         )}
       </NextLink>
     </Button>
-  )
-}
+  );
+};

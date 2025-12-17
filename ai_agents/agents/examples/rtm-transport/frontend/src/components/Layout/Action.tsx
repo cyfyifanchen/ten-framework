@@ -27,7 +27,9 @@ export default function Action(props: { className?: string }) {
   const agentConnected = useAppSelector((state) => state.global.agentConnected);
   const channel = useAppSelector((state) => state.global.options.channel);
   const userId = useAppSelector((state) => state.global.options.userId);
-  const httpPortNumber = useAppSelector((state) => state.global.options.http_port_number);
+  const httpPortNumber = useAppSelector(
+    (state) => state.global.options.http_port_number
+  );
   const language = useAppSelector((state) => state.global.language);
   const voiceType = useAppSelector((state) => state.global.voiceType);
   const selectedGraphId = useAppSelector(

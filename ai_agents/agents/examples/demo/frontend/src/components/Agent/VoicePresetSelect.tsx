@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Select,
@@ -6,20 +6,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useAppSelector, useAppDispatch, VOICE_OPTIONS } from "@/common"
-import { setVoiceType } from "@/store/reducers/global"
-import type { VoiceType } from "@/types"
-import { VoiceIcon } from "@/components/Icon"
+} from "@/components/ui/select";
+import { useAppSelector, useAppDispatch, VOICE_OPTIONS } from "@/common";
+import { setVoiceType } from "@/store/reducers/global";
+import type { VoiceType } from "@/types";
+import { VoiceIcon } from "@/components/Icon";
 
 export default function AgentVoicePresetSelect() {
-  const dispatch = useAppDispatch()
-  const options = useAppSelector((state) => state.global.options)
-  const voiceType = useAppSelector((state) => state.global.voiceType)
+  const dispatch = useAppDispatch();
+  const options = useAppSelector((state) => state.global.options);
+  const voiceType = useAppSelector((state) => state.global.voiceType);
 
   const onVoiceChange = (value: string) => {
-    dispatch(setVoiceType(value as VoiceType))
-  }
+    dispatch(setVoiceType(value as VoiceType));
+  };
 
   return (
     <Select value={voiceType} onValueChange={onVoiceChange}>
@@ -43,5 +43,5 @@ export default function AgentVoicePresetSelect() {
         ))}
       </SelectContent>
     </Select>
-  )
+  );
 }
