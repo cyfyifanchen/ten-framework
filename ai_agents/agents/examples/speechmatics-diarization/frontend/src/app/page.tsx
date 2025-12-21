@@ -352,6 +352,39 @@ export default function HomePage() {
     [appendOrUpdateItem]
   );
 
+  const stop = useCallback(async () => {
+    setPending(true);
+    try {
+      cacheRef.current = {};
+      setItems([]);
+      setLastReplySpeaker(null);
+      if (audioRef.current) {
+        try {
+          await audioRef.current.setEnabled(false);
+        } catch {}
+        audioRef.current.close();
+        audioRef.current = null;
+      }
+      remoteTracksRef.current.forEach((track) => track.stop());
+      remoteTracksRef.current.clear();
+      if (clientRef.current) {
+        try {
+          await clientRef.current.leave();
+        } catch {}
+        clientRef.current.removeAllListeners();
+        clientRef.current = null;
+      }
+      await apiStopService(channel);
+    } catch (err: any) {
+      console.warn("[UI] stop error", err);
+    } finally {
+      setJoined(false);
+      setMicEnabled(false);
+      setActiveSpeaker(null);
+      setPending(false);
+    }
+  }, [channel]);
+
   const join = useCallback(async () => {
     if (joined || pending) return;
     setPending(true);
@@ -433,39 +466,6 @@ export default function HomePage() {
       setPending(false);
     }
   }, [channel, userId, join, joined, pending]);
-
-  const stop = useCallback(async () => {
-    setPending(true);
-    try {
-      cacheRef.current = {};
-      setItems([]);
-      setLastReplySpeaker(null);
-      if (audioRef.current) {
-        try {
-          await audioRef.current.setEnabled(false);
-        } catch {}
-        audioRef.current.close();
-        audioRef.current = null;
-      }
-      remoteTracksRef.current.forEach((track) => track.stop());
-      remoteTracksRef.current.clear();
-      if (clientRef.current) {
-        try {
-          await clientRef.current.leave();
-        } catch {}
-        clientRef.current.removeAllListeners();
-        clientRef.current = null;
-      }
-      await apiStopService(channel);
-    } catch (err: any) {
-      console.warn("[UI] stop error", err);
-    } finally {
-      setJoined(false);
-      setMicEnabled(false);
-      setActiveSpeaker(null);
-      setPending(false);
-    }
-  }, [channel]);
 
   useEffect(() => {
     setMounted(true);

@@ -40,22 +40,25 @@ export default function RTCCard(props: { className?: string }) {
     VideoSourceType.CAMERA
   );
 
-  React.useEffect(() => {
-    if (!options.channel) {
-      return;
-    }
-    if (hasInit) {
-      return;
-    }
+  const onRemoteUserChanged = (user: IRtcUser) => {
+    console.log("[rtc] onRemoteUserChanged", user);
+    setRemoteUser(user);
+  };
 
-    init();
+  const onLocalTracksChanged = (tracks: IUserTracks) => {
+    console.log("[rtc] onLocalTracksChanged", tracks);
+    const { videoTrack, audioTrack, screenTrack } = tracks;
+    setVideoTrack(videoTrack);
+    setScreenTrack(screenTrack);
+    if (audioTrack) {
+      setAudioTrack(audioTrack);
+    }
+  };
 
-    return () => {
-      if (hasInit) {
-        destory();
-      }
-    };
-  }, [options.channel, destory, init]);
+  const onTextChanged = (text: IChatItem) => {
+    console.log("[rtc] onTextChanged", text);
+    dispatch(addChatItem(text));
+  };
 
   const init = async () => {
     console.log("[rtc] init");
@@ -90,25 +93,22 @@ export default function RTCCard(props: { className?: string }) {
     hasInit = false;
   };
 
-  const onRemoteUserChanged = (user: IRtcUser) => {
-    console.log("[rtc] onRemoteUserChanged", user);
-    setRemoteUser(user);
-  };
-
-  const onLocalTracksChanged = (tracks: IUserTracks) => {
-    console.log("[rtc] onLocalTracksChanged", tracks);
-    const { videoTrack, audioTrack, screenTrack } = tracks;
-    setVideoTrack(videoTrack);
-    setScreenTrack(screenTrack);
-    if (audioTrack) {
-      setAudioTrack(audioTrack);
+  React.useEffect(() => {
+    if (!options.channel) {
+      return;
     }
-  };
+    if (hasInit) {
+      return;
+    }
 
-  const onTextChanged = (text: IChatItem) => {
-    console.log("[rtc] onTextChanged", text);
-    dispatch(addChatItem(text));
-  };
+    init();
+
+    return () => {
+      if (hasInit) {
+        destory();
+      }
+    };
+  }, [options.channel, destory, init]);
 
   const _onVoiceChange = (value: any) => {
     dispatch(setVoiceType(value));

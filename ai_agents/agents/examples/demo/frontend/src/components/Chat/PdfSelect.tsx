@@ -35,12 +35,6 @@ export default function PdfSelect() {
   const [selectedPdf, setSelectedPdf] = React.useState<string>("");
   const agentConnected = useAppSelector((state) => state.global.agentConnected);
 
-  React.useEffect(() => {
-    if (agentConnected) {
-      getPDFOptions();
-    }
-  }, [agentConnected, getPDFOptions]);
-
   const getPDFOptions = async () => {
     const res = await apiGetDocumentList();
     setPdfOptions(
@@ -53,6 +47,12 @@ export default function PdfSelect() {
     );
     setSelectedPdf("");
   };
+
+  React.useEffect(() => {
+    if (agentConnected) {
+      getPDFOptions();
+    }
+  }, [agentConnected, getPDFOptions]);
 
   const onUploadSuccess = (data: IPdfData) => {
     setPdfOptions([

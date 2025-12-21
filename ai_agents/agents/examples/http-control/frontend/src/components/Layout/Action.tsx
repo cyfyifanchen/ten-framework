@@ -41,18 +41,18 @@ export default function Action(props: { className?: string }) {
   );
   const [loading, setLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    if (channel) {
-      checkAgentConnected();
-    }
-  }, [channel, checkAgentConnected]);
-
   const checkAgentConnected = async () => {
     const res: any = await apiPing(channel);
     if (res?.code === 0) {
       dispatch(setAgentConnected(true));
     }
   };
+
+  React.useEffect(() => {
+    if (channel) {
+      checkAgentConnected();
+    }
+  }, [channel, checkAgentConnected]);
 
   const onClickConnect = async () => {
     if (loading) {

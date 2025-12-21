@@ -1120,25 +1120,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    // Dynamically import Agora service only on client side
-    if (typeof window !== "undefined") {
-      import("@/services/agora").then((module) => {
-        const service = module.agoraService;
-        setAgoraService(service);
-
-        // Set up callbacks for Agora service
-        service.setOnConnectionStatusChange(handleConnectionChange);
-        service.setOnRemoteAudioTrack(handleAudioTrackChange);
-      });
-    }
-
-    // Cleanup ping interval on unmount
-    return () => {
-      stopPing();
-    };
-  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
-
   const handleConnectionChange = (status: any) => {
     setIsConnected(status.rtc === "connected");
   };
@@ -1545,6 +1526,25 @@ export default function Home() {
       setPingInterval(null);
     }
   };
+
+  useEffect(() => {
+    // Dynamically import Agora service only on client side
+    if (typeof window !== "undefined") {
+      import("@/services/agora").then((module) => {
+        const service = module.agoraService;
+        setAgoraService(service);
+
+        // Set up callbacks for Agora service
+        service.setOnConnectionStatusChange(handleConnectionChange);
+        service.setOnRemoteAudioTrack(handleAudioTrackChange);
+      });
+    }
+
+    // Cleanup ping interval on unmount
+    return () => {
+      stopPing();
+    };
+  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
 
   const handleMicToggle = () => {
     if (agoraService) {

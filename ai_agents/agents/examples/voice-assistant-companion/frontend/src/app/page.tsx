@@ -54,21 +54,6 @@ export default function Home() {
   const [callDuration, setCallDuration] = useState(0);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      import("@/services/agora").then((module) => {
-        const service = module.agoraService;
-        setAgoraService(service);
-        service.setOnConnectionStatusChange(handleConnectionChange);
-        service.setOnRemoteAudioTrack(handleAudioTrackChange);
-      });
-    }
-
-    return () => {
-      stopPing();
-    };
-  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
-
-  useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isConnected) {
       interval = setInterval(() => {
@@ -148,6 +133,21 @@ export default function Home() {
       setPingInterval(null);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      import("@/services/agora").then((module) => {
+        const service = module.agoraService;
+        setAgoraService(service);
+        service.setOnConnectionStatusChange(handleConnectionChange);
+        service.setOnRemoteAudioTrack(handleAudioTrackChange);
+      });
+    }
+
+    return () => {
+      stopPing();
+    };
+  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
 
   const _handleMicToggle = () => {
     if (agoraService) {

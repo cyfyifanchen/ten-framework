@@ -33,21 +33,6 @@ export default function ChatCard(props: { className?: string }) {
 
   useAutoScroll(chatRef);
 
-  // Register RTM event listener on mount
-  React.useEffect(() => {
-    if (rtmConnected) {
-      console.log("[chat] Registering RTM event listener");
-      rtmManager.on("rtmMessage", onTextChanged);
-    }
-
-    return () => {
-      if (rtmConnected) {
-        console.log("[chat] Unregistering RTM event listener");
-        rtmManager.off("rtmMessage", onTextChanged);
-      }
-    };
-  }, [rtmConnected, onTextChanged]);
-
   const onTextChanged = (text: IRTMTextItem) => {
     console.log("[rtm] onTextChanged", text);
     if (text.data_type === "transcribe") {
@@ -64,6 +49,21 @@ export default function ChatCard(props: { className?: string }) {
       );
     }
   };
+
+  // Register RTM event listener on mount
+  React.useEffect(() => {
+    if (rtmConnected) {
+      console.log("[chat] Registering RTM event listener");
+      rtmManager.on("rtmMessage", onTextChanged);
+    }
+
+    return () => {
+      if (rtmConnected) {
+        console.log("[chat] Unregistering RTM event listener");
+        rtmManager.off("rtmMessage", onTextChanged);
+      }
+    };
+  }, [rtmConnected, onTextChanged]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

@@ -50,40 +50,6 @@ export default function HomePage() {
     });
   }, []);
 
-  const join = useCallback(async () => {
-    if (joined) return;
-    const { ok, code, data, msg } = await apiGenAgoraData({ channel, userId });
-    if (!ok) {
-      console.error("[UI] Failed to get Agora token", { code, msg, data });
-      setError(`Token error: ${String(msg)} (code=${String(code)})`);
-      return;
-    }
-
-    const { default: AgoraRTC } = await import("agora-rtc-sdk-ng");
-    const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-    clientRef.current = client;
-    client.on("stream-message", (_uid: any, stream: any) =>
-      handleStreamMessage(stream)
-    );
-    // volume indicator for local + remote tracks
-    try {
-      client.enableAudioVolumeIndicator?.();
-      client.on("volume-indicator", (vols: any[]) => {
-        const me = vols.find((v) => String(v.uid) === String(userId));
-        if (me) console.log("[UI] Local volume level", me.level);
-      });
-    } catch {}
-    console.log("[UI] Joining channel", { appId: data.appId, channel, userId });
-    await client.join(data.appId, channel, data.token, userId);
-
-    const audio = await AgoraRTC.createMicrophoneAudioTrack();
-    audioRef.current = audio;
-    console.log("[UI] Publishing mic track...");
-    await client.publish([audio]);
-    console.log("[UI] Mic published");
-    setJoined(true);
-  }, [channel, userId, joined, handleStreamMessage]);
-
   const handleStreamMessage = useCallback(
     (data: any) => {
       try {
@@ -126,6 +92,40 @@ export default function HomePage() {
     },
     [appendItem]
   );
+
+  const join = useCallback(async () => {
+    if (joined) return;
+    const { ok, code, data, msg } = await apiGenAgoraData({ channel, userId });
+    if (!ok) {
+      console.error("[UI] Failed to get Agora token", { code, msg, data });
+      setError(`Token error: ${String(msg)} (code=${String(code)})`);
+      return;
+    }
+
+    const { default: AgoraRTC } = await import("agora-rtc-sdk-ng");
+    const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    clientRef.current = client;
+    client.on("stream-message", (_uid: any, stream: any) =>
+      handleStreamMessage(stream)
+    );
+    // volume indicator for local + remote tracks
+    try {
+      client.enableAudioVolumeIndicator?.();
+      client.on("volume-indicator", (vols: any[]) => {
+        const me = vols.find((v) => String(v.uid) === String(userId));
+        if (me) console.log("[UI] Local volume level", me.level);
+      });
+    } catch {}
+    console.log("[UI] Joining channel", { appId: data.appId, channel, userId });
+    await client.join(data.appId, channel, data.token, userId);
+
+    const audio = await AgoraRTC.createMicrophoneAudioTrack();
+    audioRef.current = audio;
+    console.log("[UI] Publishing mic track...");
+    await client.publish([audio]);
+    console.log("[UI] Mic published");
+    setJoined(true);
+  }, [channel, userId, joined, handleStreamMessage]);
 
   const start = useCallback(async () => {
     await apiStartService({ channel, userId, graphName: "transcription" });

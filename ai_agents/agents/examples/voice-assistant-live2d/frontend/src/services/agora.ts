@@ -19,6 +19,7 @@ export class AgoraService {
   private rtcClient: IAgoraRTCClient | null = null;
   private localAudioTrack: IMicrophoneAudioTrack | null = null;
   private remoteAudioTrack: IRemoteAudioTrack | null = null;
+  private config: AgoraConfig | null = null;
   private connectionStatus: ConnectionStatus = {
     rtc: "disconnected",
     rtm: "disconnected",

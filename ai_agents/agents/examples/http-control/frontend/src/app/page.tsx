@@ -30,14 +30,6 @@ export default function Home() {
   const avatarInLargeWindow = trulienceSettings.avatarDesktopLargeWindow;
   const [remoteuser, setRemoteUser] = React.useState<IRtcUser>();
 
-  React.useEffect(() => {
-    const { rtcManager } = require("../manager/rtc/rtc");
-    rtcManager.on("remoteUserChanged", onRemoteUserChanged);
-    return () => {
-      rtcManager.off("remoteUserChanged", onRemoteUserChanged);
-    };
-  }, [onRemoteUserChanged]);
-
   const onRemoteUserChanged = (user: IRtcUser) => {
     if (useTrulienceAvatar) {
       user.audioTrack?.stop();
@@ -46,6 +38,14 @@ export default function Home() {
       setRemoteUser(user);
     }
   };
+
+  React.useEffect(() => {
+    const { rtcManager } = require("../manager/rtc/rtc");
+    rtcManager.on("remoteUserChanged", onRemoteUserChanged);
+    return () => {
+      rtcManager.off("remoteUserChanged", onRemoteUserChanged);
+    };
+  }, [onRemoteUserChanged]);
 
   return (
     <AuthInitializer>

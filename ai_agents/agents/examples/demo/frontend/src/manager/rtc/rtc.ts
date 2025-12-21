@@ -172,7 +172,7 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
     });
   }
 
-  private _parseData(data: any): ITextItem | undefined {
+  private _parseData(data: any): void {
     const ascii = String.fromCharCode(...new Uint8Array(data));
 
     console.log("[test] textstream raw data", ascii);
