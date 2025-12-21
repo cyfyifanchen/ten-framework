@@ -1,12 +1,12 @@
 import AgoraRTC, {
+  type ConnectionState,
   type IAgoraRTCClient,
   type IMicrophoneAudioTrack,
   type IRemoteAudioTrack,
-  type ConnectionState,
   type NetworkQuality,
 } from "agora-rtc-sdk-ng";
-import type { AgoraConfig, ConnectionStatus, TranscriptMessage } from "@/types";
 import axios from "axios";
+import type { AgoraConfig, ConnectionStatus, TranscriptMessage } from "@/types";
 
 export class AgoraService {
   private rtcClient: IAgoraRTCClient | null = null;

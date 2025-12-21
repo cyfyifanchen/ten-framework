@@ -1,6 +1,6 @@
-import { genUUID } from "./utils";
-import type { IOceanBaseSettings, Language } from "@/types";
 import axios from "axios";
+import type { IOceanBaseSettings, Language } from "@/types";
+import { genUUID } from "./utils";
 
 export interface StartRequestConfig {
   channel: string;

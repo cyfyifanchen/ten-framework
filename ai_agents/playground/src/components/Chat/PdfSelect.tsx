@@ -81,37 +81,37 @@ export default function PdfSelect() {
 
   return (
     <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="w-fit bg-transparent">
-            <FileTextIcon />
-            PDF
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Upload & Select PDF</DialogTitle>
-          </DialogHeader>
-          <UploadPdf onSuccess={onUploadSuccess} />
-          <div className="mt-4">
-            <Select
-              value={selectedPdf}
-              onValueChange={onSelectPdf}
-              disabled={!agentConnected}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a PDF file" />
-              </SelectTrigger>
-              <SelectContent>
-                {pdfOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="w-fit bg-transparent">
+          <FileTextIcon />
+          PDF
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Upload & Select PDF</DialogTitle>
+        </DialogHeader>
+        <UploadPdf onSuccess={onUploadSuccess} />
+        <div className="mt-4">
+          <Select
+            value={selectedPdf}
+            onValueChange={onSelectPdf}
+            disabled={!agentConnected}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a PDF file" />
+            </SelectTrigger>
+            <SelectContent>
+              {pdfOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

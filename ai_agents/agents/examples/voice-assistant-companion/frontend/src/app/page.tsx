@@ -21,11 +21,7 @@ const ClientOnlyLive2D = dynamicImport(
   }
 );
 
-import {
-  apiPing,
-  apiStartService,
-  apiStopService,
-} from "@/lib/request";
+import { apiPing, apiStartService, apiStopService } from "@/lib/request";
 import type { AgoraConfig, Live2DModel } from "@/types";
 
 const defaultModel: Live2DModel = {
@@ -49,7 +45,8 @@ export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [selectedModel, _setSelectedModel] = useState<Live2DModel>(defaultModel);
+  const [selectedModel, _setSelectedModel] =
+    useState<Live2DModel>(defaultModel);
   const [remoteAudioTrack, setRemoteAudioTrack] = useState<any>(null);
   const [agoraService, setAgoraService] = useState<any>(null);
   const [pingInterval, setPingInterval] = useState<NodeJS.Timeout | null>(null);

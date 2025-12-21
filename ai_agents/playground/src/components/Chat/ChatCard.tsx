@@ -103,7 +103,7 @@ export default function ChatCard(props: { className?: string }) {
           {/* Input area */}
           <div
             className={cn("border-t pt-4", {
-              "hidden": !graphName.includes("rtm"), // TODO: TMP use rtm key word
+              hidden: !graphName.includes("rtm"), // TODO: TMP use rtm key word
             })}
           >
             <form

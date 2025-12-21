@@ -1,20 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties } from "react";
 import type {
-  IRemoteAudioTrack,
   IAgoraRTCClient,
   IMicrophoneAudioTrack,
+  IRemoteAudioTrack,
   UID,
 } from "agora-rtc-sdk-ng";
+import type { CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Threads from "@/components/Threads";
 import {
   apiGenAgoraData,
   apiPing,
   apiStartService,
   apiStopService,
 } from "../common/request";
-import Threads from "@/components/Threads";
 
 type ChatItem = {
   id: string;
@@ -253,10 +253,10 @@ export default function HomePage() {
 
     return base;
   }, [
-    recognisedSpeakers, 
-    speakerTranscriptMap, 
-    lastSpeakerLines, 
-    focusSpeaker
+    recognisedSpeakers,
+    speakerTranscriptMap,
+    lastSpeakerLines,
+    focusSpeaker,
   ]);
 
   useEffect(() => {

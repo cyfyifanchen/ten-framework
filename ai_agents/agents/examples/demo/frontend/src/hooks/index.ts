@@ -1,6 +1,6 @@
 "use client";
 
-import type { SWRResponse, SWRConfiguration } from "swr";
+import type { SWRConfiguration, SWRResponse } from "swr";
 import useSWR from "swr";
 
 // https://github.com/vercel/swr/discussions/2330#discussioncomment-4460054

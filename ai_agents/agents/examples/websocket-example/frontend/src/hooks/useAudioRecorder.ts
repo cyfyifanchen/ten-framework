@@ -3,10 +3,10 @@
  * Manages microphone recording and sends audio to WebSocket
  */
 
+import { useCallback, useRef, useState } from "react";
 import { AudioRecorder, DEFAULT_AUDIO_CONFIG } from "@/lib/audioUtils";
 import type { WebSocketManager } from "@/manager/websocket";
 import { useAgentStore } from "@/store/agentStore";
-import { useCallback, useRef, useState } from "react";
 
 export function useAudioRecorder(wsManager: WebSocketManager | null) {
   const [isRecording, setIsRecording] = useState(false);

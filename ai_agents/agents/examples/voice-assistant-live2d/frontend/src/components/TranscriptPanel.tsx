@@ -1,6 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import {
+  Bot,
+  Clock,
+  Download,
+  MessageSquare,
+  Trash2,
+  User,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,19 +17,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 // agoraService will be imported dynamically
 import type { TranscriptMessage } from "@/types";
-import {
-  MessageSquare,
-  Trash2,
-  Download,
-  User,
-  Bot,
-  Clock,
-} from "lucide-react";
 
 interface TranscriptPanelProps {
   className?: string;

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
 // IRemoteAudioTrack will be imported dynamically
 
 interface ClientOnlyLive2DProps {

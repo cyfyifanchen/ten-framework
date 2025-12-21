@@ -6,11 +6,16 @@ import AgoraRTC, {
   type IRemoteAudioTrack,
   type UID,
 } from "agora-rtc-sdk-ng";
-import { EMessageDataType, EMessageType, type IChatItem, type ITextItem } from "@/types";
-import { AGEventEmitter } from "../events";
-import type { RtcEvents, IUserTracks } from "./types";
-import { apiGenAgoraData } from "@/common/request";
 import { VideoSourceType } from "@/common/constant";
+import { apiGenAgoraData } from "@/common/request";
+import {
+  EMessageDataType,
+  EMessageType,
+  type IChatItem,
+  type ITextItem,
+} from "@/types";
+import { AGEventEmitter } from "../events";
+import type { IUserTracks, RtcEvents } from "./types";
 
 const TIMEOUT_MS = 5000; // Timeout for incomplete messages
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { MotionSync } from "live2d-motionsync/stream";
 import {
   forwardRef,
   useCallback,
@@ -11,7 +12,6 @@ import {
 } from "react";
 // Import PIXI setup first to ensure global availability
 import PIXI from "@/lib/pixi-setup";
-import { MotionSync } from "live2d-motionsync/stream";
 // IRemoteAudioTrack will be imported dynamically
 import { cn } from "@/lib/utils";
 
@@ -909,9 +909,7 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 // Validate that the model and internalModel are properly initialized
-                if (
-                  model?.internalModel?.coreModel
-                ) {
+                if (model?.internalModel?.coreModel) {
                   console.log(
                     "[Live2DCharacter] Creating MotionSync instance..."
                   );
@@ -977,11 +975,15 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
         setIsModelLoaded(false);
       };
     }, [
-      modelPath, 
-      mouthConfig, 
-      onModelLoaded, 
-      onModelError, 
-      motionSyncEnabled, applyDefaultExpression, ensureIdleMotion, resolveMouthParameters, stopFallbackLipSync
+      modelPath,
+      mouthConfig,
+      onModelLoaded,
+      onModelError,
+      motionSyncEnabled,
+      applyDefaultExpression,
+      ensureIdleMotion,
+      resolveMouthParameters,
+      stopFallbackLipSync,
     ]);
 
     // Effect for handling audioTrack from Agora
@@ -1155,7 +1157,13 @@ const Live2DCharacter = forwardRef<Live2DHandle, Live2DCharacterProps>(
           audioElementRef.current = null;
         }
       };
-    }, [audioTrack, isModelLoaded, motionSyncEnabled, startFallbackLipSync, stopFallbackLipSync]);
+    }, [
+      audioTrack,
+      isModelLoaded,
+      motionSyncEnabled,
+      startFallbackLipSync,
+      stopFallbackLipSync,
+    ]);
 
     // Component unmount cleanup
     useEffect(() => {

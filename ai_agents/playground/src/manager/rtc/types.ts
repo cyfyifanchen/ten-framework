@@ -7,7 +7,7 @@ import type {
   NetworkQuality,
   UID,
 } from "agora-rtc-sdk-ng";
-import type { IChatItem, } from "@/types";
+import type { IChatItem } from "@/types";
 
 export interface IRtcUser {
   userId: UID;

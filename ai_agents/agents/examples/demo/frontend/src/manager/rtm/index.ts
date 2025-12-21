@@ -1,8 +1,8 @@
 "use client";
 
-import AgoraRTM, { type RTMClient, } from "agora-rtm";
+import AgoraRTM, { type RTMClient } from "agora-rtm";
+import { EMessageDataType, ERTMTextType, type IRTMTextItem } from "@/types";
 import { AGEventEmitter } from "../events";
-import { type IRTMTextItem, EMessageDataType, ERTMTextType } from "@/types";
 
 export interface IRtmEvents {
   rtmMessage: (text: any) => void; // TODO: update type

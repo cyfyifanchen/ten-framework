@@ -1,8 +1,8 @@
 "use client";
 
+import { Circle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAgentStore } from "@/store/agentStore";
-import { Circle } from "lucide-react";
 
 export function ConnectionStatus() {
   const { wsConnected, status } = useAgentStore();

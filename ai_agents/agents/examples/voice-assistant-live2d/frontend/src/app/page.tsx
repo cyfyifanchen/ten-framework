@@ -11,8 +11,8 @@ import { Baloo_2, Quicksand } from "next/font/google";
 import type {
   ExpressionConfig,
   Live2DHandle,
-  MouthConfig,
   MotionConfig,
+  MouthConfig,
 } from "@/components/Live2DCharacter";
 
 // Dynamically import Live2D component to prevent SSR issues

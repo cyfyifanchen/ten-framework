@@ -8,7 +8,7 @@ import AuthInitializer from "@/components/authInitializer";
 import Action from "@/components/Layout/Action";
 import Header from "@/components/Layout/Header";
 import { cn } from "@/lib/utils";
-import type { IRtcUser, } from "@/manager";
+import type { IRtcUser } from "@/manager";
 
 const DynamicRTCCard = dynamic(() => import("@/components/Dynamic/RTCCard"), {
   ssr: false,
@@ -30,6 +30,18 @@ export default function Home() {
   const avatarInLargeWindow = trulienceSettings.avatarDesktopLargeWindow;
   const [remoteuser, setRemoteUser] = React.useState<IRtcUser>();
 
+  const onRemoteUserChanged = React.useCallback(
+    (user: IRtcUser) => {
+      if (useTrulienceAvatar) {
+        user.audioTrack?.stop();
+      }
+      if (user.audioTrack) {
+        setRemoteUser(user);
+      }
+    },
+    [useTrulienceAvatar]
+  );
+
   React.useEffect(() => {
     const { rtcManager } = require("../manager/rtc/rtc");
     rtcManager.on("remoteUserChanged", onRemoteUserChanged);
@@ -37,15 +49,6 @@ export default function Home() {
       rtcManager.off("remoteUserChanged", onRemoteUserChanged);
     };
   }, [onRemoteUserChanged]);
-
-  const onRemoteUserChanged = (user: IRtcUser) => {
-    if (useTrulienceAvatar) {
-      user.audioTrack?.stop();
-    }
-    if (user.audioTrack) {
-      setRemoteUser(user);
-    }
-  };
 
   return (
     <AuthInitializer>
@@ -74,8 +77,7 @@ export default function Home() {
               className={cn(
                 "m-0 w-full flex-auto rounded-b-lg bg-[#181a1d] md:rounded-lg",
                 {
-                  "hidden md:flex":
-                    mobileActiveTab === EMobileActiveTab.AGENT,
+                  "hidden md:flex": mobileActiveTab === EMobileActiveTab.AGENT,
                 }
               )}
             />

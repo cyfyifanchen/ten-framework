@@ -1,26 +1,26 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
 import type {
   ICameraVideoTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
 } from "agora-rtc-sdk-ng";
-import { useAppSelector, useAppDispatch } from "@/common/hooks";
+import * as React from "react";
 import { VideoSourceType } from "@/common/constant";
-import type { IChatItem } from "@/types";
-import { rtcManager, type IUserTracks, type IRtcUser } from "@/manager";
-import {
-  setRoomConnected,
-  addChatItem,
-  setVoiceType,
-  setOptions,
-} from "@/store/reducers/global";
-import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect";
-import AgentView from "@/components/Agent/View";
-import MicrophoneBlock from "@/components/Agent/Microphone";
+import { useAppDispatch, useAppSelector } from "@/common/hooks";
 import VideoBlock from "@/components/Agent/Camera";
+import MicrophoneBlock from "@/components/Agent/Microphone";
+import AgentView from "@/components/Agent/View";
+import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect";
+import { cn } from "@/lib/utils";
+import { type IRtcUser, type IUserTracks, rtcManager } from "@/manager";
+import {
+  addChatItem,
+  setOptions,
+  setRoomConnected,
+  setVoiceType,
+} from "@/store/reducers/global";
+import type { IChatItem } from "@/types";
 
 let hasInit: boolean = false;
 
@@ -121,27 +121,27 @@ export default function RTCCard(props: { className?: string }) {
 
   return (
     <div className={cn("flex-shrink-0", "overflow-y-auto", className)}>
-        <div className="flex h-full w-full flex-col">
-          {/* -- Agent */}
-          <div className="w-full">
-            <div className="flex w-full items-center justify-between p-2">
-              <h2 className="mb-2 font-semibold text-xl">Audio & Video</h2>
-              <AgentVoicePresetSelect />
-            </div>
-            <AgentView audioTrack={remoteuser?.audioTrack} />
+      <div className="flex h-full w-full flex-col">
+        {/* -- Agent */}
+        <div className="w-full">
+          <div className="flex w-full items-center justify-between p-2">
+            <h2 className="mb-2 font-semibold text-xl">Audio & Video</h2>
+            <AgentVoicePresetSelect />
           </div>
+          <AgentView audioTrack={remoteuser?.audioTrack} />
+        </div>
 
-          {/* -- You */}
-          <div className="w-full space-y-2 px-2">
-            <MicrophoneBlock audioTrack={audioTrack} />
-            <VideoBlock
-              cameraTrack={videoTrack}
-              screenTrack={screenTrack}
-              videoSourceType={videoSourceType}
-              onVideoSourceChange={onVideoSourceTypeChange}
-            />
-          </div>
+        {/* -- You */}
+        <div className="w-full space-y-2 px-2">
+          <MicrophoneBlock audioTrack={audioTrack} />
+          <VideoBlock
+            cameraTrack={videoTrack}
+            screenTrack={screenTrack}
+            videoSourceType={videoSourceType}
+            onVideoSourceChange={onVideoSourceTypeChange}
+          />
         </div>
       </div>
+    </div>
   );
 }

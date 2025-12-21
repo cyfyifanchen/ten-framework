@@ -1,18 +1,19 @@
 "use client";
 
-import * as React from "react";
-// import CamSelect from "./camSelect"
-import { CamIconByStatus } from "@/components/Icon";
 import AgoraRTC, {
   type ICameraVideoTrack,
   type ILocalVideoTrack,
 } from "agora-rtc-sdk-ng";
+import { MonitorIcon, MonitorXIcon } from "lucide-react";
+import * as React from "react";
+import { VIDEO_SOURCE_OPTIONS, VideoSourceType } from "@/common/constant";
 // import { LocalStreamPlayer } from "../streamPlayer"
 // import { useSmallScreen } from "@/common"
 import { DeviceSelect } from "@/components/Agent/Microphone";
 import { LocalStreamPlayer } from "@/components/Agent/StreamPlayer";
-import { VIDEO_SOURCE_OPTIONS, VideoSourceType } from "@/common/constant";
-import { MonitorIcon, MonitorXIcon } from "lucide-react";
+// import CamSelect from "./camSelect"
+import { CamIconByStatus } from "@/components/Icon";
+import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -20,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Button } from "../ui/button";
 
 export const ScreenIconByStatus = (
   props: React.SVGProps<SVGSVGElement> & { active?: boolean; color?: string }

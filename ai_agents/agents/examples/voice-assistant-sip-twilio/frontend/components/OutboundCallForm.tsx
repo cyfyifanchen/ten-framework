@@ -1,7 +1,7 @@
 "use client";
 
+import { MessageSquare, Phone, PhoneOff } from "lucide-react";
 import { useState } from "react";
-import { Phone, MessageSquare, PhoneOff } from "lucide-react";
 import type { CallResponse } from "../app/api";
 
 interface OutboundCallFormProps {

@@ -1,33 +1,32 @@
 "use client";
 
 import * as React from "react";
-
-import { LoadingButton } from "@/components/Button/LoadingButton";
+import { toast } from "sonner";
 import {
-  setAgentConnected,
-  setMobileActiveTab,
-  setGlobalSettingsDialog,
-} from "@/store/reducers/global";
-import {
-  useAppDispatch,
-  useAppSelector,
   apiPing,
   apiStartService,
   apiStopService,
-  MOBILE_ACTIVE_TAB_MAP,
   EMobileActiveTab,
+  MOBILE_ACTIVE_TAB_MAP,
   type StartRequestConfig,
+  useAppDispatch,
+  useAppSelector,
 } from "@/common";
-import { toast } from "sonner";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { LoadingButton } from "@/components/Button/LoadingButton";
 import SettingsDialog, {
-  isCozeGraph,
   cozeSettingsFormSchema,
-  isDifyGraph,
   difySettingsFormSchema,
+  isCozeGraph,
+  isDifyGraph,
   oceanbaseSettingsFormSchema,
 } from "@/components/Dialog/Settings";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import {
+  setAgentConnected,
+  setGlobalSettingsDialog,
+  setMobileActiveTab,
+} from "@/store/reducers/global";
 import type { IOceanBaseSettings } from "@/types";
 
 let intervalId: NodeJS.Timeout | null = null;

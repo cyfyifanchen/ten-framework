@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import type { AgoraConfig, ConnectionStatus } from "@/types";
 import type { NetworkQuality } from "agora-rtc-sdk-ng";
 // IRemoteAudioTrack will be imported dynamically
-import { Wifi, WifiOff, Activity, Mic, MicOff } from "lucide-react";
+import { Activity, Mic, MicOff, Wifi, WifiOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { AgoraConfig, ConnectionStatus } from "@/types";
 
 interface ConnectionPanelProps {
   onConnectionChange?: (connected: boolean) => void;

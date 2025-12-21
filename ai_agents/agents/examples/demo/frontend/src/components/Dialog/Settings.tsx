@@ -1,6 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EraserIcon, SettingsIcon, ShieldCheckIcon } from "lucide-react";
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import {
+  DEFAULT_DIFY_SETTINGS,
+  DEFAULT_OCEAN_BASE_SETTINGS,
+  ECozeBaseUrl,
+} from "@/common/constant";
+import { useAppDispatch, useAppSelector } from "@/common/hooks";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,8 +21,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -20,8 +29,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -29,26 +38,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SettingsIcon, EraserIcon, ShieldCheckIcon } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { toast } from "sonner";
-import { useAppDispatch, useAppSelector } from "@/common/hooks";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  DEFAULT_DIFY_SETTINGS,
-  DEFAULT_OCEAN_BASE_SETTINGS,
-  ECozeBaseUrl,
-} from "@/common/constant";
-import {
-  setAgentSettings,
-  setCozeSettings,
   resetCozeSettings,
   resetDifySettings,
-  setGlobalSettingsDialog,
-  setDifySettings,
-  setOceanBaseSettings,
   resetOceanBaseSettings,
+  setAgentSettings,
+  setCozeSettings,
+  setDifySettings,
+  setGlobalSettingsDialog,
+  setOceanBaseSettings,
 } from "@/store/reducers/global";
 
 const TABS_OPTIONS = [

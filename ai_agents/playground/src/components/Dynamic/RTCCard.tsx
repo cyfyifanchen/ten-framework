@@ -26,7 +26,7 @@ import {
   setRoomConnected,
   setVoiceType,
 } from "@/store/reducers/global";
-import type { IChatItem, } from "@/types";
+import type { IChatItem } from "@/types";
 
 let hasInit: boolean = false;
 

@@ -1,10 +1,7 @@
 "use client";
 
 // import AudioVisualizer from "../audioVisualizer"
-import type {
-  IRemoteAudioTrack,
-  IRemoteVideoTrack,
-} from "agora-rtc-sdk-ng";
+import type { IRemoteAudioTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
 import { useEffect } from "react";
 import { useMultibandTrackVolume } from "@/common";
 import AudioVisualizer from "@/components/Agent/AudioVisualizer";

@@ -1,10 +1,10 @@
-import { StoreProvider } from "@/store";
 import type { Metadata, Viewport } from "next";
+import { StoreProvider } from "@/store";
 import "./global.css";
-import { Toaster } from "@/components/ui/sonner";
 import { Roboto } from "next/font/google";
-import { cn } from "@/lib/utils";
 import Script from "next/script";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 
 const roboto = Roboto({
   subsets: ["latin"],

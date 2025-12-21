@@ -1,4 +1,3 @@
-
 import { useAppDispatch, useAppSelector } from "@/common/hooks";
 import {
   Select,
@@ -37,22 +36,22 @@ export function RemoteGraphSelect() {
 
   return (
     <Select
-        value={graphName}
-        onValueChange={onGraphNameChange}
-        disabled={agentConnected}
-      >
-        <SelectTrigger className={cn("w-auto max-w-[180px] md:max-w-[220px]")}>
-          <SelectValue placeholder={"Select Graph"}>
-            <span className="truncate">{truncatedLabel}</span>
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {graphOptions.map((item) => (
-            <SelectItem key={item.value} value={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      value={graphName}
+      onValueChange={onGraphNameChange}
+      disabled={agentConnected}
+    >
+      <SelectTrigger className={cn("w-auto max-w-[180px] md:max-w-[220px]")}>
+        <SelectValue placeholder={"Select Graph"}>
+          <span className="truncate">{truncatedLabel}</span>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {graphOptions.map((item) => (
+          <SelectItem key={item.value} value={item.value}>
+            {item.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

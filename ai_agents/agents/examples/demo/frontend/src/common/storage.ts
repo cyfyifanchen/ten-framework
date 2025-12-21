@@ -1,21 +1,21 @@
 import type {
   IAgentSettings,
-  IOptions,
   ICozeSettings,
   IDifySettings,
   IOceanBaseSettings,
+  IOptions,
 } from "@/types";
 import {
-  OPTIONS_KEY,
-  DEFAULT_OPTIONS,
   AGENT_SETTINGS_KEY,
-  DEFAULT_AGENT_SETTINGS,
   COZE_SETTINGS_KEY,
+  DEFAULT_AGENT_SETTINGS,
   DEFAULT_COZE_SETTINGS,
-  DIFY_SETTINGS_KEY,
   DEFAULT_DIFY_SETTINGS,
   DEFAULT_OCEAN_BASE_SETTINGS,
+  DEFAULT_OPTIONS,
+  DIFY_SETTINGS_KEY,
   OCEANBASE_SETTINGS_KEY,
+  OPTIONS_KEY,
 } from "./constant";
 
 export const getOptionsFromLocal = (): {
