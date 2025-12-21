@@ -67,7 +67,6 @@ export default function HomePage() {
     );
     // volume indicator for local + remote tracks
     try {
-      // @ts-expect-error
       client.enableAudioVolumeIndicator?.();
       client.on("volume-indicator", (vols: any[]) => {
         const me = vols.find((v) => String(v.uid) === String(userId));
