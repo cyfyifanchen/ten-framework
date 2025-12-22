@@ -18,8 +18,10 @@
     "include": [
       "manifest.json",
       "property.json",
+      "**.tent",
       "**.py",
-      "README.md"
+      "README.md",
+      "tests/**"
     ]
   },
   "api": {

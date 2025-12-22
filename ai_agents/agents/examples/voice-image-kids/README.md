@@ -95,6 +95,25 @@ This starts:
 - **API Server**: http://localhost:8080
 - **TMAN Designer**: http://localhost:49483
 
+## API Endpoints
+
+- `GET /graphs` lists available graphs in `tenapp/property.json` for the API server:
+  ```
+  curl http://localhost:8080/graphs
+  ```
+- `POST /start` launches a worker with the selected graph and optional property overrides:
+  ```
+  curl -X POST http://localhost:8080/start \
+    -H 'Content-Type: application/json' \
+    -d '{
+      "request_id":"any-id",
+      "channel_name":"kids_demo",
+      "user_uid":10001,
+      "graph_name":"voice_image_kids",
+      "properties":{}
+    }'
+  ```
+
 ## Usage
 
 1. Open http://localhost:3000 in your browser

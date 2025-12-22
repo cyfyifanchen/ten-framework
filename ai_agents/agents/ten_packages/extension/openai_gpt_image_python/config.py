@@ -35,7 +35,7 @@ class OpenAIGPTImageConfig(BaseModel):
             raise ValueError("Model is required (params.model)")
 
         # Validate model
-        valid_models = ["gpt-image-1.5", "dall-e-3", "dall-e-2"]
+        valid_models = ["gpt-image-1", "gpt-image-1.5", "dall-e-3", "dall-e-2"]
         if self.params["model"] not in valid_models:
             raise ValueError(f"Invalid model. Must be one of: {valid_models}")
 

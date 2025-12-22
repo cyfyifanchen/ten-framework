@@ -18,7 +18,7 @@
                 "stream_id": 1234,
                 "remote_stream_id": 123,
                 "subscribe_audio": true,
-                "publish_audio": false,
+                "publish_audio": true,
                 "publish_data": true,
                 "enable_agora_asr": false
               }
@@ -45,8 +45,22 @@
                 "model": "${env:OPENAI_MODEL|gpt-4o-mini}",
                 "max_tokens": 512,
                 "prompt": "You are a friendly AI art assistant for kids! When children describe what they want to draw, help them create amazing images.\n\nGuidelines:\n- Keep responses short, fun, and encouraging\n- When they describe an image idea, use the generate_image tool immediately\n- Make prompts detailed and vivid (add colors, mood, style details)\n- After generating, celebrate their creativity!\n- If the image can't be created, gently suggest something similar\n\nExample:\nKid: \"I want a purple dragon!\"\nYou: \"Ooh, a purple dragon! Let me create that for you!\" [calls generate_image with detailed prompt]",
-                "greeting": "Hi! I'm your AI art friend! Tell me what you'd like to draw!",
+                "greeting": "Hi there! I'm your AI art buddy! Tell me what you'd like me to draw for you!",
                 "max_memory_length": 10
+              }
+            },
+            {
+              "type": "extension",
+              "name": "tts",
+              "addon": "openai_tts2_python",
+              "extension_group": "tts",
+              "property": {
+                "params": {
+                  "api_key": "${env:OPENAI_API_KEY}",
+                  "model": "tts-1",
+                  "voice": "nova",
+                  "speed": 1.0
+                }
               }
             },
             {
@@ -70,7 +84,7 @@
               "addon": "main_python",
               "extension_group": "control",
               "property": {
-                "greeting": "Hi! I'm your AI art friend! Tell me what you'd like to draw!"
+                "greeting": "Hi there! I'm your AI art buddy! Tell me what you'd like me to draw for you!"
               }
             },
             {
@@ -132,6 +146,14 @@
                   "dest": [
                     {
                       "extension": "streamid_adapter"
+                    }
+                  ]
+                },
+                {
+                  "name": "pcm_frame",
+                  "source": [
+                    {
+                      "extension": "tts"
                     }
                   ]
                 }

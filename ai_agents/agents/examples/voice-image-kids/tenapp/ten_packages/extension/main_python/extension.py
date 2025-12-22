@@ -1,8 +1,6 @@
-#
-# This file is part of TEN Framework, an open source project.
-# Licensed under the Apache License, Version 2.0.
-# See the LICENSE file for more information.
-#
+import asyncio
+import json
+import time
 from typing import Literal
 
 from .agent.decorators import agent_event_handler
@@ -21,14 +19,16 @@ from .agent.events import (
     UserJoinedEvent,
     UserLeftEvent,
 )
-from .helper import _send_data
-from .config import MainControlConfig
+from .helper import _send_cmd, _send_data, parse_sentences
+from .config import MainControlConfig  # assume extracted from your base model
+
+import uuid
 
 
 class MainControlExtension(AsyncExtension):
     """
-    Main control extension for voice-image-kids app.
-    Simplified version without TTS - images are the primary output.
+    The entry point of the agent module.
+    Consumes semantic AgentEvents from the Agent class and drives the runtime behavior.
     """
 
     def __init__(self, name: str):
@@ -39,6 +39,7 @@ class MainControlExtension(AsyncExtension):
 
         self.stopped: bool = False
         self._rtc_user_count: int = 0
+        self.sentence_fragment: str = ""
         self.turn_id: int = 0
         self.session_id: str = "0"
 
@@ -54,52 +55,58 @@ class MainControlExtension(AsyncExtension):
 
         self.agent = Agent(ten_env)
 
-        # Auto-register decorated methods
+        # Now auto-register decorated methods
         for attr_name in dir(self):
             fn = getattr(self, attr_name)
             event_type = getattr(fn, "_agent_event_type", None)
             if event_type:
                 self.agent.on(event_type, fn)
 
-    # === Event Handlers ===
+    # === Register handlers with decorators ===
     @agent_event_handler(UserJoinedEvent)
     async def _on_user_joined(self, event: UserJoinedEvent):
-        """Handle user joining the session"""
         self._rtc_user_count += 1
         if self._rtc_user_count == 1 and self.config and self.config.greeting:
-            # Send greeting message to frontend
+            await self._send_to_tts(self.config.greeting, True)
             await self._send_transcript(
                 "assistant", self.config.greeting, True, 100
             )
 
     @agent_event_handler(UserLeftEvent)
     async def _on_user_left(self, event: UserLeftEvent):
-        """Handle user leaving the session"""
         self._rtc_user_count -= 1
 
     @agent_event_handler(ToolRegisterEvent)
     async def _on_tool_register(self, event: ToolRegisterEvent):
-        """Register LLM tools (e.g., image generation)"""
         await self.agent.register_llm_tool(event.tool, event.source)
 
     @agent_event_handler(ASRResultEvent)
     async def _on_asr_result(self, event: ASRResultEvent):
-        """Handle speech recognition results"""
         self.session_id = event.metadata.get("session_id", "100")
         stream_id = int(self.session_id)
         if not event.text:
             return
+        if event.final or len(event.text) > 2:
+            await self._interrupt()
         if event.final:
             self.turn_id += 1
-            # Send user's speech to LLM for processing
             await self.agent.queue_llm_input(event.text)
-        # Show transcript to user
         await self._send_transcript("user", event.text, event.final, stream_id)
 
     @agent_event_handler(LLMResponseEvent)
     async def _on_llm_response(self, event: LLMResponseEvent):
-        """Handle LLM responses (including tool calls for image generation)"""
-        # Show LLM response to user
+        if not event.is_final and event.type == "message":
+            sentences, self.sentence_fragment = parse_sentences(
+                self.sentence_fragment, event.delta
+            )
+            for s in sentences:
+                await self._send_to_tts(s, False)
+
+        if event.is_final and event.type == "message":
+            remaining_text = self.sentence_fragment or ""
+            self.sentence_fragment = ""
+            await self._send_to_tts(remaining_text, True)
+
         await self._send_transcript(
             "assistant",
             event.text,
@@ -108,7 +115,6 @@ class MainControlExtension(AsyncExtension):
             data_type=("reasoning" if event.type == "reasoning" else "text"),
         )
 
-    # === Lifecycle Hooks ===
     async def on_start(self, ten_env: AsyncTenEnv):
         ten_env.log_info("[MainControlExtension] on_start")
 
@@ -123,7 +129,7 @@ class MainControlExtension(AsyncExtension):
     async def on_data(self, ten_env: AsyncTenEnv, data: Data):
         await self.agent.on_data(data)
 
-    # === Helper Methods ===
+    # === helpers ===
     async def _send_transcript(
         self,
         role: str,
@@ -132,7 +138,9 @@ class MainControlExtension(AsyncExtension):
         stream_id: int,
         data_type: Literal["text", "reasoning"] = "text",
     ):
-        """Send transcript to message collector for chat UI"""
+        """
+        Sends the transcript (ASR or LLM output) to the message collector.
+        """
         if data_type == "text":
             await _send_data(
                 self.ten_env,
@@ -140,14 +148,11 @@ class MainControlExtension(AsyncExtension):
                 "message_collector",
                 {
                     "data_type": "transcribe",
-                    "text_data": {
-                        "text": text,
-                        "is_final": final,
-                        "stream_id": stream_id,
-                        "end_of_segment": final,
-                        "role": role,
-                    },
-                    **self._current_metadata(),
+                    "role": role,
+                    "text": text,
+                    "text_ts": int(time.time() * 1000),
+                    "is_final": final,
+                    "stream_id": stream_id,
                 },
             )
         elif data_type == "reasoning":
@@ -156,13 +161,53 @@ class MainControlExtension(AsyncExtension):
                 "message",
                 "message_collector",
                 {
-                    "data_type": "reasoning",
-                    "text_data": {
-                        "text": text,
-                        "is_final": final,
-                        "stream_id": stream_id,
-                        "end_of_segment": final,
-                    },
-                    **self._current_metadata(),
+                    "data_type": "raw",
+                    "role": role,
+                    "text": json.dumps(
+                        {
+                            "type": "reasoning",
+                            "data": {
+                                "text": text,
+                            },
+                        }
+                    ),
+                    "text_ts": int(time.time() * 1000),
+                    "is_final": final,
+                    "stream_id": stream_id,
                 },
             )
+        self.ten_env.log_info(
+            f"[MainControlExtension] Sent transcript: {role}, final={final}, text={text}"
+        )
+
+    async def _send_to_tts(self, text: str, is_final: bool):
+        """
+        Sends a sentence to the TTS system.
+        """
+        request_id = f"tts-request-{self.turn_id}"
+        await _send_data(
+            self.ten_env,
+            "tts_text_input",
+            "tts",
+            {
+                "request_id": request_id,
+                "text": text,
+                "text_input_end": is_final,
+                "metadata": self._current_metadata(),
+            },
+        )
+        self.ten_env.log_info(
+            f"[MainControlExtension] Sent to TTS: is_final={is_final}, text={text}"
+        )
+
+    async def _interrupt(self):
+        """
+        Interrupts ongoing LLM and TTS generation. Typically called when user speech is detected.
+        """
+        self.sentence_fragment = ""
+        await self.agent.flush_llm()
+        await _send_data(
+            self.ten_env, "tts_flush", "tts", {"flush_id": str(uuid.uuid4())}
+        )
+        await _send_cmd(self.ten_env, "flush", "agora_rtc")
+        self.ten_env.log_info("[MainControlExtension] Interrupt signal sent")

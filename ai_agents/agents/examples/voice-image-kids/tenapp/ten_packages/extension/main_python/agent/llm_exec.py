@@ -157,6 +157,7 @@ class LLMExec:
         self.current_request_id = request_id
         llm_input = LLMRequest(
             request_id=request_id,
+            model="",  # Model is configured in LLM extension, pass empty to use default
             messages=messages,
             streaming=True,
             parameters={"temperature": 0.7},
