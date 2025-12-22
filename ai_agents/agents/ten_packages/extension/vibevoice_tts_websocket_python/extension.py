@@ -51,7 +51,9 @@ class VibeVoiceTTSWebsocketExtension(AsyncTTS2BaseExtension):
             if not config_json_str or config_json_str.strip() == "{}":
                 raise ValueError("Configuration is empty.")
 
-            self.config = VibeVoiceTTSConfig.model_validate_json(config_json_str)
+            self.config = VibeVoiceTTSConfig.model_validate_json(
+                config_json_str
+            )
             self.config.update_params()
 
             ten_env.log_info(
@@ -284,10 +286,7 @@ class VibeVoiceTTSWebsocketExtension(AsyncTTS2BaseExtension):
                         pass
                 self._active_ws = None
 
-                if (
-                    self.config.dump
-                    and t.request_id in self.recorder_map
-                ):
+                if self.config.dump and t.request_id in self.recorder_map:
                     try:
                         await self.recorder_map[t.request_id].flush()
                     except Exception:
