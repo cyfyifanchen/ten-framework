@@ -21,42 +21,49 @@ class VibeVoiceTTSConfig(BaseModel):
 
     def update_params(self) -> None:
         if "url" in self.params:
-            self.url = str(self.params.pop("url"))
+            self.url = str(self.params["url"])
+            del self.params["url"]
 
         if "cfg_scale" in self.params:
             try:
-                self.cfg_scale = float(self.params.pop("cfg_scale"))
+                self.cfg_scale = float(self.params["cfg_scale"])
+                del self.params["cfg_scale"]
             except (TypeError, ValueError):
-                self.params.pop("cfg_scale", None)
+                del self.params["cfg_scale"]
 
         if "steps" in self.params:
             try:
-                self.steps = int(self.params.pop("steps"))
+                self.steps = int(self.params["steps"])
+                del self.params["steps"]
             except (TypeError, ValueError):
                 self.steps = None
-                self.params.pop("steps", None)
+                del self.params["steps"]
 
         if "voice" in self.params:
-            voice_val = self.params.pop("voice")
+            voice_val = self.params["voice"]
+            del self.params["voice"]
             self.voice = str(voice_val) if voice_val is not None else None
 
         if "sample_rate" in self.params:
             try:
-                self.sample_rate = int(self.params.pop("sample_rate"))
+                self.sample_rate = int(self.params["sample_rate"])
+                del self.params["sample_rate"]
             except (TypeError, ValueError):
-                self.params.pop("sample_rate", None)
+                del self.params["sample_rate"]
 
         if "channels" in self.params:
             try:
-                self.channels = int(self.params.pop("channels"))
+                self.channels = int(self.params["channels"])
+                del self.params["channels"]
             except (TypeError, ValueError):
-                self.params.pop("channels", None)
+                del self.params["channels"]
 
         if "sample_width" in self.params:
             try:
-                self.sample_width = int(self.params.pop("sample_width"))
+                self.sample_width = int(self.params["sample_width"])
+                del self.params["sample_width"]
             except (TypeError, ValueError):
-                self.params.pop("sample_width", None)
+                del self.params["sample_width"]
 
-    def to_str(self, sensitive_handling: bool = False) -> str:
+    def to_str(self, _sensitive_handling: bool = False) -> str:
         return f"{self}"
