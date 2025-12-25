@@ -48,7 +48,7 @@ A delightful voice-to-image generation application built with TEN Framework. Kid
 ### 1. Clone and Navigate
 
 ```bash
-cd ai_agents/agents/examples/voice-image-kids
+cd ai_agents/agents/examples/doodler
 ```
 
 ### 2. Set Environment Variables
@@ -172,7 +172,7 @@ Edit `tenapp/property.json` to customize:
 ## Project Structure
 
 ```
-voice-image-kids/
+doodler/
 ├── tenapp/
 │   ├── property.json              # Agent graph configuration
 │   ├── manifest.json               # App metadata
@@ -224,7 +224,7 @@ tman install
 
 ```bash
 cd ai_agents
-docker build -f agents/examples/voice-image-kids/Dockerfile -t voice-image-kids .
+docker build -f agents/examples/doodler/Dockerfile -t doodler .
 ```
 
 ### Run Container
@@ -234,7 +234,7 @@ docker run --rm -it --env-file .env \
   -p 8080:8080 \
   -p 3000:3000 \
   -p 49483:49483 \
-  voice-image-kids
+  doodler
 ```
 
 ### Access

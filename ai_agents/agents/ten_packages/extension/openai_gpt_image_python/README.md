@@ -208,7 +208,7 @@ For Azure OpenAI, configure:
 
 ## Examples
 
-See the [voice-image-kids](../../../examples/voice-image-kids/) example for a complete implementation.
+See the [doodler](../../../examples/doodler/) example for a complete implementation.
 
 ## License
 
