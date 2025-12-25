@@ -102,17 +102,32 @@ class OpenAIImageClient:
         """
         # Build request parameters
         model = model_override or self.current_model
+        is_gpt_image_model = model.startswith("gpt-image")
+
+        # GPT Image models use different quality values than DALL-E
+        # DALL-E: 'standard', 'hd'
+        # GPT Image: 'low', 'medium', 'high', 'auto'
+        requested_quality = quality or self.config.params.get("quality", "standard")
+        if is_gpt_image_model:
+            # Map DALL-E quality values to GPT Image values
+            quality_map = {
+                "standard": "auto",
+                "hd": "high",
+            }
+            requested_quality = quality_map.get(requested_quality, requested_quality)
+
         request_params = {
             "model": model,
             "prompt": prompt,
             "size": self.config.params.get("size", "1024x1024"),
-            "quality": quality or self.config.params.get("quality", "standard"),
+            "quality": requested_quality,
             "n": 1,  # Always generate 1 image
         }
 
-        # Add response_format if configured
+        # GPT Image models (gpt-image-1, gpt-image-1.5) don't support response_format
+        # Only add it for DALL-E models
         response_format = self.config.params.get("response_format", "url")
-        if response_format:
+        if response_format and not is_gpt_image_model:
             request_params["response_format"] = response_format
 
         self.ten_env.log_info(
@@ -126,13 +141,14 @@ class OpenAIImageClient:
             response = await self.client.images.generate(**request_params)
 
             # Extract image URL or base64 data
-            if response_format == "b64_json":
-                # Handle base64 response (future feature)
+            # GPT Image models ONLY return base64 data, not URLs
+            if is_gpt_image_model or response_format == "b64_json":
+                # GPT Image models always return base64
                 image_data = response.data[0].b64_json
                 # Convert to data URL
                 image_url = f"data:image/png;base64,{image_data}"
             else:
-                # Standard URL response
+                # DALL-E models support URL response
                 image_url = response.data[0].url
 
             # Optional: Save response for debugging

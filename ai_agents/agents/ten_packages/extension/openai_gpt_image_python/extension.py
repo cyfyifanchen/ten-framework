@@ -4,6 +4,7 @@
 # See the LICENSE file for more information.
 #
 import json
+import time
 from ten_runtime import (
     Data,
     TenEnv,
@@ -121,25 +122,27 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
     async def send_image(
         self, async_ten_env: AsyncTenEnv, image_url: str
     ) -> None:
-        """Send generated image URL to frontend via content_data"""
+        """Send generated image URL to frontend"""
         async_ten_env.log_info(f"Sending image URL: {image_url}")
 
         try:
-            # Format as JSON matching TEN content_data schema
-            payload = json.dumps({
-                "data": {
-                    "image_url": image_url
-                },
-                "type": "image_url"
-            })
+            payload_obj = {
+                "data_type": "raw",
+                "role": "assistant",
+                "text": json.dumps({
+                    "type": "image_url",
+                    "data": {
+                        "image_url": image_url
+                    }
+                }),
+                "text_ts": int(time.time() * 1000),
+                "is_final": True,
+                "stream_id": 100
+            }
 
-            # Create content_data message
-            output_data = Data.create(CONTENT_DATA_OUT_NAME)
-            output_data.set_property_string(DATA_OUT_PROPERTY_TEXT, payload)
-            output_data.set_property_bool(DATA_OUT_PROPERTY_END_OF_SEGMENT, True)
-
-            # Send asynchronously
-            await async_ten_env.send_data(output_data)
+            msg = Data.create("message")
+            msg.set_property_from_json(None, json.dumps(payload_obj))
+            await async_ten_env.send_data(msg)
 
             async_ten_env.log_info(
                 "Image URL sent successfully",
@@ -175,11 +178,61 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
             # Override quality if specified
             quality = args.get("quality", self.config.params.get("quality"))
 
+            # Enforce kid-friendly doodle style
+            unsafe_keywords = [
+                "weapon", "blood", "violence", "gore", "nsfw", "adult",
+                "gun", "knife", "kill", "attack", "war"
+            ]
+            lowered = prompt.lower()
+            if any(k in lowered for k in unsafe_keywords):
+                return LLMToolResultLLMResult(
+                    type="llmresult",
+                    content=json.dumps({
+                        "success": False,
+                        "error": "Let's try a kid-friendly idea. Describe a playful scene or character to doodle!"
+                    }),
+                )
+            doodle_modifier = (
+                " in playful doodle style, hand-drawn, crayon-like, bold outlines, simple shapes, "
+                "kid-friendly and cheerful"
+            )
+            prompt = f"{prompt.strip()}{doodle_modifier}"
+
+            # Emit progress: queued → generating
+            try:
+                queued_msg = {
+                    "data_type": "raw",
+                    "role": "assistant",
+                    "text": json.dumps({"type": "progress", "data": {"phase": "queued", "pct": 10}}),
+                    "text_ts": int(time.time() * 1000),
+                    "is_final": False,
+                    "stream_id": 100
+                }
+                msg = Data.create("message")
+                msg.set_property_from_json(None, json.dumps(queued_msg))
+                await ten_env.send_data(msg)
+            except Exception:
+                pass
+
             # Generate image
             ten_env.log_info(
                 f"Generating image with prompt: {prompt[:100]}...",
                 category=LOG_CATEGORY_KEY_POINT
             )
+            try:
+                generating_msg = {
+                    "data_type": "raw",
+                    "role": "assistant",
+                    "text": json.dumps({"type": "progress", "data": {"phase": "generating", "pct": 50}}),
+                    "text_ts": int(time.time() * 1000),
+                    "is_final": False,
+                    "stream_id": 100
+                }
+                msg2 = Data.create("message")
+                msg2.set_property_from_json(None, json.dumps(generating_msg))
+                await ten_env.send_data(msg2)
+            except Exception:
+                pass
             image_url = await self.client.generate_image(
                 prompt=prompt,
                 quality=quality,
@@ -188,13 +241,29 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
             # Send image to frontend
             await self.send_image(ten_env, image_url)
 
-            # Return success to LLM
+            # Emit progress: final
+            try:
+                final_msg = {
+                    "data_type": "raw",
+                    "role": "assistant",
+                    "text": json.dumps({"type": "progress", "data": {"phase": "final", "pct": 100}}),
+                    "text_ts": int(time.time() * 1000),
+                    "is_final": True,
+                    "stream_id": 100
+                }
+                msg3 = Data.create("message")
+                msg3.set_property_from_json(None, json.dumps(final_msg))
+                await ten_env.send_data(msg3)
+            except Exception:
+                pass
+
+            # Return success to LLM (without image data to avoid context overflow)
+            # The image is already sent to the frontend via send_image()
             return LLMToolResultLLMResult(
                 type="llmresult",
                 content=json.dumps({
                     "success": True,
-                    "image_url": image_url,
-                    "message": "Image generated successfully!"
+                    "message": "Image generated and sent to the user successfully!"
                 }),
             )
 
@@ -248,8 +317,7 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
                         type="llmresult",
                         content=json.dumps({
                             "success": True,
-                            "image_url": image_url,
-                            "message": f"Image generated with {fallback_model}"
+                            "message": f"Image generated with {fallback_model} and sent to the user successfully!"
                         }),
                     )
                 except Exception as fallback_error:

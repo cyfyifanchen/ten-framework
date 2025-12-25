@@ -71,9 +71,10 @@
               "property": {
                 "params": {
                   "api_key": "${env:OPENAI_API_KEY}",
-                  "model": "gpt-image-1.5",
+                  "model": "dall-e-3",
                   "size": "1024x1024",
                   "quality": "standard",
+                  "response_format": "url",
                   "fallback_model": "dall-e-3"
                 }
               }
@@ -133,6 +134,32 @@
                   "source": [
                     {
                       "extension": "stt"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "extension": "message_collector",
+              "data": [
+                {
+                  "name": "content_data",
+                  "source": [
+                    {
+                      "extension": "image_gen_tool"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "extension": "message_collector",
+              "data": [
+                {
+                  "name": "message",
+                  "source": [
+                    {
+                      "extension": "image_gen_tool"
                     }
                   ]
                 }
