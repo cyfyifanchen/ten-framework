@@ -15,6 +15,8 @@ export default function MagicCanvasBackground(props: {
   const { phase, mode, reducedMotion = false } = props;
   const isGenerating = phase === "queued" || phase === "sketch" || phase === "color";
   const showDream = phase === "complete";
+  const tileStart = "0px 0px";
+  const tileEnd = "160px 140px";
 
   return (
     <div
@@ -44,7 +46,7 @@ export default function MagicCanvasBackground(props: {
           reducedMotion
             ? undefined
             : {
-                backgroundPosition: ["0px 0px", "120px 120px"],
+                backgroundPosition: [tileStart, tileEnd],
               }
         }
         transition={

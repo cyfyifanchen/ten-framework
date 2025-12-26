@@ -193,12 +193,13 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
                     }),
                 )
             doodle_modifier = (
-                " in playful doodle style, hand-drawn, crayon-like, bold outlines, simple shapes, "
-                "kid-friendly and cheerful"
+                " in playful crayon doodle style on white paper, hand-drawn, bold uneven outlines, "
+                "simple shapes, flat colors, limited palette, minimal detail, no gradients, no 3D, "
+                "no realistic lighting, no photo realism, kid-friendly and cheerful"
             )
             prompt = f"{prompt.strip()}{doodle_modifier}"
 
-            # Emit progress: queued → generating
+            # Emit progress: queued → drawing
             try:
                 queued_msg = {
                     "data_type": "raw",
@@ -223,7 +224,7 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
                 generating_msg = {
                     "data_type": "raw",
                     "role": "assistant",
-                    "text": json.dumps({"type": "progress", "data": {"phase": "generating", "pct": 50}}),
+                    "text": json.dumps({"type": "progress", "data": {"phase": "drawing", "pct": 50}}),
                     "text_ts": int(time.time() * 1000),
                     "is_final": False,
                     "stream_id": 100

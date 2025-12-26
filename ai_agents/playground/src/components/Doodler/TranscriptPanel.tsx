@@ -44,13 +44,13 @@ export default function TranscriptPanel(props: {
     <section
       aria-label="Transcript"
       className={cn(
-        "flex min-h-0 flex-col overflow-hidden rounded-[24px] border border-black/10",
-        "bg-white/70 shadow-[0_18px_50px_rgba(34,18,10,0.12)] backdrop-blur-md",
+        "flex min-h-0 flex-col overflow-hidden",
+        "crayon-border shadow-[0_18px_50px_rgba(34,18,10,0.12)] backdrop-blur-md",
         className
       )}
       style={style}
     >
-      <div className="flex items-center justify-between gap-2 border-black/10 border-b px-4 py-3">
+      <div className="flex items-center justify-between gap-2 border-black/20 border-b border-dashed px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-[#F97316]" aria-hidden />
           <h2 className="font-semibold text-sm">Transcript</h2>
@@ -73,7 +73,7 @@ export default function TranscriptPanel(props: {
                 >
                   <div
                     className={cn(
-                      "max-w-[92%] rounded-2xl border px-3 py-2 text-sm leading-relaxed shadow-sm",
+                      "max-w-[92%] px-3 py-2 text-sm leading-relaxed crayon-bubble",
                       isUser
                         ? "border-[#F97316]/20 bg-[#F97316]/12"
                         : "border-black/10 bg-white/60",
@@ -102,17 +102,21 @@ export default function TranscriptPanel(props: {
       {onSend ? (
         <form
           onSubmit={onSubmit}
-          className="border-black/10 border-t bg-white/55 p-3"
+          className="border-black/20 border-t border-dashed bg-white/55 p-3"
         >
           <div className="flex items-center gap-2">
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder={placeholder ?? "Type a prompt…"}
-              className="h-11 bg-white/70"
+              className="h-11 bg-white/80 crayon-control"
               disabled={disabled}
             />
-            <Button type="submit" className="h-11 px-5" disabled={!canSend}>
+            <Button
+              type="submit"
+              className="h-11 px-5 shadow-none crayon-control"
+              disabled={!canSend}
+            >
               Send
             </Button>
           </div>

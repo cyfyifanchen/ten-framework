@@ -8,8 +8,10 @@ import type { CreativeMode, DoodlePhase } from "./MagicCanvasBackground";
 function PenIcon(props: { mode: CreativeMode }) {
   const { mode } = props;
   const isNeon = mode === "neon";
-  const body = isNeon ? "#0B1220" : "#2B2116";
-  const accent = isNeon ? "#7CFFFA" : "#F97316";
+  const body = isNeon ? "#FF8A3D" : "#F97316";
+  const bodyTop = isNeon ? "#FFB457" : "#FB923C";
+  const stripe = isNeon ? "#0B1220" : "#1F1F1F";
+  const outline = isNeon ? "rgba(124,255,250,0.4)" : "rgba(0,0,0,0.18)";
   return (
     <svg
       width="44"
@@ -18,22 +20,20 @@ function PenIcon(props: { mode: CreativeMode }) {
       fill="none"
       aria-hidden
     >
-      <path
-        d="M18 46l-2 8 8-2 25-25-6-6-25 25z"
-        fill={accent}
-        opacity={isNeon ? 0.95 : 0.9}
-      />
-      <path d="M40 15l9 9 3-3a4 4 0 0 0 0-6l-3-3a4 4 0 0 0-6 0l-3 3z" fill={body} />
-      <path
-        d="M22 42l20-20 6 6-20 20-6-6z"
-        fill={body}
-        opacity={0.92}
-      />
-      <path
-        d="M17 54l7-2-5-5-2 7z"
-        fill={isNeon ? "#FFFFFF" : "#FFE9C7"}
-        opacity={0.9}
-      />
+      <g transform="rotate(-20 32 32)">
+        <rect x="18" y="10" width="28" height="40" rx="9" fill={body} stroke={outline} />
+        <rect x="18" y="10" width="28" height="10" rx="5" fill={bodyTop} />
+        <rect x="18" y="22" width="28" height="5" rx="2.5" fill={stripe} />
+        <rect x="18" y="30" width="28" height="5" rx="2.5" fill={stripe} />
+        <rect x="18" y="42" width="28" height="5" rx="2.5" fill={stripe} />
+        <ellipse cx="32" cy="36" rx="6.5" ry="10" fill={stripe} />
+        <path
+          d="M22 18c3-4 11-4 14 0"
+          stroke="rgba(255,255,255,0.45)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </g>
     </svg>
   );
 }

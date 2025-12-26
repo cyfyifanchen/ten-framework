@@ -1,27 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { useAppDispatch, useAppSelector } from "@/common";
 import { cn } from "@/lib/utils";
-import {
-  addChatItem,
-  setOptions,
-  setRoomConnected,
-} from "@/store/reducers/global";
-import { EMessageDataType, EMessageType, type IChatItem } from "@/types";
+import { useAppDispatch, useAppSelector } from "@/common";
+import { addChatItem, setOptions, setRoomConnected } from "@/store/reducers/global";
 import DoodleCanvas from "./Canvas";
 import ControlsBar from "./ControlsBar";
 import LoadingAnimator from "./LoadingAnimator";
+import { EMessageDataType, EMessageType, type IChatItem } from "@/types";
 
 export default function AppShell() {
   const dispatch = useAppDispatch();
   const options = useAppSelector((s) => s.global.options);
-  const [channel, setChannel] = React.useState(
-    options.channel || "voice_image_kids"
-  );
-  const [userId, setUserId] = React.useState<number>(
-    options.userId || Math.floor(100000 + Math.random() * 900000)
-  );
+  const [channel, setChannel] = React.useState(options.channel || "voice_image_kids");
+  const [userId, setUserId] = React.useState<number>(options.userId || Math.floor(100000 + Math.random() * 900000));
   const rtcRef = React.useRef<any>(null);
 
   React.useEffect(() => {
@@ -72,12 +64,12 @@ export default function AppShell() {
       <header
         className={cn(
           "flex items-center justify-between px-4 py-3",
-          "bg-[#1b1d22] shadow-md"
+          "shadow-md bg-[#1b1d22]"
         )}
       >
         <h1
           className={cn(
-            "font-extrabold text-2xl tracking-wide",
+            "text-2xl font-extrabold tracking-wide",
             "text-[#FF6B6B]"
           )}
           aria-label="Doodler"
@@ -90,24 +82,24 @@ export default function AppShell() {
             value={channel}
             onChange={(e) => setChannel(e.target.value)}
             aria-label="Channel"
-            className={cn(
-              "rounded-lg border border-[#2b2e35] bg-[#121316] px-3 py-2 text-sm text-white"
-            )}
+          className={cn(
+            "rounded-lg border border-[#2b2e35] bg-[#121316] px-3 py-2 text-sm text-white"
+          )}
           />
           <input
             type="number"
             value={userId}
             onChange={(e) => setUserId(Number(e.target.value))}
             aria-label="User ID"
-            className={cn(
-              "rounded-lg border border-[#2b2e35] bg-[#121316] px-3 py-2 text-sm text-white"
-            )}
+          className={cn(
+            "rounded-lg border border-[#2b2e35] bg-[#121316] px-3 py-2 text-sm text-white"
+          )}
           />
           <button
             type="button"
             onClick={connect}
             className={cn(
-              "rounded-lg px-3 py-2 font-semibold text-sm",
+              "rounded-lg px-3 py-2 text-sm font-semibold",
               "bg-[#ffd166] text-black"
             )}
             aria-label="Connect"
@@ -118,7 +110,7 @@ export default function AppShell() {
             type="button"
             onClick={disconnect}
             className={cn(
-              "rounded-lg px-3 py-2 font-semibold text-sm",
+              "rounded-lg px-3 py-2 text-sm font-semibold",
               "bg-[#2b2e35] text-white"
             )}
             aria-label="Disconnect"
@@ -139,7 +131,7 @@ export default function AppShell() {
         <section
           className={cn(
             "flex flex-1 items-center justify-center rounded-xl",
-            "bg-[#181a1d] p-2"
+            "p-2 bg-[#181a1d]"
           )}
           aria-label="Drawing canvas"
         >
@@ -148,7 +140,7 @@ export default function AppShell() {
         </section>
         <aside
           className={cn(
-            "w-full rounded-xl bg-[#181a1d] p-3 md:w-[380px]",
+            "w-full md:w-[380px] rounded-xl bg-[#181a1d] p-3",
             "border border-[#262a31]"
           )}
           aria-label="Controls"

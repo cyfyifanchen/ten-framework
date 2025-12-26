@@ -10,8 +10,7 @@ export default function ControlsBar() {
   const options = useAppSelector((s) => s.global.options);
   const agentConnected = useAppSelector((s) => s.global.agentConnected);
   const rtmConnected = useAppSelector((s) => s.global.rtmConnected);
-  const disable =
-    !options.channel || !options.userId || !rtmConnected || !agentConnected;
+  const disable = !options.channel || !options.userId || !rtmConnected || !agentConnected;
   const [val, setVal] = React.useState("");
   const rtmRef = React.useRef<any>(null);
 
@@ -48,9 +47,9 @@ export default function ControlsBar() {
             key={s}
             type="button"
             className={cn(
-              "rounded-xl px-4 py-3 font-semibold text-sm",
+              "rounded-xl px-4 py-3 text-sm font-semibold",
               "bg-[#2b2e35] text-white",
-              { ["cursor-not-allowed opacity-50"]: disable }
+              { ["opacity-50 cursor-not-allowed"]: disable }
             )}
             onClick={() => styleClick(s)}
             disabled={disable}
@@ -76,9 +75,9 @@ export default function ControlsBar() {
         <button
           type="submit"
           className={cn(
-            "rounded-xl px-5 py-3 font-bold text-base",
+            "rounded-xl px-5 py-3 text-base font-bold",
             "bg-[#FF6B6B] text-black focus:outline-hidden focus:ring-2 focus:ring-[#ffd166]",
-            { ["cursor-not-allowed opacity-50"]: disable || val.length === 0 }
+            { ["opacity-50 cursor-not-allowed"]: disable || val.length === 0 }
           )}
           disabled={disable || val.length === 0}
           aria-label="Doodle It!"
@@ -86,9 +85,7 @@ export default function ControlsBar() {
           Doodle It!
         </button>
       </form>
-      <div className="text-[#ffd166] text-xs">
-        Sounds can be toggled in Settings.
-      </div>
+      <div className="text-xs text-[#ffd166]">Sounds can be toggled in Settings.</div>
     </div>
   );
 }

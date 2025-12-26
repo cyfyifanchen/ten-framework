@@ -462,12 +462,12 @@ export default function ImmersiveShell() {
 
         <footer className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4">
           <div className="mx-auto w-full max-w-6xl">
-            <div className={cn("flex flex-wrap items-center justify-center gap-4", "py-2")}>
+            <div className={cn("flex flex-nowrap items-center justify-center gap-4", "py-2")}>
               <Select value={micValue} onValueChange={onMicChange} disabled={!micTrack}>
                 <SelectTrigger
                   className={cn(
-                    "h-11 min-w-[240px] rounded-full border border-black/10 bg-white",
-                    "px-4 text-left shadow-none focus:ring-0"
+                    "h-11 min-w-[240px] bg-white/85 px-4 text-left shadow-none focus:ring-0",
+                    "crayon-control"
                   )}
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -503,7 +503,7 @@ export default function ImmersiveShell() {
                     </div>
                   </div>
                 </SelectTrigger>
-                <SelectContent className="border-black/10 bg-white/90">
+                <SelectContent className="crayon-border bg-white/90">
                   {micDevices.map((item) => (
                     <SelectItem key={item.value} value={item.value}>
                       {item.label}
@@ -514,7 +514,7 @@ export default function ImmersiveShell() {
 
               <Button
                 type="button"
-                className="h-11 rounded-full px-5 shadow-none"
+                className="h-11 px-5 shadow-none crayon-control"
                 variant="secondary"
                 onClick={() => setMicMuted((prev) => !prev)}
                 disabled={!micTrack}
@@ -524,7 +524,7 @@ export default function ImmersiveShell() {
 
               <Button
                 type="button"
-                className="h-11 rounded-full px-6 shadow-none"
+                className="h-11 px-6 shadow-none crayon-control"
                 variant={isConnected ? "secondary" : "default"}
                 onClick={isConnected ? disconnect : connect}
                 disabled={connecting || (!isConnected && !canConnect)}
