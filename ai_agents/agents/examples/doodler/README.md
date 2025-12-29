@@ -7,7 +7,7 @@ A delightful voice-to-image generation application built with TEN Framework. Kid
 - **Voice Activity Detection**: Automatic speech detection - no buttons needed!
 - **Natural Speech Input**: Kids just talk naturally about what they want to create
 - **GPT Image 1.5**: Latest, fastest OpenAI image generation (4x faster than DALL-E 3)
-- **Kid-Friendly UI**: Colorful, engaging interface via shared playground
+- **Kid-Friendly UI**: Colorful, engaging interface via dedicated doodler frontend
 - **Instant Results**: Images appear in seconds
 - **Safe & Encouraging**: Gentle error messages and positive feedback
 
@@ -63,6 +63,9 @@ OPENAI_API_KEY=sk-your_openai_key
 # Optional
 AGORA_APP_CERTIFICATE=your_certificate
 OPENAI_MODEL=gpt-4o-mini
+AGENT_SERVER_URL=http://localhost:8080
+TEN_DEV_SERVER_URL=http://localhost:49483
+NEXT_PUBLIC_EDIT_GRAPH_MODE=true
 ```
 
 ### 3. Install Dependencies
@@ -74,7 +77,7 @@ task install
 This will:
 - Install TEN framework packages
 - Install Python dependencies
-- Install frontend (shared playground)
+- Install frontend
 - Build the API server
 
 ### 4. Run the App
@@ -87,7 +90,9 @@ This starts:
 - TEN Runtime (agent backend)
 - API Server (port 8080)
 - TMAN Designer (port 49483)
-- Frontend will be available via the shared playground
+- Frontend will be available from the doodler frontend
+
+Frontend source lives in `ai_agents/agents/examples/doodler/frontend`.
 
 ### 5. Access the Application
 

@@ -5,9 +5,9 @@ dotenv: ["../../../.env"]
 tasks:
   # install scripts
   install-frontend:
-    desc: install frontend dependencies (shared playground)
+    desc: install frontend dependencies
     internal: true
-    dir: ../../../playground
+    dir: ./frontend
     cmds:
       - bun install --verbose
 
@@ -55,8 +55,8 @@ tasks:
       - tman designer
 
   run-frontend:
-    desc: run frontend (shared playground)
-    dir: ../../../playground
+    desc: run frontend
+    dir: ./frontend
     cmds:
       - bun run dev
 
