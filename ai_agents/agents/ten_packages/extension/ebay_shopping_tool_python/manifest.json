@@ -1,0 +1,114 @@
+{
+  "type": "extension",
+  "name": "ebay_shopping_tool_python",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "type": "system",
+      "name": "ten_runtime_python",
+      "version": "0.11"
+    },
+    {
+      "type": "system",
+      "name": "ten_ai_base",
+      "version": "0.7"
+    }
+  ],
+  "package": {
+    "include": [
+      "manifest.json",
+      "property.json",
+      "BUILD.gn",
+      "**.tent",
+      "**.py",
+      "README.md",
+      "requirements.txt"
+    ]
+  },
+  "api": {
+    "property": {
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "description": "eBay Browse API OAuth token"
+        },
+        "marketplace_id": {
+          "type": "string",
+          "description": "eBay marketplace ID (default: EBAY_US)"
+        },
+        "max_results": {
+          "type": "number",
+          "description": "Maximum number of search results to return (default: 5)"
+        }
+      }
+    },
+    "cmd_in": [
+      {
+        "name": "tool_call",
+        "property": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Tool name: search_ebay, open_ebay_item, or get_ebay_item_details"
+            },
+            "args": {
+              "type": "string",
+              "description": "JSON string of tool arguments"
+            }
+          },
+          "required": ["name"]
+        }
+      }
+    ],
+    "cmd_out": [
+      {
+        "name": "tool_register",
+        "property": {
+          "properties": {
+            "tool": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              },
+              "required": ["name", "description", "parameters"]
+            }
+          }
+        },
+        "result": {
+          "property": {
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
