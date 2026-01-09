@@ -104,9 +104,9 @@ See the [Example code][voice-assistant-live2d-example] for different Live2D char
 
 <br>
 
-![Image][speech-diarization-image]
+![Image][speaker-diarization-image]
 
-<strong>Speech Diarization</strong> — Real-time diarization that detects and labels speakers, the Who Likes What game shows an interactive use case.
+<strong>Speaker Diarization</strong> — Real-time diarization that detects and labels speakers, the Who Likes What game shows an interactive use case.
 
 [Example code][speechmatics-diarization-example]
 
