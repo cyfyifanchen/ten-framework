@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+export PYTHONPATH=$(pwd)/ten_packages/system/ten_ai_base/interface:$PYTHONPATH
+export LD_LIBRARY_PATH=$(pwd)/ten_packages/system/agora_rtc_sdk/lib:$(pwd)/ten_packages/extension/agora_rtm/lib:$(pwd)/ten_packages/system/azure_speech_sdk/lib
+
+exec bin/main "$@"

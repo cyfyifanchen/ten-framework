@@ -37,7 +37,7 @@
           "description": "eBay marketplace ID (default: EBAY_US)"
         },
         "max_results": {
-          "type": "number",
+          "type": "int32",
           "description": "Maximum number of search results to return (default: 5)"
         }
       }
@@ -89,7 +89,7 @@
                         "type": "string"
                       },
                       "required": {
-                        "type": "boolean"
+                        "type": "bool"
                       }
                     }
                   }

@@ -104,13 +104,61 @@ Update the eBay tool property:
 
 Available marketplaces: `EBAY_US`, `EBAY_UK`, `EBAY_DE`, `EBAY_AU`, etc.
 
+## Frontend UI
+
+A dedicated shopping assistant UI is available in the `frontend` directory.
+
+### Quick Start
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env and set AGENT_SERVER_URL
+
+# Run development server
+npm run dev
+```
+
+Open [http://localhost:3001](http://localhost:3001) in your browser.
+
+### Features
+
+- **Voice + Text Input**: Speak or type your shopping queries
+- **Real-time Chat**: See conversation with the assistant
+- **Product Cards**: Visual product display with images, prices, and quick actions
+- **Modern Design**: Clean, Apple-style interface
+
+### Project Structure
+
+```
+frontend/
+├── src/
+│   ├── app/                # Next.js app router
+│   ├── components/         # React components
+│   │   ├── Chat/          # Chat interface
+│   │   ├── Header/        # App header
+│   │   ├── Products/      # Product cards
+│   │   └── VoiceInput/    # Voice button & visualizer
+│   ├── manager/           # RTC/RTM managers
+│   ├── store/             # Redux state
+│   └── types/             # TypeScript types
+├── package.json
+└── .env.example
+```
+
 ## Files
 
 ```
 shopping-assistant/
 ├── README.md           # This file
-└── tenapp/
-    └── property.json   # Graph configuration
+├── tenapp/
+│   └── property.json   # Graph configuration
+└── frontend/           # Web UI (Next.js)
 ```
 
 ## Related
