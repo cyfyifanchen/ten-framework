@@ -343,11 +343,18 @@ class SonioxASRExtension(AsyncASRBaseExtension):
             await self.send_asr_finalize_end()
 
     # WebSocket event handlers
-    async def _handle_open(self):
+    async def _handle_open(self, connection_start_timestamp: int):
+        connection_delay_ms = (
+            int(time.time() * 1000) - connection_start_timestamp
+        )
+
         self.ten_env.log_info(
-            "vendor_status_changed: connection opened",
+            f"vendor_status_changed: connection opened, connection_delay_ms: {connection_delay_ms}",
             category=LOG_CATEGORY_VENDOR,
         )
+
+        await self.send_connect_delay_metrics(connection_delay_ms)
+
         self.sent_user_audio_duration_ms_before_last_reset += (
             self.audio_timeline.get_total_user_audio_duration()
         )
@@ -604,6 +611,15 @@ class SonioxASRExtension(AsyncASRBaseExtension):
 
         return results
 
+    def _calculate_average_confidence(
+        self, tokens: List[SonioxTranscriptToken]
+    ) -> Optional[float]:
+        """Calculate average confidence from tokens, skipping None values."""
+        confidences = [t.confidence for t in tokens if t.confidence is not None]
+        if not confidences:
+            return None
+        return sum(confidences) / len(confidences)
+
     def _create_single_asr_result(
         self, tokens: List[SonioxTranscriptToken], language: str, is_final: bool
     ) -> ASRResult:
@@ -623,6 +639,12 @@ class SonioxASRExtension(AsyncASRBaseExtension):
             words.append(word)
             text += token.text
 
+        # Calculate average confidence
+        avg_confidence = self._calculate_average_confidence(tokens)
+        metadata = {}
+        if avg_confidence is not None:
+            metadata["asr_info"] = {"confidence": avg_confidence}
+
         return ASRResult(
             text=text,
             final=is_final,
@@ -630,6 +652,7 @@ class SonioxASRExtension(AsyncASRBaseExtension):
             duration_ms=duration_ms,
             language=language,
             words=words,
+            metadata=metadata,
         )
 
     def _adjust_timestamp(self, timestamp_ms: int) -> int:
