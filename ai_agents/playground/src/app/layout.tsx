@@ -45,14 +45,14 @@ export default function RootLayout({
         > */}
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
-          forcedTheme="light"
-          enableSystem={false}
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem
           disableTransitionOnChange
         >
           <StoreProvider>{children}</StoreProvider>
           {/* </ConfigProvider> */}
-          <Toaster richColors closeButton />
+          <Toaster richColors closeButton theme="dark" />
         </ThemeProvider>
       </body>
     </html>
