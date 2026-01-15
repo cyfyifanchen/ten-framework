@@ -25,7 +25,6 @@ import MagicCanvasBackground, {
   type CreativeMode,
   type DoodlePhase,
 } from "./MagicCanvasBackground";
-import MagicPenAnimator from "./MagicPenAnimator";
 import MouseTrail from "./MouseTrail";
 import TranscriptPanel from "./TranscriptPanel";
 import type { IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
@@ -54,6 +53,14 @@ function getLastTime(chatItems: IChatItem[], predicate: (i: IChatItem) => boolea
   }
   return 0;
 }
+
+const CRAYON_PROMPT_COLORS: Record<string, string> = {
+  ink: "black",
+  lavender: "lavender purple",
+  mint: "mint green",
+  sky: "sky blue",
+  rose: "rose pink",
+};
 
 export default function ImmersiveShell() {
   const dispatch = useAppDispatch();
@@ -85,6 +92,31 @@ export default function ImmersiveShell() {
   const [boardHeight, setBoardHeight] = React.useState<number | null>(null);
   const [crayonId, setCrayonId] = React.useState(
     DEFAULT_CRAYON_SWATCHES[0]?.id ?? "crayon"
+  );
+  const activeCrayon = React.useMemo(
+    () =>
+      DEFAULT_CRAYON_SWATCHES.find((swatch) => swatch.id === crayonId) ??
+      DEFAULT_CRAYON_SWATCHES[0],
+    [crayonId]
+  );
+  const lineColorName = React.useMemo(() => {
+    if (!activeCrayon) return "black";
+    return (
+      CRAYON_PROMPT_COLORS[activeCrayon.id] ||
+      activeCrayon.label.toLowerCase() ||
+      "black"
+    );
+  }, [activeCrayon]);
+  const buildDoodlePrompt = React.useCallback(
+    (raw: string) => {
+      const color = lineColorName;
+      const colorLine =
+        color === "black"
+          ? "Use black lines on white paper."
+          : `Use ${color} lines on white paper.`;
+      return `${raw}\n\nDoodle style notes: simple hand-drawn line art. Two colors only (${color} lines and white background). No shading, no gradients, no fills, no 3D or realistic rendering. ${colorLine}`;
+    },
+    [lineColorName]
   );
 
   React.useEffect(() => {
@@ -329,7 +361,7 @@ export default function ImmersiveShell() {
       return;
     }
     try {
-      await rtmRef.current?.sendText?.(msg);
+      await rtmRef.current?.sendText?.(buildDoodlePrompt(msg));
       dispatch(
         addChatItem({
           userId: options.userId || userId,
@@ -396,14 +428,6 @@ export default function ImmersiveShell() {
       mass: 0.7,
     };
   }, [isBoardGenerating, reducedMotion]);
-
-  const activeCrayon = React.useMemo(
-    () =>
-      DEFAULT_CRAYON_SWATCHES.find((swatch) => swatch.id === crayonId) ??
-      DEFAULT_CRAYON_SWATCHES[0],
-    [crayonId]
-  );
-
   const penBodyColor = activeCrayon?.penBody;
   const penTopColor = activeCrayon?.penTop;
 
@@ -453,16 +477,6 @@ export default function ImmersiveShell() {
                   onSwatchSelect={setCrayonId}
                   penBodyColor={penBodyColor}
                   penTopColor={penTopColor}
-                  overlay={
-                    <MagicPenAnimator
-                      phase={phase}
-                      mode={mode}
-                      reducedMotion={reducedMotion}
-                      showPen={false}
-                      penBodyColor={penBodyColor}
-                      penTopColor={penTopColor}
-                    />
-                  }
                 />
               </motion.div>
             </motion.div>
@@ -489,11 +503,11 @@ export default function ImmersiveShell() {
 
         <footer className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4">
           <div className="mx-auto w-full max-w-6xl">
-            <div className={cn("flex flex-nowrap items-center justify-center gap-4", "py-2")}>
+            <div className={cn("mx-auto flex w-fit flex-nowrap items-center justify-center gap-4 py-2")}>
               <Select value={micValue} onValueChange={onMicChange} disabled={!micTrack}>
                 <SelectTrigger
                   className={cn(
-                    "h-11 min-w-[240px] bg-white/85 px-4 text-left shadow-none focus:ring-0",
+                    "h-11 w-44 bg-white/85 px-4 text-left shadow-none focus:ring-0",
                     "crayon-control"
                   )}
                 >
@@ -541,7 +555,7 @@ export default function ImmersiveShell() {
 
               <Button
                 type="button"
-                className="h-11 px-5 shadow-none crayon-control"
+                className="h-11 w-44 shadow-none crayon-control"
                 variant="secondary"
                 onClick={() => setMicMuted((prev) => !prev)}
                 disabled={!micTrack}
@@ -551,7 +565,7 @@ export default function ImmersiveShell() {
 
               <Button
                 type="button"
-                className="h-11 px-6 shadow-none crayon-control"
+                className="h-11 w-44 shadow-none crayon-control"
                 variant={isConnected ? "secondary" : "default"}
                 onClick={isConnected ? disconnect : connect}
                 disabled={connecting || (!isConnected && !canConnect)}

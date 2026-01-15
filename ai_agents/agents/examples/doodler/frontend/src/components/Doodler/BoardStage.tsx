@@ -16,6 +16,14 @@ export type CrayonSwatch = {
 
 export const DEFAULT_CRAYON_SWATCHES: CrayonSwatch[] = [
   {
+    id: "ink",
+    label: "Ink",
+    stickerClass: "bg-[#111111]",
+    ringClass: "ring-[#111111]",
+    penBody: "#111111",
+    penTop: "#3C3C3C",
+  },
+  {
     id: "lavender",
     label: "Lavender",
     stickerClass: "bg-[#BFA2FF]",
@@ -48,6 +56,301 @@ export const DEFAULT_CRAYON_SWATCHES: CrayonSwatch[] = [
     penTop: "#FFB3C7",
   },
 ];
+
+type DoodleStrokePoint = {
+  x: number;
+  y: number;
+  rotate: number;
+};
+
+type DoodleStroke = {
+  id: string;
+  d: string;
+  duration: number;
+  points: DoodleStrokePoint[];
+};
+
+type TimedDoodleStroke = DoodleStroke & { delay: number };
+
+const DOODLE_STROKES: DoodleStroke[] = [
+  {
+    id: "stroke-1",
+    d: "M120 260 C 300 120, 420 340, 620 220 S 860 260, 920 200",
+    duration: 1.2,
+    points: [
+      { x: 120, y: 260, rotate: -8 },
+      { x: 320, y: 170, rotate: 6 },
+      { x: 520, y: 260, rotate: -12 },
+      { x: 720, y: 240, rotate: 10 },
+      { x: 920, y: 200, rotate: -6 },
+    ],
+  },
+  {
+    id: "stroke-2",
+    d: "M160 620 C 320 820, 460 520, 660 700 S 860 860, 940 640",
+    duration: 1.1,
+    points: [
+      { x: 160, y: 620, rotate: 12 },
+      { x: 340, y: 780, rotate: -6 },
+      { x: 520, y: 560, rotate: 8 },
+      { x: 720, y: 740, rotate: -10 },
+      { x: 940, y: 640, rotate: 6 },
+    ],
+  },
+  {
+    id: "stroke-3",
+    d: "M200 420 C 320 360, 420 460, 520 400 S 720 320, 820 440",
+    duration: 0.95,
+    points: [
+      { x: 200, y: 420, rotate: -6 },
+      { x: 360, y: 360, rotate: 8 },
+      { x: 520, y: 420, rotate: -10 },
+      { x: 700, y: 340, rotate: 12 },
+      { x: 820, y: 440, rotate: -4 },
+    ],
+  },
+  {
+    id: "stroke-4",
+    d: "M280 160 C 420 120, 520 200, 600 300 S 760 520, 880 480",
+    duration: 1.05,
+    points: [
+      { x: 280, y: 160, rotate: -12 },
+      { x: 440, y: 140, rotate: 6 },
+      { x: 600, y: 260, rotate: -8 },
+      { x: 760, y: 480, rotate: 10 },
+      { x: 880, y: 480, rotate: -6 },
+    ],
+  },
+];
+
+const DOODLE_STROKE_GAP = 0.12;
+const DOODLE_MASK_STROKE_WIDTH = 36;
+const DOODLE_INK_STROKE_WIDTH = 3.6;
+
+const TIMED_DOODLE_STROKES: TimedDoodleStroke[] = (() => {
+  let offset = 0;
+  return DOODLE_STROKES.map((stroke) => {
+    const timed = { ...stroke, delay: offset };
+    offset += stroke.duration + DOODLE_STROKE_GAP;
+    return timed;
+  });
+})();
+
+const DOODLE_REVEAL_DURATION = TIMED_DOODLE_STROKES.length
+  ? TIMED_DOODLE_STROKES[TIMED_DOODLE_STROKES.length - 1].delay +
+    TIMED_DOODLE_STROKES[TIMED_DOODLE_STROKES.length - 1].duration
+  : 0;
+
+function buildKeyframeTimes(count: number) {
+  if (count <= 1) return [0];
+  const times: number[] = [];
+  for (let i = 0; i < count; i += 1) {
+    times.push(i / (count - 1));
+  }
+  return times;
+}
+
+function DoodlePenGlyph(props: { bodyColor?: string; topColor?: string }) {
+  const { bodyColor = "#111111", topColor = "#3C3C3C" } = props;
+  return (
+    <g transform="translate(-32 -32)">
+      <g transform="rotate(-20 32 32)">
+        <rect
+          x="18"
+          y="10"
+          width="28"
+          height="40"
+          rx="9"
+          fill={bodyColor}
+          stroke="rgba(0,0,0,0.18)"
+        />
+        <rect x="18" y="10" width="28" height="10" rx="5" fill={topColor} />
+        <rect x="18" y="22" width="28" height="5" rx="2.5" fill="#1F1F1F" />
+        <rect x="18" y="30" width="28" height="5" rx="2.5" fill="#1F1F1F" />
+        <rect x="18" y="42" width="28" height="5" rx="2.5" fill="#1F1F1F" />
+        <ellipse cx="32" cy="36" rx="6.5" ry="10" fill="#1F1F1F" />
+        <path
+          d="M22 18c3-4 11-4 14 0"
+          stroke="rgba(255,255,255,0.45)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </g>
+    </g>
+  );
+}
+
+function DoodleRevealImage(props: {
+  imageUrl: string;
+  caption?: string;
+  lineColor?: string;
+  penBodyColor?: string;
+  penTopColor?: string;
+  reducedMotion: boolean;
+}) {
+  const {
+    imageUrl,
+    caption,
+    lineColor = "#111111",
+    penBodyColor,
+    penTopColor,
+    reducedMotion,
+  } = props;
+  const maskId = React.useId();
+
+  if (reducedMotion) {
+    return (
+      <img
+        src={imageUrl}
+        alt={caption ?? "doodle"}
+        className="block h-auto max-h-[64vh] w-full rounded-[16px] object-contain"
+      />
+    );
+  }
+
+  return (
+    <svg
+      className="block h-auto max-h-[64vh] w-full rounded-[16px]"
+      viewBox="0 0 1000 1000"
+      preserveAspectRatio="xMidYMid meet"
+      aria-label={caption ?? "doodle"}
+    >
+      <title>{caption ?? "doodle"}</title>
+      <defs>
+        <mask id={maskId}>
+          <rect width="100%" height="100%" fill="black" />
+          {TIMED_DOODLE_STROKES.map((stroke) => (
+            <motion.path
+              key={`mask-${stroke.id}`}
+              d={stroke.d}
+              fill="none"
+              stroke="white"
+              strokeWidth={DOODLE_MASK_STROKE_WIDTH}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{
+                duration: stroke.duration,
+                delay: stroke.delay,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+          <motion.rect
+            width="100%"
+            height="100%"
+            fill="white"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 0.25,
+              delay: DOODLE_REVEAL_DURATION + 0.1,
+              ease: "easeOut",
+            }}
+          />
+        </mask>
+      </defs>
+
+      <image
+        href={imageUrl}
+        width="100%"
+        height="100%"
+        preserveAspectRatio="xMidYMid meet"
+        mask={`url(#${maskId})`}
+      />
+
+      <g pointerEvents="none">
+        {TIMED_DOODLE_STROKES.map((stroke) => (
+          <motion.path
+            key={`ink-${stroke.id}`}
+            d={stroke.d}
+            fill="none"
+            stroke={lineColor}
+            strokeWidth={DOODLE_INK_STROKE_WIDTH}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: [0, 0.95, 0] }}
+            transition={{
+              pathLength: {
+                duration: stroke.duration,
+                delay: stroke.delay,
+                ease: "easeInOut",
+              },
+              opacity: {
+                duration: stroke.duration + 0.2,
+                delay: stroke.delay,
+                times: [0, 0.7, 1],
+                ease: "easeInOut",
+              },
+            }}
+          />
+        ))}
+      </g>
+
+      <g pointerEvents="none">
+        {TIMED_DOODLE_STROKES.map((stroke) => {
+          const times = buildKeyframeTimes(stroke.points.length);
+          return (
+            <motion.g
+              key={`pen-${stroke.id}`}
+              initial={{
+                x: stroke.points[0]?.x ?? 0,
+                y: stroke.points[0]?.y ?? 0,
+                rotate: stroke.points[0]?.rotate ?? 0,
+                opacity: 0,
+              }}
+              animate={{
+                x: stroke.points.map((p) => p.x),
+                y: stroke.points.map((p) => p.y),
+                rotate: stroke.points.map((p) => p.rotate),
+                opacity: [0, 1, 1, 0],
+              }}
+              transition={{
+                x: {
+                  duration: stroke.duration,
+                  delay: stroke.delay,
+                  ease: "easeInOut",
+                  times,
+                },
+                y: {
+                  duration: stroke.duration,
+                  delay: stroke.delay,
+                  ease: "easeInOut",
+                  times,
+                },
+                rotate: {
+                  duration: stroke.duration,
+                  delay: stroke.delay,
+                  ease: "easeInOut",
+                  times,
+                },
+                opacity: {
+                  duration: stroke.duration,
+                  delay: stroke.delay,
+                  times: [0, 0.12, 0.86, 1],
+                  ease: "easeInOut",
+                },
+              }}
+              style={
+                {
+                  transformBox: "fill-box",
+                  transformOrigin: "center",
+                } as React.CSSProperties
+              }
+            >
+              <DoodlePenGlyph
+                bodyColor={penBodyColor}
+                topColor={penTopColor}
+              />
+            </motion.g>
+          );
+        })}
+      </g>
+    </svg>
+  );
+}
 
 function SurfaceTexture() {
   const patternId = React.useId();
@@ -237,10 +540,13 @@ export default function BoardStage(props: {
                       transition={{ duration: 0.32, ease: "easeOut" }}
                     >
                       <div className="crayon-border p-2 shadow-[0_18px_45px_rgba(32,16,8,0.16)] backdrop-blur-sm">
-                        <img
-                          src={imageUrl}
-                          alt={caption ?? "doodle"}
-                          className="max-h-[64vh] w-full rounded-[16px] object-contain"
+                        <DoodleRevealImage
+                          imageUrl={imageUrl}
+                          caption={caption}
+                          lineColor={resolvedPenBody}
+                          penBodyColor={resolvedPenBody}
+                          penTopColor={resolvedPenTop}
+                          reducedMotion={reducedMotion}
                         />
                       </div>
                     </motion.div>
