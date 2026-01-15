@@ -150,67 +150,34 @@ function buildKeyframeTimes(count: number) {
   return times;
 }
 
-function DoodlePenGlyph(props: { bodyColor?: string; topColor?: string }) {
-  const { bodyColor = "#111111", topColor = "#3C3C3C" } = props;
-  return (
-    <g transform="translate(-32 -32)">
-      <g transform="rotate(-20 32 32)">
-        <rect
-          x="18"
-          y="10"
-          width="28"
-          height="40"
-          rx="9"
-          fill={bodyColor}
-          stroke="rgba(0,0,0,0.18)"
-        />
-        <rect x="18" y="10" width="28" height="10" rx="5" fill={topColor} />
-        <rect x="18" y="22" width="28" height="5" rx="2.5" fill="#1F1F1F" />
-        <rect x="18" y="30" width="28" height="5" rx="2.5" fill="#1F1F1F" />
-        <rect x="18" y="42" width="28" height="5" rx="2.5" fill="#1F1F1F" />
-        <ellipse cx="32" cy="36" rx="6.5" ry="10" fill="#1F1F1F" />
-        <path
-          d="M22 18c3-4 11-4 14 0"
-          stroke="rgba(255,255,255,0.45)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-      </g>
-    </g>
-  );
-}
-
 function DoodleRevealImage(props: {
   imageUrl: string;
   caption?: string;
   lineColor?: string;
-  penBodyColor?: string;
-  penTopColor?: string;
   reducedMotion: boolean;
 }) {
   const {
     imageUrl,
     caption,
     lineColor = "#111111",
-    penBodyColor,
-    penTopColor,
     reducedMotion,
   } = props;
   const maskId = React.useId();
+  const inkFilterId = React.useId();
 
   if (reducedMotion) {
     return (
       <img
         src={imageUrl}
         alt={caption ?? "doodle"}
-        className="block h-auto max-h-[64vh] w-full rounded-[16px] object-contain"
+        className="block h-full w-full rounded-[30px] object-cover"
       />
     );
   }
 
   return (
     <svg
-      className="block h-auto max-h-[64vh] w-full rounded-[16px]"
+      className="block h-full w-full rounded-[30px]"
       viewBox="0 0 1000 1000"
       preserveAspectRatio="xMidYMid meet"
       aria-label={caption ?? "doodle"}
@@ -250,14 +217,36 @@ function DoodleRevealImage(props: {
             }}
           />
         </mask>
+        <filter
+          id={inkFilterId}
+          colorInterpolationFilters="sRGB"
+        >
+          <feColorMatrix
+            type="matrix"
+            values="
+              1 0 0 0 0
+              0 1 0 0 0
+              0 0 1 0 0
+              -0.2126 -0.7152 -0.0722 1 0
+            "
+          />
+          <feComponentTransfer>
+            <feFuncA type="gamma" amplitude="1" exponent="1.6" offset="0" />
+          </feComponentTransfer>
+        </filter>
       </defs>
 
       <image
         href={imageUrl}
         width="100%"
         height="100%"
-        preserveAspectRatio="xMidYMid meet"
+        preserveAspectRatio="xMidYMid slice"
         mask={`url(#${maskId})`}
+        filter={`url(#${inkFilterId})`}
+        style={{
+          opacity: 0.94,
+          mixBlendMode: "multiply",
+        }}
       />
 
       <g pointerEvents="none">
@@ -289,65 +278,6 @@ function DoodleRevealImage(props: {
         ))}
       </g>
 
-      <g pointerEvents="none">
-        {TIMED_DOODLE_STROKES.map((stroke) => {
-          const times = buildKeyframeTimes(stroke.points.length);
-          return (
-            <motion.g
-              key={`pen-${stroke.id}`}
-              initial={{
-                x: stroke.points[0]?.x ?? 0,
-                y: stroke.points[0]?.y ?? 0,
-                rotate: stroke.points[0]?.rotate ?? 0,
-                opacity: 0,
-              }}
-              animate={{
-                x: stroke.points.map((p) => p.x),
-                y: stroke.points.map((p) => p.y),
-                rotate: stroke.points.map((p) => p.rotate),
-                opacity: [0, 1, 1, 0],
-              }}
-              transition={{
-                x: {
-                  duration: stroke.duration,
-                  delay: stroke.delay,
-                  ease: "easeInOut",
-                  times,
-                },
-                y: {
-                  duration: stroke.duration,
-                  delay: stroke.delay,
-                  ease: "easeInOut",
-                  times,
-                },
-                rotate: {
-                  duration: stroke.duration,
-                  delay: stroke.delay,
-                  ease: "easeInOut",
-                  times,
-                },
-                opacity: {
-                  duration: stroke.duration,
-                  delay: stroke.delay,
-                  times: [0, 0.12, 0.86, 1],
-                  ease: "easeInOut",
-                },
-              }}
-              style={
-                {
-                  transformBox: "fill-box",
-                  transformOrigin: "center",
-                } as React.CSSProperties
-              }
-            >
-              <DoodlePenGlyph
-                bodyColor={penBodyColor}
-                topColor={penTopColor}
-              />
-            </motion.g>
-          );
-        })}
-      </g>
     </svg>
   );
 }
@@ -399,6 +329,86 @@ function Stylus(props: { bodyColor?: string; topColor?: string }) {
         strokeWidth="4"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+function StrokeStylusAnimator(props: {
+  active: boolean;
+  reducedMotion: boolean;
+  bodyColor?: string;
+  topColor?: string;
+}) {
+  const { active, reducedMotion, bodyColor, topColor } = props;
+  if (!active || reducedMotion) return null;
+
+  const scale = 0.32;
+  const offsetX = -27 * scale;
+  const offsetY = -250 * scale;
+
+  return (
+    <svg
+      aria-hidden
+      className="absolute inset-0 h-full w-full"
+      viewBox="0 0 1000 1000"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      {TIMED_DOODLE_STROKES.map((stroke) => {
+        const times = buildKeyframeTimes(stroke.points.length);
+        return (
+          <motion.g
+            key={`stylus-${stroke.id}`}
+            initial={{
+              x: stroke.points[0]?.x ?? 0,
+              y: stroke.points[0]?.y ?? 0,
+              rotate: stroke.points[0]?.rotate ?? 0,
+              opacity: 0,
+            }}
+            animate={{
+              x: stroke.points.map((p) => p.x),
+              y: stroke.points.map((p) => p.y),
+              rotate: stroke.points.map((p) => p.rotate),
+              opacity: [0, 1, 1, 0],
+            }}
+            transition={{
+              x: {
+                duration: stroke.duration,
+                delay: stroke.delay,
+                ease: "easeInOut",
+                times,
+              },
+              y: {
+                duration: stroke.duration,
+                delay: stroke.delay,
+                ease: "easeInOut",
+                times,
+              },
+              rotate: {
+                duration: stroke.duration,
+                delay: stroke.delay,
+                ease: "easeInOut",
+                times,
+              },
+              opacity: {
+                duration: stroke.duration,
+                delay: stroke.delay,
+                times: [0, 0.12, 0.86, 1],
+                ease: "easeInOut",
+              },
+            }}
+            style={
+              {
+                transformBox: "fill-box",
+                transformOrigin: "center",
+              } as React.CSSProperties
+            }
+          >
+            <g transform={`translate(${offsetX} ${offsetY}) scale(${scale})`}>
+              <Stylus bodyColor={bodyColor} topColor={topColor} />
+            </g>
+          </motion.g>
+        );
+      })}
     </svg>
   );
 }
@@ -524,30 +534,57 @@ export default function BoardStage(props: {
           </div>
 
           <div className="toy-board-bezel">
-            <div className="relative overflow-hidden toy-board-screen">
+            <div className="relative overflow-hidden toy-board-screen min-h-[50vh] sm:min-h-[58vh]">
               <SurfaceTexture />
               <div className="pointer-events-none absolute inset-0 doodle-board-grid opacity-20" />
 
-              <div className="relative flex min-h-[50vh] items-center justify-center p-4 sm:min-h-[58vh] sm:p-6">
+              <div className="absolute inset-0 flex items-center justify-center">
                 <AnimatePresence mode="wait">
                   {imageUrl ? (
                     <motion.div
                       key={imageUrl}
-                      className="relative w-full max-w-[min(720px,94%)]"
+                      className="relative h-full w-full"
                       initial={{ opacity: 0, y: 10, rotate: -0.6, scale: 0.985 }}
                       animate={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.98 }}
                       transition={{ duration: 0.32, ease: "easeOut" }}
                     >
-                      <div className="crayon-border p-2 shadow-[0_18px_45px_rgba(32,16,8,0.16)] backdrop-blur-sm">
+                      <div className="doodle-image-frame relative h-full w-full">
+                        <StrokeStylusAnimator
+                          active
+                          reducedMotion={reducedMotion}
+                          bodyColor={resolvedPenBody}
+                          topColor={resolvedPenTop}
+                        />
                         <DoodleRevealImage
                           imageUrl={imageUrl}
                           caption={caption}
                           lineColor={resolvedPenBody}
-                          penBodyColor={resolvedPenBody}
-                          penTopColor={resolvedPenTop}
                           reducedMotion={reducedMotion}
                         />
+                      </div>
+                    </motion.div>
+                  ) : drawingActive ? (
+                    <motion.div
+                      key="doodle-placeholder"
+                      className="flex w-full max-w-[min(520px,90%)] flex-col items-center gap-3 rounded-[18px] border border-dashed border-neutral-300/80 bg-white/80 p-6 text-center shadow-[0_16px_40px_rgba(32,16,8,0.12)] backdrop-blur-sm"
+                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                    >
+                      <div
+                        className="h-2 w-40 rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, ${resolvedPenBody} 0%, rgba(255,255,255,0.6) 100%)`,
+                        }}
+                        aria-hidden
+                      />
+                      <div className="text-sm font-semibold text-neutral-700">
+                        Sketching your doodle…
+                      </div>
+                      <div className="text-xs text-neutral-500">
+                        The pen is warming up with your color.
                       </div>
                     </motion.div>
                   ) : null}
@@ -557,7 +594,7 @@ export default function BoardStage(props: {
               <div className="pointer-events-none absolute inset-0">
                 {overlay}
                 <ToyStylusAnimator
-                  phase={phase}
+                  phase={imageUrl ? "idle" : phase}
                   reducedMotion={reducedMotion}
                   bodyColor={resolvedPenBody}
                   topColor={resolvedPenTop}

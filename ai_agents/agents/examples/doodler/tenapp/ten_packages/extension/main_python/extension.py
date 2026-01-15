@@ -42,6 +42,7 @@ class MainControlExtension(AsyncExtension):
         self.sentence_fragment: str = ""
         self.turn_id: int = 0
         self.session_id: str = "0"
+        self._tts_sent_turn_id: int = -1
 
     def _current_metadata(self) -> dict:
         return {"session_id": self.session_id, "turn_id": self.turn_id}
@@ -96,16 +97,18 @@ class MainControlExtension(AsyncExtension):
     @agent_event_handler(LLMResponseEvent)
     async def _on_llm_response(self, event: LLMResponseEvent):
         if not event.is_final and event.type == "message":
-            sentences, self.sentence_fragment = parse_sentences(
-                self.sentence_fragment, event.delta
-            )
-            for s in sentences:
-                await self._send_to_tts(s, False)
+            if event.text:
+                self.sentence_fragment = event.text
 
         if event.is_final and event.type == "message":
-            remaining_text = self.sentence_fragment or ""
+            tts_text = self._select_tts_text(event.text)
             self.sentence_fragment = ""
-            await self._send_to_tts(remaining_text, True)
+            if (
+                tts_text
+                and self._tts_sent_turn_id != self.turn_id
+            ):
+                self._tts_sent_turn_id = self.turn_id
+                await self._send_to_tts(tts_text, True)
 
         await self._send_transcript(
             "assistant",
@@ -184,6 +187,8 @@ class MainControlExtension(AsyncExtension):
         """
         Sends a sentence to the TTS system.
         """
+        if not text or not any(char.isalnum() for char in text):
+            return
         request_id = f"tts-request-{self.turn_id}"
         await _send_data(
             self.ten_env,
@@ -199,6 +204,15 @@ class MainControlExtension(AsyncExtension):
         self.ten_env.log_info(
             f"[MainControlExtension] Sent to TTS: is_final={is_final}, text={text}"
         )
+
+    def _select_tts_text(self, text: str) -> str:
+        if not text:
+            return "Got it. Drawing now!"
+        sentences, _ = parse_sentences("", text)
+        if sentences:
+            return sentences[0].strip()
+        trimmed = text.strip()
+        return trimmed or "Got it. Drawing now!"
 
     async def _interrupt(self):
         """

@@ -107,16 +107,23 @@ export default function ImmersiveShell() {
       "black"
     );
   }, [activeCrayon]);
+  const lineColorDescriptor = React.useMemo(() => {
+    if (!activeCrayon) return "black";
+    const hex = activeCrayon.penBody?.trim();
+    if (!hex) return lineColorName;
+    return `${lineColorName} (${hex})`;
+  }, [activeCrayon, lineColorName]);
   const buildDoodlePrompt = React.useCallback(
     (raw: string) => {
-      const color = lineColorName;
+      const colorName = lineColorName;
+      const colorDescriptor = lineColorDescriptor;
       const colorLine =
-        color === "black"
+        colorName === "black"
           ? "Use black lines on white paper."
-          : `Use ${color} lines on white paper.`;
-      return `${raw}\n\nDoodle style notes: simple hand-drawn line art. Two colors only (${color} lines and white background). No shading, no gradients, no fills, no 3D or realistic rendering. ${colorLine}`;
+          : `Use ${colorDescriptor} lines on white paper.`;
+      return `${raw}\n\nDoodle style notes: simple hand-drawn line art. Two colors only (${colorDescriptor} lines and white background). No shading, no gradients, no fills, no 3D or realistic rendering. No borders, frames, paper edges, or background props. Do not include pens, pencils, crayons, markers, hands, shadows, or signatures. ${colorLine}`;
     },
-    [lineColorName]
+    [lineColorDescriptor, lineColorName]
   );
 
   React.useEffect(() => {
@@ -152,8 +159,20 @@ export default function ImmersiveShell() {
       ),
     [chatItems]
   );
+  const lastAssistantTime = React.useMemo(
+    () =>
+      getLastTime(
+        chatItems,
+        (i) => i.type === EMessageType.AGENT && i.data_type === EMessageDataType.TEXT
+      ),
+    [chatItems]
+  );
   const lastImageTime = latestImage?.time ?? 0;
-  const isGenerating = lastUserTime > lastImageTime;
+  const hasRequest = lastUserTime > 0;
+  const generationStarted =
+    hasRequest && lastAssistantTime >= lastUserTime;
+  const isGenerating =
+    generationStarted && lastImageTime < lastAssistantTime;
 
   const [phase, setPhase] = React.useState<DoodlePhase>("idle");
   React.useEffect(() => {
@@ -167,7 +186,7 @@ export default function ImmersiveShell() {
       };
     }
 
-    if (lastImageTime > 0 && lastImageTime >= lastUserTime) {
+    if (hasRequest && lastImageTime >= lastAssistantTime) {
       setPhase("complete");
       const t = window.setTimeout(() => setPhase("idle"), 1700);
       return () => window.clearTimeout(t);
@@ -175,7 +194,7 @@ export default function ImmersiveShell() {
 
     setPhase("idle");
     return;
-  }, [isGenerating, lastImageTime, lastUserTime]);
+  }, [hasRequest, isGenerating, lastImageTime, lastAssistantTime]);
 
   const canConnect = channel.trim().length > 0 && userId > 0;
   const controlsEnabled = roomConnected && agentConnected && rtmConnected;

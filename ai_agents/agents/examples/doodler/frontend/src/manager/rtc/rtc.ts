@@ -266,6 +266,8 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
               data_type: EMessageDataType.REASON,
               text: data.text,
             };
+          } else if (type === "progress") {
+            return;
           } else if (type === "action") {
             const { action, data: actionData } = data;
             if (action === "browse_website") {

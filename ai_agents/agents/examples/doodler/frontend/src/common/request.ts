@@ -51,6 +51,7 @@ export const apiStartService = async (
     graph_name: graphName,
     language,
     voice_type: voiceType,
+    timeout: -1,
   };
   let resp: any = await axios.post(url, data);
   resp = resp.data || {};

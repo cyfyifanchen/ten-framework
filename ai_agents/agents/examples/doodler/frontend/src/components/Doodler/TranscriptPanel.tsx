@@ -62,7 +62,7 @@ export default function TranscriptPanel(props: {
 
       <div ref={containerRef} className="min-h-0 flex-1 overflow-y-auto p-3">
         {transcript.length ? (
-          <div className="space-y-2">
+          <div className="space-y-3 py-1">
             {transcript.map((item, idx) => {
               const isUser = item.type === EMessageType.USER;
               return (

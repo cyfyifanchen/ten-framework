@@ -255,6 +255,18 @@
     pointer-events: none;
   }
 
+  .doodle-image-frame {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+
+  .doodle-image-frame::after {
+    content: none;
+  }
+
   .doodle-dream {
     background-image:
       radial-gradient(circle at 20% 20%, rgba(124, 255, 250, 0.38), transparent 55%),
