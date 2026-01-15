@@ -15,6 +15,4 @@ from .extension import OpenAIGPTImageExtension
 class OpenAIGPTImageExtensionAddon(Addon):
     def on_create_instance(self, ten_env: TenEnv, name: str, context) -> None:
         ten_env.log_info("OpenAIGPTImageExtension: on_create_instance")
-        ten_env.on_create_instance_done(
-            OpenAIGPTImageExtension(name), context
-        )
+        ten_env.on_create_instance_done(OpenAIGPTImageExtension(name), context)

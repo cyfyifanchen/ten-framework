@@ -13,17 +13,15 @@ class OpenAIGPTImageConfig(BaseModel):
     """OpenAI GPT Image 1.5 Configuration"""
 
     params: dict[str, Any] = Field(
-        default_factory=dict,
-        description="OpenAI Images API parameters"
+        default_factory=dict, description="OpenAI Images API parameters"
     )
 
     dump: bool = Field(
-        default=False,
-        description="Enable response dumping for debugging"
+        default=False, description="Enable response dumping for debugging"
     )
     dump_path: str = Field(
         default="./openai_image_responses.json",
-        description="Path to dump responses"
+        description="Path to dump responses",
     )
 
     def validate(self) -> None:
@@ -49,7 +47,9 @@ class OpenAIGPTImageConfig(BaseModel):
         if "quality" in self.params:
             valid_quality = ["standard", "hd"]
             if self.params["quality"] not in valid_quality:
-                raise ValueError(f"Invalid quality. Must be one of: {valid_quality}")
+                raise ValueError(
+                    f"Invalid quality. Must be one of: {valid_quality}"
+                )
 
     def update_params(self) -> None:
         """Update/normalize parameters"""

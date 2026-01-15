@@ -58,7 +58,7 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
         # Log config (with sensitive data encrypted)
         ten_env.log_info(
             f"Configuration loaded: {self.config.to_str()}",
-            category=LOG_CATEGORY_KEY_POINT
+            category=LOG_CATEGORY_KEY_POINT,
         )
 
         # Validate configuration
@@ -73,7 +73,7 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
         self.client = OpenAIImageClient(self.config, ten_env)
         ten_env.log_info(
             "OpenAI GPT Image client initialized successfully",
-            category=LOG_CATEGORY_KEY_POINT
+            category=LOG_CATEGORY_KEY_POINT,
         )
 
     async def on_stop(self, ten_env: AsyncTenEnv) -> None:
@@ -129,15 +129,12 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
             payload_obj = {
                 "data_type": "raw",
                 "role": "assistant",
-                "text": json.dumps({
-                    "type": "image_url",
-                    "data": {
-                        "image_url": image_url
-                    }
-                }),
+                "text": json.dumps(
+                    {"type": "image_url", "data": {"image_url": image_url}}
+                ),
                 "text_ts": int(time.time() * 1000),
                 "is_final": True,
-                "stream_id": 100
+                "stream_id": 100,
             }
 
             msg = Data.create("message")
@@ -145,14 +142,12 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
             await async_ten_env.send_data(msg)
 
             async_ten_env.log_info(
-                "Image URL sent successfully",
-                category=LOG_CATEGORY_KEY_POINT
+                "Image URL sent successfully", category=LOG_CATEGORY_KEY_POINT
             )
 
         except Exception as err:
             async_ten_env.log_error(
-                f"Failed to send image URL: {err}",
-                category=LOG_CATEGORY_VENDOR
+                f"Failed to send image URL: {err}", category=LOG_CATEGORY_VENDOR
             )
 
     async def run_tool(
@@ -168,10 +163,12 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
         if not prompt or not prompt.strip():
             return LLMToolResultLLMResult(
                 type="llmresult",
-                content=json.dumps({
-                    "success": False,
-                    "error": "No prompt provided. Please describe what image you want to create."
-                }),
+                content=json.dumps(
+                    {
+                        "success": False,
+                        "error": "No prompt provided. Please describe what image you want to create.",
+                    }
+                ),
             )
 
         try:
@@ -180,17 +177,28 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
 
             # Enforce kid-friendly doodle style
             unsafe_keywords = [
-                "weapon", "blood", "violence", "gore", "nsfw", "adult",
-                "gun", "knife", "kill", "attack", "war"
+                "weapon",
+                "blood",
+                "violence",
+                "gore",
+                "nsfw",
+                "adult",
+                "gun",
+                "knife",
+                "kill",
+                "attack",
+                "war",
             ]
             lowered = prompt.lower()
             if any(k in lowered for k in unsafe_keywords):
                 return LLMToolResultLLMResult(
                     type="llmresult",
-                    content=json.dumps({
-                        "success": False,
-                        "error": "Let's try a kid-friendly idea. Describe a playful scene or character to doodle!"
-                    }),
+                    content=json.dumps(
+                        {
+                            "success": False,
+                            "error": "Let's try a kid-friendly idea. Describe a playful scene or character to doodle!",
+                        }
+                    ),
                 )
             doodle_modifier = (
                 " in playful crayon doodle style on white paper, hand-drawn, bold uneven outlines, "
@@ -204,10 +212,15 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
                 queued_msg = {
                     "data_type": "raw",
                     "role": "assistant",
-                    "text": json.dumps({"type": "progress", "data": {"phase": "queued", "pct": 10}}),
+                    "text": json.dumps(
+                        {
+                            "type": "progress",
+                            "data": {"phase": "queued", "pct": 10},
+                        }
+                    ),
                     "text_ts": int(time.time() * 1000),
                     "is_final": False,
-                    "stream_id": 100
+                    "stream_id": 100,
                 }
                 msg = Data.create("message")
                 msg.set_property_from_json(None, json.dumps(queued_msg))
@@ -218,16 +231,21 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
             # Generate image
             ten_env.log_info(
                 f"Generating image with prompt: {prompt[:100]}...",
-                category=LOG_CATEGORY_KEY_POINT
+                category=LOG_CATEGORY_KEY_POINT,
             )
             try:
                 generating_msg = {
                     "data_type": "raw",
                     "role": "assistant",
-                    "text": json.dumps({"type": "progress", "data": {"phase": "drawing", "pct": 50}}),
+                    "text": json.dumps(
+                        {
+                            "type": "progress",
+                            "data": {"phase": "drawing", "pct": 50},
+                        }
+                    ),
                     "text_ts": int(time.time() * 1000),
                     "is_final": False,
-                    "stream_id": 100
+                    "stream_id": 100,
                 }
                 msg2 = Data.create("message")
                 msg2.set_property_from_json(None, json.dumps(generating_msg))
@@ -247,10 +265,15 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
                 final_msg = {
                     "data_type": "raw",
                     "role": "assistant",
-                    "text": json.dumps({"type": "progress", "data": {"phase": "final", "pct": 100}}),
+                    "text": json.dumps(
+                        {
+                            "type": "progress",
+                            "data": {"phase": "final", "pct": 100},
+                        }
+                    ),
                     "text_ts": int(time.time() * 1000),
                     "is_final": True,
-                    "stream_id": 100
+                    "stream_id": 100,
                 }
                 msg3 = Data.create("message")
                 msg3.set_property_from_json(None, json.dumps(final_msg))
@@ -262,40 +285,36 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
             # The image is already sent to the frontend via send_image()
             return LLMToolResultLLMResult(
                 type="llmresult",
-                content=json.dumps({
-                    "success": True,
-                    "message": "Image generated and sent to the user successfully!"
-                }),
+                content=json.dumps(
+                    {
+                        "success": True,
+                        "message": "Image generated and sent to the user successfully!",
+                    }
+                ),
             )
 
         except ContentPolicyError as e:
-            error_msg = "I can't create that image. Let's try something different!"
+            error_msg = (
+                "I can't create that image. Let's try something different!"
+            )
             ten_env.log_warn(
-                f"Content policy violation: {e}",
-                category=LOG_CATEGORY_VENDOR
+                f"Content policy violation: {e}", category=LOG_CATEGORY_VENDOR
             )
 
             return LLMToolResultLLMResult(
                 type="llmresult",
-                content=json.dumps({
-                    "success": False,
-                    "error": error_msg
-                }),
+                content=json.dumps({"success": False, "error": error_msg}),
             )
 
         except InvalidAPIKeyError as e:
             error_msg = "API key is invalid. Please check your configuration."
             ten_env.log_error(
-                f"Invalid API key: {e}",
-                category=LOG_CATEGORY_VENDOR
+                f"Invalid API key: {e}", category=LOG_CATEGORY_VENDOR
             )
 
             return LLMToolResultLLMResult(
                 type="llmresult",
-                content=json.dumps({
-                    "success": False,
-                    "error": error_msg
-                }),
+                content=json.dumps({"success": False, "error": error_msg}),
             )
 
         except ModelNotFoundError as e:
@@ -305,50 +324,45 @@ class OpenAIGPTImageExtension(AsyncLLMToolBaseExtension):
                 ten_env.log_warn(
                     f"Model {self.client.current_model} not available, "
                     f"falling back to {fallback_model}",
-                    category=LOG_CATEGORY_KEY_POINT
+                    category=LOG_CATEGORY_KEY_POINT,
                 )
                 try:
                     image_url = await self.client.generate_image(
                         prompt=prompt,
                         quality=quality,
-                        model_override=fallback_model
+                        model_override=fallback_model,
                     )
                     await self.send_image(ten_env, image_url)
                     return LLMToolResultLLMResult(
                         type="llmresult",
-                        content=json.dumps({
-                            "success": True,
-                            "message": f"Image generated with {fallback_model} and sent to the user successfully!"
-                        }),
+                        content=json.dumps(
+                            {
+                                "success": True,
+                                "message": f"Image generated with {fallback_model} and sent to the user successfully!",
+                            }
+                        ),
                     )
                 except Exception as fallback_error:
                     error_msg = "Image generation is temporarily unavailable."
                     ten_env.log_error(
                         f"Fallback also failed: {fallback_error}",
-                        category=LOG_CATEGORY_VENDOR
+                        category=LOG_CATEGORY_VENDOR,
                     )
             else:
                 error_msg = "Image generation model is not available."
 
             return LLMToolResultLLMResult(
                 type="llmresult",
-                content=json.dumps({
-                    "success": False,
-                    "error": error_msg
-                }),
+                content=json.dumps({"success": False, "error": error_msg}),
             )
 
         except Exception as e:
             error_msg = "Something went wrong. Please try again."
             ten_env.log_error(
-                f"Image generation failed: {e}",
-                category=LOG_CATEGORY_VENDOR
+                f"Image generation failed: {e}", category=LOG_CATEGORY_VENDOR
             )
 
             return LLMToolResultLLMResult(
                 type="llmresult",
-                content=json.dumps({
-                    "success": False,
-                    "error": error_msg
-                }),
+                content=json.dumps({"success": False, "error": error_msg}),
             )

@@ -14,16 +14,19 @@ from .config import OpenAIGPTImageConfig
 # Custom exceptions for better error handling
 class ContentPolicyError(Exception):
     """Raised when content violates OpenAI's usage policies"""
+
     pass
 
 
 class InvalidAPIKeyError(Exception):
     """Raised when API key is invalid or unauthorized"""
+
     pass
 
 
 class ModelNotFoundError(Exception):
     """Raised when requested model is not available"""
+
     pass
 
 
@@ -64,9 +67,7 @@ class OpenAIImageClient:
             )
         else:
             # Standard OpenAI client
-            client_kwargs = {
-                "api_key": config.params["api_key"]
-            }
+            client_kwargs = {"api_key": config.params["api_key"]}
 
             # Optional custom base_url
             base_url = config.params.get("base_url")
@@ -107,14 +108,18 @@ class OpenAIImageClient:
         # GPT Image models use different quality values than DALL-E
         # DALL-E: 'standard', 'hd'
         # GPT Image: 'low', 'medium', 'high', 'auto'
-        requested_quality = quality or self.config.params.get("quality", "standard")
+        requested_quality = quality or self.config.params.get(
+            "quality", "standard"
+        )
         if is_gpt_image_model:
             # Map DALL-E quality values to GPT Image values
             quality_map = {
                 "standard": "auto",
                 "hd": "high",
             }
-            requested_quality = quality_map.get(requested_quality, requested_quality)
+            requested_quality = quality_map.get(
+                requested_quality, requested_quality
+            )
 
         request_params = {
             "model": model,
@@ -133,7 +138,7 @@ class OpenAIImageClient:
         self.ten_env.log_info(
             f"Requesting image generation: model={model}, "
             f"size={request_params['size']}, quality={request_params['quality']}",
-            category=LOG_CATEGORY_VENDOR
+            category=LOG_CATEGORY_VENDOR,
         )
 
         try:
@@ -157,7 +162,7 @@ class OpenAIImageClient:
 
             self.ten_env.log_info(
                 f"Image generated successfully: {image_url[:100]}...",
-                category=LOG_CATEGORY_VENDOR
+                category=LOG_CATEGORY_VENDOR,
             )
 
             return image_url
@@ -166,7 +171,7 @@ class OpenAIImageClient:
             error_message = str(e)
             self.ten_env.log_error(
                 f"Image generation error: {error_message}",
-                category=LOG_CATEGORY_VENDOR
+                category=LOG_CATEGORY_VENDOR,
             )
 
             # Classify error for appropriate handling
@@ -191,11 +196,14 @@ class OpenAIImageClient:
         """Dump response to file for debugging"""
         try:
             with open(self.config.dump_path, "a") as f:
-                json.dump({
-                    "prompt": prompt,
-                    "image_url": image_url,
-                    "model": self.current_model,
-                }, f)
+                json.dump(
+                    {
+                        "prompt": prompt,
+                        "image_url": image_url,
+                        "model": self.current_model,
+                    },
+                    f,
+                )
                 f.write("\n")
         except Exception as e:
             self.ten_env.log_warn(f"Failed to dump response: {e}")
