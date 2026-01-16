@@ -16,15 +16,12 @@ class ContentPolicyError(Exception):
     """Raised when content violates OpenAI's usage policies"""
 
 
-
 class InvalidAPIKeyError(Exception):
     """Raised when API key is invalid or unauthorized"""
 
 
-
 class ModelNotFoundError(Exception):
     """Raised when requested model is not available"""
-
 
 
 class OpenAIImageClient:
