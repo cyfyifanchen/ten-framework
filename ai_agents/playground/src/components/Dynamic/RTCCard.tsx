@@ -12,11 +12,13 @@ import {
   useAppSelector,
   useIsCompactLayout,
   VideoSourceType,
+  VOICE_OPTIONS,
 } from "@/common";
 import Avatar from "@/components/Agent/AvatarTrulience";
 import VideoBlock from "@/components/Agent/Camera";
 import MicrophoneBlock from "@/components/Agent/Microphone";
 import AgentView from "@/components/Agent/View";
+import AgentVoicePresetSelect from "@/components/Agent/VoicePresetSelect";
 import ChatCard from "@/components/Chat/ChatCard";
 import { cn } from "@/lib/utils";
 import { type IRtcUser, type IUserTracks, rtcManager } from "@/manager";
@@ -26,7 +28,7 @@ import {
   setRoomConnected,
   setVoiceType,
 } from "@/store/reducers/global";
-import type { IChatItem, } from "@/types";
+import { EMessageType, type IChatItem, ITextItem } from "@/types";
 
 let hasInit: boolean = false;
 
@@ -51,7 +53,7 @@ export default function RTCCard(props: { className?: string }) {
 
   const isCompactLayout = useIsCompactLayout();
 
-  const _DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
+  const DynamicChatCard = dynamic(() => import("@/components/Chat/ChatCard"), {
     ssr: false,
   });
 
@@ -70,7 +72,7 @@ export default function RTCCard(props: { className?: string }) {
         destory();
       }
     };
-  }, [options.channel, destory, init]);
+  }, [options.channel]);
 
   const init = async () => {
     console.log("[rtc] init");
@@ -133,7 +135,7 @@ export default function RTCCard(props: { className?: string }) {
     dispatch(addChatItem(text));
   };
 
-  const _onVoiceChange = (value: any) => {
+  const onVoiceChange = (value: any) => {
     dispatch(setVoiceType(value));
   };
 
@@ -145,10 +147,7 @@ export default function RTCCard(props: { className?: string }) {
   return (
     <div className={cn("flex h-full min-h-0 flex-col", className)}>
       {/* Top region (Avatar or ChatCard) */}
-      <div
-        className="z-10 min-h-0 flex-1 overflow-y-auto"
-        style={{ minHeight: "240px" }}
-      >
+      <div className="z-10 min-h-0 overflow-y-auto">
         {useTrulienceAvatar ? (
           !avatarInLargeWindow ? (
             <div className="h-60 w-full p-1">
@@ -163,10 +162,7 @@ export default function RTCCard(props: { className?: string }) {
             )
           )
         ) : (
-          <AgentView
-            audioTrack={remoteuser?.audioTrack}
-            videoTrack={remoteuser?.videoTrack}
-          />
+          <AgentView audioTrack={remoteuser?.audioTrack} videoTrack={remoteuser?.videoTrack} />
         )}
       </div>
 
