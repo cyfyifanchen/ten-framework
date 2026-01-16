@@ -50,7 +50,7 @@ tasks:
     vars:
       FRONTEND_PATHS: "ai_agents/agents/examples ai_agents/playground core/src/ten_manager/designer_frontend"
     cmds:
-      - ./node_modules/.bin/biome lint --config-path biome.json {{.FRONTEND_PATHS}}
+      - ./node_modules/.bin/biome lint {{.FRONTEND_PATHS}}
 
   biome-frontend-check:
     desc: run biome check for frontends
@@ -58,7 +58,7 @@ tasks:
     vars:
       FRONTEND_PATHS: "ai_agents/agents/examples ai_agents/playground core/src/ten_manager/designer_frontend"
     cmds:
-      - ./node_modules/.bin/biome check --config-path biome.json {{.FRONTEND_PATHS}}
+      - ./node_modules/.bin/biome check {{.FRONTEND_PATHS}}
 
   biome-frontend:
     desc: run biome lint and check for frontends

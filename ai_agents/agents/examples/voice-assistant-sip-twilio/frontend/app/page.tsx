@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { PhoneIncoming, PhoneOutgoing } from "lucide-react";
-import OutboundCallForm from "@/components/OutboundCallForm";
-import InboundCallModal from "@/components/InboundCallModal";
+import { useEffect, useState } from "react";
 import CallStatus from "@/components/CallStatus";
-import { twilioAPI, type CallResponse, type ServerConfig } from "./api";
+import InboundCallModal from "@/components/InboundCallModal";
+import OutboundCallForm from "@/components/OutboundCallForm";
+import { type CallResponse, type ServerConfig, twilioAPI } from "./api";
 
 export default function Home() {
   const [activeCall, setActiveCall] = useState<CallResponse | null>(null);

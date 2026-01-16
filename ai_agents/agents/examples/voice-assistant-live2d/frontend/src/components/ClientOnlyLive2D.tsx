@@ -1,13 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import type React from "react";
 import { forwardRef } from "react";
-import dynamic from "next/dynamic";
 import type {
   ExpressionConfig,
   Live2DHandle,
-  MouthConfig,
   MotionConfig,
+  MouthConfig,
 } from "./Live2DCharacter";
 
 interface ClientOnlyLive2DProps {

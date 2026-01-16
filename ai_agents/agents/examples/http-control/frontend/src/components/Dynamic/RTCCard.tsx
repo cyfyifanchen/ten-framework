@@ -26,7 +26,7 @@ import {
   setRoomConnected,
   setVoiceType,
 } from "@/store/reducers/global";
-import type { IChatItem, } from "@/types";
+import type { IChatItem } from "@/types";
 
 let hasInit: boolean = false;
 
@@ -55,22 +55,31 @@ export default function RTCCard(props: { className?: string }) {
     ssr: false,
   });
 
-  React.useEffect(() => {
-    if (!options.channel) {
-      return;
+  const onRemoteUserChanged = (user: IRtcUser) => {
+    console.log("[rtc] onRemoteUserChanged", user);
+    if (useTrulienceAvatar) {
+      // trulience SDK will play audio in synch with mouth
+      user.audioTrack?.stop();
     }
-    if (hasInit) {
-      return;
+    if (user.audioTrack) {
+      setRemoteUser(user);
     }
+  };
 
-    init();
+  const onLocalTracksChanged = (tracks: IUserTracks) => {
+    console.log("[rtc] onLocalTracksChanged", tracks);
+    const { videoTrack, audioTrack, screenTrack } = tracks;
+    setVideoTrack(videoTrack);
+    setScreenTrack(screenTrack);
+    if (audioTrack) {
+      setAudioTrack(audioTrack);
+    }
+  };
 
-    return () => {
-      if (hasInit) {
-        destory();
-      }
-    };
-  }, [options.channel, destory, init]);
+  const onTextChanged = (text: IChatItem) => {
+    console.log("[rtc] onTextChanged", text);
+    dispatch(addChatItem(text));
+  };
 
   const init = async () => {
     console.log("[rtc] init");
@@ -105,31 +114,22 @@ export default function RTCCard(props: { className?: string }) {
     hasInit = false;
   };
 
-  const onRemoteUserChanged = (user: IRtcUser) => {
-    console.log("[rtc] onRemoteUserChanged", user);
-    if (useTrulienceAvatar) {
-      // trulience SDK will play audio in synch with mouth
-      user.audioTrack?.stop();
+  React.useEffect(() => {
+    if (!options.channel) {
+      return;
     }
-    if (user.audioTrack) {
-      setRemoteUser(user);
+    if (hasInit) {
+      return;
     }
-  };
 
-  const onLocalTracksChanged = (tracks: IUserTracks) => {
-    console.log("[rtc] onLocalTracksChanged", tracks);
-    const { videoTrack, audioTrack, screenTrack } = tracks;
-    setVideoTrack(videoTrack);
-    setScreenTrack(screenTrack);
-    if (audioTrack) {
-      setAudioTrack(audioTrack);
-    }
-  };
+    init();
 
-  const onTextChanged = (text: IChatItem) => {
-    console.log("[rtc] onTextChanged", text);
-    dispatch(addChatItem(text));
-  };
+    return () => {
+      if (hasInit) {
+        destory();
+      }
+    };
+  }, [options.channel, destory, init]);
 
   const _onVoiceChange = (value: any) => {
     dispatch(setVoiceType(value));

@@ -1,9 +1,9 @@
 import type {
-  UID,
   ICameraVideoTrack,
+  ILocalVideoTrack,
   IMicrophoneAudioTrack,
   NetworkQuality,
-  ILocalVideoTrack,
+  UID,
 } from "agora-rtc-sdk-ng";
 import type { IChatItem } from "@/types";
 

@@ -1,9 +1,11 @@
 "use client";
 
+import AgoraRTC, { type IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
 import * as React from "react";
 import { useMultibandTrackVolume } from "@/common";
 import AudioVisualizer from "@/components/Agent/AudioVisualizer";
-import AgoraRTC, { type IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
+import { MicIconByStatus } from "@/components/Icon";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,8 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { MicIconByStatus } from "@/components/Icon";
 
 export default function MicrophoneBlock(props: {
   audioTrack?: IMicrophoneAudioTrack;
@@ -21,6 +21,11 @@ export default function MicrophoneBlock(props: {
   const [audioMute, setAudioMute] = React.useState(false);
   const [mediaStreamTrack, setMediaStreamTrack] =
     React.useState<MediaStreamTrack>();
+
+  const onAudioTrackupdated = (track: MediaStreamTrack) => {
+    console.log("[test] audio track updated", track);
+    setMediaStreamTrack(track);
+  };
 
   React.useEffect(() => {
     audioTrack?.on("track-updated", onAudioTrackupdated);
@@ -38,11 +43,6 @@ export default function MicrophoneBlock(props: {
   }, [audioTrack, audioMute]);
 
   const subscribedVolumes = useMultibandTrackVolume(mediaStreamTrack, 20);
-
-  const onAudioTrackupdated = (track: MediaStreamTrack) => {
-    console.log("[test] audio track updated", track);
-    setMediaStreamTrack(track);
-  };
 
   const onClickMute = () => {
     setAudioMute(!audioMute);

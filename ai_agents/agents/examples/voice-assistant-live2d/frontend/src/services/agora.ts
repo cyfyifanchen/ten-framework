@@ -1,12 +1,12 @@
 import AgoraRTC, {
+  type ConnectionState,
   type IAgoraRTCClient,
   type IMicrophoneAudioTrack,
   type IRemoteAudioTrack,
-  type ConnectionState,
   type NetworkQuality,
 } from "agora-rtc-sdk-ng";
-import type { AgoraConfig, ConnectionStatus, TranscriptMessage } from "@/types";
 import axios from "axios";
+import type { AgoraConfig, ConnectionStatus, TranscriptMessage } from "@/types";
 
 type TextChunk = {
   messageId: string;
@@ -19,6 +19,7 @@ export class AgoraService {
   private rtcClient: IAgoraRTCClient | null = null;
   private localAudioTrack: IMicrophoneAudioTrack | null = null;
   private remoteAudioTrack: IRemoteAudioTrack | null = null;
+  private config: AgoraConfig | null = null;
   private connectionStatus: ConnectionStatus = {
     rtc: "disconnected",
     rtm: "disconnected",

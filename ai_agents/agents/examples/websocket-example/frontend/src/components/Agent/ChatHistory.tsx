@@ -1,10 +1,10 @@
 "use client";
 
+import { Bot, User } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAgentStore } from "@/store/agentStore";
-import { Bot, User } from "lucide-react";
-import { useEffect, useRef } from "react";
 
 export function ChatHistory() {
   const { messages } = useAgentStore();

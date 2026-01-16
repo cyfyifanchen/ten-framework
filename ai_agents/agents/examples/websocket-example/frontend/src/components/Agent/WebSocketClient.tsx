@@ -1,10 +1,15 @@
 "use client";
 
+import { AlertCircle, Loader2, Play, Square, Wifi } from "lucide-react";
+import { useEffect, useState } from "react";
 import { AudioControls } from "@/components/Agent/AudioControls";
 import { AudioVisualizer } from "@/components/Agent/AudioVisualizer";
 import { ChatHistory } from "@/components/Agent/ChatHistory";
 import { ConnectionStatus } from "@/components/Agent/ConnectionStatus";
 import { TranscriptionDisplay } from "@/components/Agent/TranscriptionDisplay";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,17 +17,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useAgentLifecycle } from "@/hooks/useAgentLifecycle";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useWebSocket } from "@/hooks/useWebSocket";
-import { useAgentLifecycle } from "@/hooks/useAgentLifecycle";
-import { useAgentStore } from "@/store/agentStore";
 import { getOrGeneratePort, getWebSocketUrl } from "@/lib/portManager";
-import { useEffect, useState } from "react";
-import { Play, Square, Loader2, Wifi, AlertCircle } from "lucide-react";
+import { useAgentStore } from "@/store/agentStore";
 
 export function WebSocketClient() {
   const [port, setPort] = useState<number | null>(null);

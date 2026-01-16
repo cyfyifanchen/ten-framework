@@ -1,13 +1,7 @@
 import axios from "axios";
 import type { Language } from "@/types";
 import { isEditModeOn } from "./constant";
-import type {
-  AddonDef,
-  Connection,
-  Graph,
-  Node,
-  ProtocolLabel,
-} from "./graph";
+import type { AddonDef, Connection, Graph, Node, ProtocolLabel } from "./graph";
 import { genUUID } from "./utils";
 
 interface StartRequestConfig {

@@ -1,6 +1,6 @@
 "use client";
 
-import AgoraRTM, { type RTMClient, } from "agora-rtm";
+import AgoraRTM, { type RTMClient } from "agora-rtm";
 import { ERTMTextType, type IRTMTextItem } from "@/types";
 import { AGEventEmitter } from "../events";
 

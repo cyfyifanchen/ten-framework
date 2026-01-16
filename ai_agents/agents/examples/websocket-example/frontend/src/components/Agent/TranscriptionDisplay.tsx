@@ -1,9 +1,9 @@
 "use client";
 
+import { Mic2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAgentStore } from "@/store/agentStore";
-import { Mic2 } from "lucide-react";
 
 export function TranscriptionDisplay() {
   const { transcribing } = useAgentStore();

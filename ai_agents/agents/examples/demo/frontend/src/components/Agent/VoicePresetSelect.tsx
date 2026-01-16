@@ -1,5 +1,7 @@
 "use client";
 
+import { useAppDispatch, useAppSelector, VOICE_OPTIONS } from "@/common";
+import { VoiceIcon } from "@/components/Icon";
 import {
   Select,
   SelectContent,
@@ -7,10 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAppSelector, useAppDispatch, VOICE_OPTIONS } from "@/common";
 import { setVoiceType } from "@/store/reducers/global";
 import type { VoiceType } from "@/types";
-import { VoiceIcon } from "@/components/Icon";
 
 export default function AgentVoicePresetSelect() {
   const dispatch = useAppDispatch();

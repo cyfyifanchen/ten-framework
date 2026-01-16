@@ -1,9 +1,9 @@
 "use client";
 
+import { MotionSync } from "live2d-motionsync/stream";
 import { useEffect, useRef, useState } from "react";
 // Import PIXI setup first to ensure global availability
 import PIXI from "@/lib/pixi-setup";
-import { MotionSync } from "live2d-motionsync/stream";
 // IRemoteAudioTrack will be imported dynamically
 import { cn } from "@/lib/utils";
 
@@ -250,9 +250,7 @@ export default function Live2DCharacter({
               await new Promise((resolve) => setTimeout(resolve, 1000));
 
               // Validate that the model and internalModel are properly initialized
-              if (
-                model?.internalModel?.coreModel
-              ) {
+              if (model?.internalModel?.coreModel) {
                 console.log(
                   "[Live2DCharacter] Creating MotionSync instance..."
                 );

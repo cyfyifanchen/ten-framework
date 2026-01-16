@@ -1,6 +1,25 @@
 "use client";
 
 import {
+  GROUPED_GRAPH_OPTIONS,
+  LANGUAGE_OPTIONS,
+  useAppDispatch,
+  useAppSelector,
+} from "@/common";
+import {
+  AzureIcon,
+  CozeIcon,
+  DeepSeekIcon,
+  DifyIcon,
+  GeminiIcon,
+  MetaIcon,
+  NovaIcon,
+  OceanBaseIcon,
+  OpenAIIcon,
+  QwenIcon,
+  XAIIcon,
+} from "@/components/Icon";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -9,27 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  useAppDispatch,
-  LANGUAGE_OPTIONS,
-  useAppSelector,
-  GROUPED_GRAPH_OPTIONS,
-} from "@/common";
-import {
-  OpenAIIcon,
-  GeminiIcon,
-  AzureIcon,
-  MetaIcon,
-  NovaIcon,
-  DeepSeekIcon,
-  XAIIcon,
-  QwenIcon,
-  DifyIcon,
-  CozeIcon,
-  OceanBaseIcon,
-} from "@/components/Icon";
-import type { Language } from "@/types";
 import { setGraphName, setLanguage } from "@/store/reducers/global";
+import type { Language } from "@/types";
 
 const getBrandIcon = (label: string) => {
   if (label.includes("OpenAI")) return OpenAIIcon;
@@ -57,40 +57,40 @@ export function GraphSelect() {
 
   return (
     <Select
-        value={graphName}
-        onValueChange={onGraphNameChange}
-        disabled={agentConnected}
-      >
-        <SelectTrigger className="w-auto max-w-full">
-          <SelectValue placeholder="Graph" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.entries(GROUPED_GRAPH_OPTIONS).map(([category, options]) => {
-            return (
-              <SelectGroup key={category}>
-                <SelectLabel className="flex items-center gap-2 px-2 py-2 font-bold text-base text-foreground">
-                  {category}
-                </SelectLabel>
-                {options.map((item) => {
-                  const BrandIcon = getBrandIcon(item.label);
-                  return (
-                    <SelectItem
-                      value={item.value}
-                      key={item.value}
-                      className="pl-8"
-                    >
-                      <span className="flex items-center gap-2">
-                        <BrandIcon className="h-4 w-4 flex-shrink-0" />
-                        {item.label}
-                      </span>
-                    </SelectItem>
-                  );
-                })}
-              </SelectGroup>
-            );
-          })}
-        </SelectContent>
-      </Select>
+      value={graphName}
+      onValueChange={onGraphNameChange}
+      disabled={agentConnected}
+    >
+      <SelectTrigger className="w-auto max-w-full">
+        <SelectValue placeholder="Graph" />
+      </SelectTrigger>
+      <SelectContent>
+        {Object.entries(GROUPED_GRAPH_OPTIONS).map(([category, options]) => {
+          return (
+            <SelectGroup key={category}>
+              <SelectLabel className="flex items-center gap-2 px-2 py-2 font-bold text-base text-foreground">
+                {category}
+              </SelectLabel>
+              {options.map((item) => {
+                const BrandIcon = getBrandIcon(item.label);
+                return (
+                  <SelectItem
+                    value={item.value}
+                    key={item.value}
+                    className="pl-8"
+                  >
+                    <span className="flex items-center gap-2">
+                      <BrandIcon className="h-4 w-4 flex-shrink-0" />
+                      {item.label}
+                    </span>
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          );
+        })}
+      </SelectContent>
+    </Select>
   );
 }
 
@@ -105,22 +105,22 @@ export function LanguageSelect() {
 
   return (
     <Select
-        value={language}
-        onValueChange={onLanguageChange}
-        disabled={agentConnected}
-      >
-        <SelectTrigger className="w-32">
-          <SelectValue placeholder="Language" />
-        </SelectTrigger>
-        <SelectContent>
-          {LANGUAGE_OPTIONS.map((item) => {
-            return (
-              <SelectItem value={item.value} key={item.value}>
-                {item.label}
-              </SelectItem>
-            );
-          })}
-        </SelectContent>
-      </Select>
+      value={language}
+      onValueChange={onLanguageChange}
+      disabled={agentConnected}
+    >
+      <SelectTrigger className="w-32">
+        <SelectValue placeholder="Language" />
+      </SelectTrigger>
+      <SelectContent>
+        {LANGUAGE_OPTIONS.map((item) => {
+          return (
+            <SelectItem value={item.value} key={item.value}>
+              {item.label}
+            </SelectItem>
+          );
+        })}
+      </SelectContent>
+    </Select>
   );
 }

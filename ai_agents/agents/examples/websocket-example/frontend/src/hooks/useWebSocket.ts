@@ -3,9 +3,9 @@
  * Manages WebSocket connection and integrates with Zustand store
  */
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { WebSocketManager } from "@/manager/websocket";
 import { useAgentStore } from "@/store/agentStore";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseWebSocketOptions {
   url: string;

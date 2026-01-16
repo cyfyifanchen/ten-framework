@@ -1,10 +1,10 @@
 "use client";
 
 import type { IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
-import { normalizeFrequencies } from "./utils";
-import { useState, useEffect, useRef } from "react";
-import type { AppDispatch, AppStore, RootState } from "../store";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
+import type { AppDispatch, AppStore, RootState } from "../store";
+import { normalizeFrequencies } from "./utils";
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();

@@ -1,7 +1,7 @@
 "use client";
 
-import globalReducer from "./reducers/global";
 import { configureStore } from "@reduxjs/toolkit";
+import globalReducer from "./reducers/global";
 
 export * from "./provider";
 

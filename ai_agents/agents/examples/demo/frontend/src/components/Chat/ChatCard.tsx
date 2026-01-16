@@ -1,18 +1,18 @@
 "use client";
 
+import { Send } from "lucide-react";
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { LanguageSelect, GraphSelect } from "@/components/Chat/ChatCfgSelect";
-import PdfSelect from "@/components/Chat/PdfSelect";
 import {
+  isLanguageSupported,
+  isRagGraph,
   useAppDispatch,
   useAppSelector,
-  isRagGraph,
-  isLanguageSupported,
 } from "@/common";
+import { GraphSelect, LanguageSelect } from "@/components/Chat/ChatCfgSelect";
 import MessageList from "@/components/Chat/MessageList";
+import PdfSelect from "@/components/Chat/PdfSelect";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const hasInit: boolean = false;
 
@@ -143,7 +143,7 @@ export default function ChatCard(props: { className?: string }) {
           <MessageList />
           <div
             className={cn("border-t pt-4", {
-              "hidden": !graphName.includes("rtm"), // TODO: TMP use rtm key word
+              hidden: !graphName.includes("rtm"), // TODO: TMP use rtm key word
             })}
           >
             <form

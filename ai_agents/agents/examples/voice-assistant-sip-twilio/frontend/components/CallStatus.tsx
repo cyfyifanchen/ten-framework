@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Phone, PhoneOff, Clock, CheckCircle, XCircle } from "lucide-react";
-import { twilioAPI, type CallInfo } from "../app/api";
+import { CheckCircle, Clock, Phone, PhoneOff, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { type CallInfo, twilioAPI } from "../app/api";
 
 interface CallStatusProps {
   callSid: string | null;

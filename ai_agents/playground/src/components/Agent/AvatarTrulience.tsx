@@ -76,7 +76,12 @@ export default function Avatar({ audioTrack }: AvatarProps) {
         height="100%"
       />
     );
-  }, [finalAvatarId, eventCallbacks, trulienceSettings.avatarToken, trulienceSettings.trulienceSDK]);
+  }, [
+    finalAvatarId,
+    eventCallbacks,
+    trulienceSettings.avatarToken,
+    trulienceSettings.trulienceSDK,
+  ]);
 
   // Update the Avatar’s audio stream whenever audioTrack or agentConnected changes
   useEffect(() => {

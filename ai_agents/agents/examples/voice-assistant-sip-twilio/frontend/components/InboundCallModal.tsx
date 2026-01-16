@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Phone } from "lucide-react";
+import { Phone, X } from "lucide-react";
 
 interface InboundCallModalProps {
   isOpen: boolean;

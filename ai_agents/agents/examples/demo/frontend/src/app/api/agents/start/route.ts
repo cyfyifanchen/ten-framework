@@ -1,6 +1,6 @@
+import axios from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 import { getGraphProperties } from "./graph";
-import axios from "axios";
 /**
  * Handles the POST request to start an agent.
  *

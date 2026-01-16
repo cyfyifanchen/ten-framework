@@ -1,7 +1,8 @@
 // import { LogoIcon, SmallLogoIcon } from "@/components/Icon"
-import { HeaderActions } from "./HeaderComponents";
+
 import { TenLogo } from "@/components/Icon";
 import { cn } from "@/lib/utils";
+import { HeaderActions } from "./HeaderComponents";
 
 export default function Header(props: { className?: string }) {
   const { className } = props;

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
-import path from "node:path";
+
 import fs from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Derive __dirname in ESM

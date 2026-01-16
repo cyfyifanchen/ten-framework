@@ -1,12 +1,16 @@
 "use client";
 
-import * as React from "react";
 import type { NetworkQuality } from "agora-rtc-sdk-ng";
-import { rtcManager } from "@/manager";
+import * as React from "react";
 import { NetworkIconByLevel } from "@/components/Icon";
+import { rtcManager } from "@/manager";
 
 export default function NetworkIndicator() {
   const [networkQuality, setNetworkQuality] = React.useState<NetworkQuality>();
+
+  const onNetworkQuality = (quality: NetworkQuality) => {
+    setNetworkQuality(quality);
+  };
 
   React.useEffect(() => {
     rtcManager.on("networkQuality", onNetworkQuality);
@@ -15,10 +19,6 @@ export default function NetworkIndicator() {
       rtcManager.off("networkQuality", onNetworkQuality);
     };
   }, [onNetworkQuality]);
-
-  const onNetworkQuality = (quality: NetworkQuality) => {
-    setNetworkQuality(quality);
-  };
 
   return (
     <NetworkIconByLevel

@@ -1,5 +1,6 @@
 "use client";
 
+import { Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -7,7 +8,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Mic, MicOff } from "lucide-react";
 
 interface AudioControlsProps {
   isRecording: boolean;

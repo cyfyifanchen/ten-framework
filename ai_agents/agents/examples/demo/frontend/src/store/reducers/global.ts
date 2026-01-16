@@ -1,31 +1,31 @@
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  COLOR_LIST,
+  DEFAULT_AGENT_SETTINGS,
+  DEFAULT_COZE_SETTINGS,
+  DEFAULT_DIFY_SETTINGS,
+  DEFAULT_OCEAN_BASE_SETTINGS,
+  DEFAULT_OPTIONS,
+  EMobileActiveTab,
+  resetCozeSettings as resetCozeSettingsLocal,
+  resetDifySettings as resetDifySettingsLocal,
+  resetOceanBaseSettings as resetOceanBaseSettingsLocal,
+  setAgentSettingsToLocal,
+  setCozeSettingsToLocal,
+  setDifySettingsToLocal,
+  setOceanBaseSettingsToLocal,
+  setOptionsToLocal,
+} from "@/common";
 import type {
-  IOptions,
-  IChatItem,
-  Language,
-  VoiceType,
   IAgentSettings,
+  IChatItem,
   ICozeSettings,
   IDifySettings,
   IOceanBaseSettings,
+  IOptions,
+  Language,
+  VoiceType,
 } from "@/types";
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import {
-  EMobileActiveTab,
-  DEFAULT_OPTIONS,
-  COLOR_LIST,
-  setOptionsToLocal,
-  DEFAULT_AGENT_SETTINGS,
-  DEFAULT_COZE_SETTINGS,
-  setAgentSettingsToLocal,
-  setCozeSettingsToLocal,
-  resetCozeSettings as resetCozeSettingsLocal,
-  DEFAULT_DIFY_SETTINGS,
-  setDifySettingsToLocal,
-  resetDifySettings as resetDifySettingsLocal,
-  DEFAULT_OCEAN_BASE_SETTINGS,
-  setOceanBaseSettingsToLocal,
-  resetOceanBaseSettings as resetOceanBaseSettingsLocal,
-} from "@/common";
 
 export interface InitialState {
   options: IOptions;

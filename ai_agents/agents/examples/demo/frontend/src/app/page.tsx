@@ -1,13 +1,12 @@
 "use client";
 
-import { useAppSelector, EMobileActiveTab } from "@/common";
 import dynamic from "next/dynamic";
-
-import Header from "@/components/Layout/Header";
-import Action from "@/components/Layout/Action";
+import { EMobileActiveTab, useAppSelector } from "@/common";
 // import RTCCard from "@/components/Dynamic/RTCCard"
 // import ChatCard from "@/components/Chat/ChatCard"
 import AuthInitializer from "@/components/authInitializer";
+import Action from "@/components/Layout/Action";
+import Header from "@/components/Layout/Header";
 import { cn } from "@/lib/utils";
 
 const DynamicRTCCard = dynamic(() => import("@/components/Dynamic/RTCCard"), {

@@ -6,11 +6,16 @@ import AgoraRTC, {
   type IRemoteAudioTrack,
   type UID,
 } from "agora-rtc-sdk-ng";
-import { EMessageDataType, EMessageType, type IChatItem, type ITextItem } from "@/types";
-import { AGEventEmitter } from "../events";
-import type { RtcEvents, IUserTracks } from "./types";
-import { apiGenAgoraData } from "@/common/request";
 import { VideoSourceType } from "@/common/constant";
+import { apiGenAgoraData } from "@/common/request";
+import {
+  EMessageDataType,
+  EMessageType,
+  type IChatItem,
+  type ITextItem,
+} from "@/types";
+import { AGEventEmitter } from "../events";
+import type { IUserTracks, RtcEvents } from "./types";
 
 const TIMEOUT_MS = 5000; // Timeout for incomplete messages
 
@@ -167,7 +172,7 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
     });
   }
 
-  private _parseData(data: any): ITextItem | undefined {
+  private _parseData(data: any): void {
     const ascii = String.fromCharCode(...new Uint8Array(data));
 
     console.log("[test] textstream raw data", ascii);

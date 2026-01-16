@@ -2,19 +2,19 @@
 
 import { type ReactNode, useEffect } from "react";
 import {
-  useAppDispatch,
-  getOptionsFromLocal,
-  getRandomUserId,
-  getRandomChannel,
   genRandomString,
+  getOptionsFromLocal,
+  getRandomChannel,
+  getRandomUserId,
+  useAppDispatch,
 } from "@/common";
 import {
-  setOptions,
   reset,
   setAgentSettings,
   setCozeSettings,
   setDifySettings,
   setOceanBaseSettings,
+  setOptions,
 } from "@/store/reducers/global";
 
 interface AuthInitializerProps {

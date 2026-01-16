@@ -2,7 +2,7 @@
  * Agent Lifecycle Hook - Manages agent start/stop via API server
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ping } from "@/lib/api";
 
 interface StartAgentParams {

@@ -1,6 +1,14 @@
 "use client";
 
+import { FileTextIcon } from "lucide-react";
 import * as React from "react";
+import { toast } from "sonner";
+import {
+  apiGetDocumentList,
+  apiUpdateDocument,
+  genUUID,
+  useAppSelector,
+} from "@/common";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,16 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FileTextIcon } from "lucide-react";
-
-import type { OptionType, IPdfData } from "@/types";
-import {
-  apiGetDocumentList,
-  apiUpdateDocument,
-  useAppSelector,
-  genUUID,
-} from "@/common";
-import { toast } from "sonner";
+import type { IPdfData, OptionType } from "@/types";
 
 export default function PdfSelect() {
   const options = useAppSelector((state) => state.global.options);
@@ -35,12 +34,6 @@ export default function PdfSelect() {
   const [pdfOptions, setPdfOptions] = React.useState<OptionType[]>([]);
   const [selectedPdf, setSelectedPdf] = React.useState<string>("");
   const agentConnected = useAppSelector((state) => state.global.agentConnected);
-
-  React.useEffect(() => {
-    if (agentConnected) {
-      getPDFOptions();
-    }
-  }, [agentConnected, getPDFOptions]);
 
   const getPDFOptions = async () => {
     const res = await apiGetDocumentList();
@@ -54,6 +47,12 @@ export default function PdfSelect() {
     );
     setSelectedPdf("");
   };
+
+  React.useEffect(() => {
+    if (agentConnected) {
+      getPDFOptions();
+    }
+  }, [agentConnected, getPDFOptions]);
 
   const onUploadSuccess = (data: IPdfData) => {
     setPdfOptions([
@@ -82,37 +81,37 @@ export default function PdfSelect() {
 
   return (
     <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="w-fit bg-transparent">
-            <FileTextIcon />
-            PDF
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Upload & Select PDF</DialogTitle>
-          </DialogHeader>
-          <UploadPdf onSuccess={onUploadSuccess} />
-          <div className="mt-4">
-            <Select
-              value={selectedPdf}
-              onValueChange={onSelectPdf}
-              disabled={!agentConnected}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a PDF file" />
-              </SelectTrigger>
-              <SelectContent>
-                {pdfOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="w-fit bg-transparent">
+          <FileTextIcon />
+          PDF
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Upload & Select PDF</DialogTitle>
+        </DialogHeader>
+        <UploadPdf onSuccess={onUploadSuccess} />
+        <div className="mt-4">
+          <Select
+            value={selectedPdf}
+            onValueChange={onSelectPdf}
+            disabled={!agentConnected}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a PDF file" />
+            </SelectTrigger>
+            <SelectContent>
+              {pdfOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

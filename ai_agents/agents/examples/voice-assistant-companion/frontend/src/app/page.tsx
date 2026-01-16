@@ -21,11 +21,7 @@ const ClientOnlyLive2D = dynamicImport(
   }
 );
 
-import {
-  apiPing,
-  apiStartService,
-  apiStopService,
-} from "@/lib/request";
+import { apiPing, apiStartService, apiStopService } from "@/lib/request";
 import type { AgoraConfig, Live2DModel } from "@/types";
 
 const defaultModel: Live2DModel = {
@@ -49,27 +45,13 @@ export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [selectedModel, _setSelectedModel] = useState<Live2DModel>(defaultModel);
+  const [selectedModel, _setSelectedModel] =
+    useState<Live2DModel>(defaultModel);
   const [remoteAudioTrack, setRemoteAudioTrack] = useState<any>(null);
   const [agoraService, setAgoraService] = useState<any>(null);
   const [pingInterval, setPingInterval] = useState<NodeJS.Timeout | null>(null);
   const [isAssistantSpeaking, setIsAssistantSpeaking] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      import("@/services/agora").then((module) => {
-        const service = module.agoraService;
-        setAgoraService(service);
-        service.setOnConnectionStatusChange(handleConnectionChange);
-        service.setOnRemoteAudioTrack(handleAudioTrackChange);
-      });
-    }
-
-    return () => {
-      stopPing();
-    };
-  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -151,6 +133,21 @@ export default function Home() {
       setPingInterval(null);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      import("@/services/agora").then((module) => {
+        const service = module.agoraService;
+        setAgoraService(service);
+        service.setOnConnectionStatusChange(handleConnectionChange);
+        service.setOnRemoteAudioTrack(handleAudioTrackChange);
+      });
+    }
+
+    return () => {
+      stopPing();
+    };
+  }, [handleAudioTrackChange, handleConnectionChange, stopPing]);
 
   const _handleMicToggle = () => {
     if (agoraService) {

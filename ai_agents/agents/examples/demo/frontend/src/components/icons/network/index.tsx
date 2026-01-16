@@ -1,8 +1,8 @@
 import averageSvg from "@/assets/network/average.svg";
-import goodSvg from "@/assets/network/good.svg";
-import poorSvg from "@/assets/network/poor.svg";
 import disconnectedSvg from "@/assets/network/disconnected.svg";
 import excellentSvg from "@/assets/network/excellent.svg";
+import goodSvg from "@/assets/network/good.svg";
+import poorSvg from "@/assets/network/poor.svg";
 
 import type { IconProps } from "../types";
 
