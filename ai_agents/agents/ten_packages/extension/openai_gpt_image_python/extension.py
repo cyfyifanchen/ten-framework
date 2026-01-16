@@ -11,9 +11,6 @@ from ten_runtime import (
     AsyncTenEnv,
 )
 from ten_ai_base.const import (
-    DATA_OUT_PROPERTY_END_OF_SEGMENT,
-    DATA_OUT_PROPERTY_TEXT,
-    CONTENT_DATA_OUT_NAME,
     LOG_CATEGORY_KEY_POINT,
     LOG_CATEGORY_VENDOR,
 )

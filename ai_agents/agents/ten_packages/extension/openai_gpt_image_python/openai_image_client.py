@@ -15,19 +15,16 @@ from .config import OpenAIGPTImageConfig
 class ContentPolicyError(Exception):
     """Raised when content violates OpenAI's usage policies"""
 
-    pass
 
 
 class InvalidAPIKeyError(Exception):
     """Raised when API key is invalid or unauthorized"""
 
-    pass
 
 
 class ModelNotFoundError(Exception):
     """Raised when requested model is not available"""
 
-    pass
 
 
 class OpenAIImageClient:
@@ -176,17 +173,19 @@ class OpenAIImageClient:
 
             # Classify error for appropriate handling
             if "content_policy_violation" in error_message.lower():
-                raise ContentPolicyError(error_message)
+                raise ContentPolicyError(error_message) from e
 
             elif "401" in error_message or "invalid_api_key" in error_message:
-                raise InvalidAPIKeyError(error_message)
+                raise InvalidAPIKeyError(error_message) from e
 
             elif "404" in error_message or "model_not_found" in error_message:
-                raise ModelNotFoundError(error_message)
+                raise ModelNotFoundError(error_message) from e
 
             elif "429" in error_message:
                 # Rate limit - re-raise as generic exception
-                raise Exception("Rate limit exceeded. Please try again later.")
+                raise RuntimeError(
+                    "Rate limit exceeded. Please try again later."
+                ) from e
 
             else:
                 # Generic error
@@ -195,7 +194,7 @@ class OpenAIImageClient:
     def _dump_response(self, prompt: str, image_url: str) -> None:
         """Dump response to file for debugging"""
         try:
-            with open(self.config.dump_path, "a") as f:
+            with open(self.config.dump_path, "a", encoding="utf-8") as f:
                 json.dump(
                     {
                         "prompt": prompt,

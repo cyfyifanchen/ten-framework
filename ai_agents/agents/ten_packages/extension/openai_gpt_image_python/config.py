@@ -53,18 +53,22 @@ class OpenAIGPTImageConfig(BaseModel):
 
     def update_params(self) -> None:
         """Update/normalize parameters"""
+        params = dict(self.params)
+
         # Set defaults for optional params
-        self.params.setdefault("size", "1024x1024")
-        self.params.setdefault("quality", "standard")
-        self.params.setdefault("n", 1)
-        self.params.setdefault("response_format", "url")
+        params.setdefault("size", "1024x1024")
+        params.setdefault("quality", "standard")
+        params.setdefault("n", 1)
+        params.setdefault("response_format", "url")
 
         # Remove vendor param if exists (internal only)
-        self.params.pop("vendor", None)
+        params.pop("vendor", None)
 
         # Ensure n=1 for simplicity
-        if self.params["n"] != 1:
-            self.params["n"] = 1
+        if params["n"] != 1:
+            params["n"] = 1
+
+        self.params = params
 
     def to_str(self, sensitive_handling: bool = True) -> str:
         """Convert config to string with optional sensitive data handling"""
