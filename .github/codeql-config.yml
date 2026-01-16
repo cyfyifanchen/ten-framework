@@ -1,5 +1,0 @@
-name: "CodeQL config"
-
-paths-ignore:
-  - "ai_agents/**"
-
