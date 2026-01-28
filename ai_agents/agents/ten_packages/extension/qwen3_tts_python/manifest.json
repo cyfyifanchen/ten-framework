@@ -1,7 +1,7 @@
 {
   "type": "extension",
-  "name": "openai_tts2_python",
-  "version": "0.6.0",
+  "name": "qwen3_tts_python",
+  "version": "0.1.0",
   "dependencies": [
     {
       "type": "system",
@@ -36,25 +36,49 @@
         "params": {
           "type": "object",
           "properties": {
-            "api_key": {
-              "type": "string"
-            },
-            "base_url": {
-              "type": "string"
-            },
             "model": {
               "type": "string"
             },
-            "voice": {
+            "language": {
               "type": "string"
             },
-            "speed": {
-              "type": "float64"
+            "speaker": {
+              "type": "string"
             },
-            "instructions": {
+            "instruct": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string"
+            },
+            "ref_audio_path": {
+              "type": "string"
+            },
+            "ref_text": {
+              "type": "string"
+            },
+            "voice_description": {
+              "type": "string"
+            },
+            "device": {
+              "type": "string"
+            },
+            "dtype": {
+              "type": "string"
+            },
+            "attn_implementation": {
               "type": "string"
             }
           }
+        },
+        "dump": {
+          "type": "bool"
+        },
+        "dump_path": {
+          "type": "string"
+        },
+        "sample_rate": {
+          "type": "int64"
         }
       }
     }
